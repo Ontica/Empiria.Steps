@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.12
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Steps.WebAPI", "Steps.WebAPI\Empiria.Steps.WebAPI.csproj", "{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Steps", "Steps\Empiria.Steps.csproj", "{7D98C757-6ED4-48D0-B351-A99CE5ED8987}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D98C757-6ED4-48D0-B351-A99CE5ED8987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D98C757-6ED4-48D0-B351-A99CE5ED8987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D98C757-6ED4-48D0-B351-A99CE5ED8987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D98C757-6ED4-48D0-B351-A99CE5ED8987}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

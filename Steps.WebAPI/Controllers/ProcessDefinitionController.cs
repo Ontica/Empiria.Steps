@@ -13,6 +13,9 @@ using System.Web.Http;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
+using Empiria.Steps.Modeling;
+using System.Collections;
+
 namespace Empiria.Steps.WebApi {
 
   /// <summary>Provides services that gets or sets process definition models.</summary>
@@ -20,23 +23,28 @@ namespace Empiria.Steps.WebApi {
 
     #region Public APIs
 
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     [Route("v1/process-definitions")]
     public CollectionModel GetProcessDefinitionList() {
       try {
-        throw new NotImplementedException();
+        var list = ProcessDefinition.GetList();
+
+        return new CollectionModel(this.Request, this.BuildResponse(list), typeof(ProcessDefinition).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
 
-
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     [Route("v1/process-definitions/{processDef_ID}")]
     public SingleObjectModel GetProcessDefinition(string processDef_ID) {
       try {
-        throw new NotImplementedException();
+        base.RequireResource(processDef_ID, "processDef_ID");
+
+        var processDefinition = ProcessDefinition.Parse(processDef_ID);
+
+        return new SingleObjectModel(this.Request, processDefinition);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -44,6 +52,20 @@ namespace Empiria.Steps.WebApi {
     }
 
     #endregion Public APIs
+
+    private ICollection BuildResponse(FixedList<ProcessDefinition> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var processDefinition in list) {
+        var item = new {
+          uid = processDefinition.UID,
+          name = processDefinition.Name,
+          version = processDefinition.Version,
+        };
+        array.Add(item);
+      }
+      return array;
+    }
 
   }  // class ProcessDefinitionController
 
