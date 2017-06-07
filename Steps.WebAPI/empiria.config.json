@@ -45,6 +45,11 @@
     },
     {
       "type": "Data",
+      "key": "IsObjectIdGeneratorServer",
+      "value": true
+    },
+    {
+      "type": "Data",
       "key": "§DataSource.Default",
       "value": "{{DEFAULT-DATABASE-CONNECTION}}"
     },

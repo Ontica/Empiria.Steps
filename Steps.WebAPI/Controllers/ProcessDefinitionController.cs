@@ -10,6 +10,7 @@
 using System;
 using System.Web.Http;
 
+using Empiria.Json;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
@@ -43,6 +44,47 @@ namespace Empiria.Steps.WebApi {
         base.RequireResource(processDef_ID, "processDef_ID");
 
         var processDefinition = ProcessDefinition.Parse(processDef_ID);
+
+        return new SingleObjectModel(this.Request, processDefinition);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpPost, AllowAnonymous]
+    [Route("v1/process-definitions")]
+    public SingleObjectModel CreateProcessDefinition([FromBody] object body) {
+      try {
+        base.RequireBody(body);
+
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var processDefinition = new ProcessDefinition(bodyAsJson);
+
+        processDefinition.Save();
+
+        return new SingleObjectModel(this.Request, processDefinition);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpPut, HttpPatch, AllowAnonymous]
+    [Route("v1/process-definitions/{processDef_ID}")]
+    public SingleObjectModel UpdateProcessDefinition(string processDef_ID, [FromBody] object body) {
+      try {
+        base.RequireResource(processDef_ID, "processDef_ID");
+        base.RequireBody(body);
+
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var processDefinition = ProcessDefinition.Parse(processDef_ID);
+
+        processDefinition.Update(bodyAsJson);
+
+        processDefinition.Save();
 
         return new SingleObjectModel(this.Request, processDefinition);
 

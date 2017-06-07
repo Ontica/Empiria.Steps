@@ -14,12 +14,20 @@ using Empiria.Data;
 
 namespace Empiria.Steps.Modeling {
 
-  internal static class ProcessDefinitionData {
+  static internal class ProcessDefinitionData {
 
     static internal FixedList<ProcessDefinition> GetProcessDefinitionList() {
-      DataTable table = GeneralDataOperations.GetEntities("BPMProcessDefinitions");
+      DataTable table = GeneralDataOperations.GetEntities("BPMProcessDefinitions",
+                                                          sortExpression: "Name, Version");
 
       return BaseObject.ParseList<ProcessDefinition>(table).ToFixedList();
+    }
+
+    static internal void WriteProcessDefinition(ProcessDefinition o) {
+      var op = DataOperation.Parse("writeBPMProcessDefinition",
+                                    o.Id, o.UID, o.Name, o.Version, o.BpmnXml);
+
+      DataWriter.Execute(op);
     }
 
   }  // class ProcessDefinitionData

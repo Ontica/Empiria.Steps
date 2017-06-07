@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Steps.WebAPI", "Steps.WebAPI\Empiria.Steps.WebAPI.csproj", "{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Steps.WebApi", "Steps.WebAPI\Empiria.Steps.WebApi.csproj", "{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Steps", "Steps\Empiria.Steps.csproj", "{7D98C757-6ED4-48D0-B351-A99CE5ED8987}"
 EndProject
