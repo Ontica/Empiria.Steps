@@ -129,7 +129,9 @@
   <ItemGroup>
     <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
     <Compile Include="Modeling\ProcessDefinition.cs" />
-    <Compile Include="Modeling\ProcessDefinitionData.cs" />
+    <Compile Include="Modeling\Procedure.cs" />
+    <Compile Include="Data\ProcedureData.cs" />
+    <Compile Include="Data\ProcessDefinitionData.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
