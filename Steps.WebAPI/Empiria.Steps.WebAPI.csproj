@@ -97,6 +97,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AuthorityController.cs" />
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\ProcessDefinitionController.cs" />
     <Compile Include="Empiria.Steps.WebApi.AssemblyInfo.cs" />

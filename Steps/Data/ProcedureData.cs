@@ -18,7 +18,7 @@ namespace Empiria.Steps.Modeling {
 
     static internal FixedList<Procedure> GetProcedureList(string filter = "") {
       DataTable table = GeneralDataOperations.GetEntities("BPMProcedures",
-                                                          filter, "Stage, StageInnerNo, ProcedureName");
+                                                          filter, "Stage, StageInnerNo, Name");
 
       return BaseObject.ParseList<Procedure>(table).ToFixedList();
     }
