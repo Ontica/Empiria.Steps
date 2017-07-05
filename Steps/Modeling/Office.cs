@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
 *  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
-*  Type     : Position                                         License : Please read LICENSE.txt file        *
+*  Type     : Office                                           License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Describes a government office position.                                                        *
+*  Summary  : Describes a government agency or office.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,22 +14,21 @@ using Empiria.Contacts;
 
 namespace Empiria.Steps.Modeling {
 
-  /// <summary>Describes a government office position.</summary>
-  public class Position : Contact {
+  public class Office : Organization {
 
     #region Constructors and parsers
 
-    private Position() {
+    private Office() {
       // Required by Empiria Framework.
     }
 
-    static public Position Parse(string uid) {
-      return BaseObject.ParseKey<Position>(uid);
+    static public Office Parse(string uid) {
+      return BaseObject.ParseKey<Office>(uid);
     }
 
-    static public new Position Empty {
+    static public new Office Empty {
       get {
-        return BaseObject.ParseEmpty<Position>();
+        return BaseObject.ParseEmpty<Office>();
       }
     }
 
@@ -37,25 +36,18 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    public string PhoneNumber {
+    private Position _headPosition = null;
+    public Position HeadPosition {
       get {
-        return base.ExtendedData.Get("PhoneNumber", "No determinado");
-      }
-    }
-
-
-    private Person _officer = null;
-    public Person Officer {
-      get {
-        if (_officer == null) {
-          _officer = base.GetLink<Person>("Position->Officer", Person.Empty);
+        if (_headPosition == null) {
+          _headPosition = base.GetLink<Position>("Office->HeadPosition", Position.Empty);
         }
-        return _officer;
+        return _headPosition;
       }
     }
 
     #endregion Properties
 
-  }  // class Authority
+  }  // class Office
 
 }  // namespace Empiria.Steps.Modeling

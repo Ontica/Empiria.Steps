@@ -52,14 +52,14 @@ namespace Empiria.Steps.WebApi {
     }
 
     [HttpGet, AllowAnonymous]
-    [Route("v1/modeling/authorities/{authorityUID}")]
-    public SingleObjectModel GetAuthority([FromUri] string authorityUID) {
+    [Route("v1/modeling/offices/{officeUID}")]
+    public SingleObjectModel GetOffice([FromUri] string officeUID) {
       try {
-        base.RequireResource(authorityUID, "authorityUID");
+        base.RequireResource(officeUID, "officeUID");
 
-        var authority = Authority.Parse(authorityUID);
+        var authority = Office.Parse(officeUID);
 
-        return new SingleObjectModel(this.Request, BuildResponse(authority), typeof(Authority).FullName);
+        return new SingleObjectModel(this.Request, BuildResponse(authority), typeof(Office).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -89,12 +89,12 @@ namespace Empiria.Steps.WebApi {
         uid = entity.UID,
         name = entity.FullName,
         shortName = entity.Nickname,
-        authorities = BuildResponse(entity.Authorities),
+        offices = BuildResponse(entity.Authorities),
         positions = BuildResponse(entity.Positions)
       };
     }
 
-    private ICollection BuildResponse(FixedList<Authority> list) {
+    private ICollection BuildResponse(FixedList<Office> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var authority in list) {
@@ -107,7 +107,7 @@ namespace Empiria.Steps.WebApi {
       return array;
     }
 
-    private object BuildResponse(Authority authority) {
+    private object BuildResponse(Office authority) {
       return new {
         uid = authority.UID,
         name = authority.FullName,
@@ -120,6 +120,7 @@ namespace Empiria.Steps.WebApi {
 
       foreach (var position in list) {
         var item = BuildResponse(position);
+        array.Add(item);
       }
       return array;
     }

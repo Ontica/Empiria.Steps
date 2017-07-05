@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
 *  Type     : Entity                                           License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Describes a government agency or ministry.                                                     *
+*  Summary  : Describes a government entity such as an agency or ministry.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -26,6 +26,12 @@ namespace Empiria.Steps.Modeling {
       return BaseObject.ParseKey<Entity>(uid);
     }
 
+    static public new Entity Empty {
+      get {
+        return BaseObject.ParseEmpty<Entity>();
+      }
+    }
+
     static public new FixedList<Entity> GetList(string filter) {
       var list = BaseObject.GetList<Entity>(filter, "Nickname");
       return list.ToFixedList();
@@ -35,11 +41,11 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    private FixedList<Authority> _authoritiesList = null;
-    public FixedList<Authority> Authorities {
+    private FixedList<Office> _authoritiesList = null;
+    public FixedList<Office> Authorities {
       get {
         if (_authoritiesList == null) {
-          _authoritiesList = base.GetLinks<Authority>("Entity->Authorities");
+          _authoritiesList = base.GetLinks<Office>("Entity->Offices");
 
           _authoritiesList.Sort((x, y) => x.FullName.CompareTo(y.FullName));
         }
