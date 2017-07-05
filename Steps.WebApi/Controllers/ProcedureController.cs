@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections;
 using System.Web.Http;
 
 using Empiria.Json;
@@ -29,7 +30,7 @@ namespace Empiria.Steps.WebApi {
       try {
         var list = Procedure.GetList(filter ?? String.Empty);
 
-        return new CollectionModel(this.Request, list);
+        return new CollectionModel(this.Request, BuildResponse(list), typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -44,7 +45,7 @@ namespace Empiria.Steps.WebApi {
 
         var procedure = Procedure.Parse(procedure_UID);
 
-        return new SingleObjectModel(this.Request, procedure);
+        return new SingleObjectModel(this.Request, BuildResponse(procedure), typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -63,7 +64,7 @@ namespace Empiria.Steps.WebApi {
 
         procedure.Save();
 
-        return new SingleObjectModel(this.Request, procedure);
+        return new SingleObjectModel(this.Request, BuildResponse(procedure), typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -86,7 +87,7 @@ namespace Empiria.Steps.WebApi {
 
         procedure.Save();
 
-        return new SingleObjectModel(this.Request, procedure);
+        return new SingleObjectModel(this.Request, BuildResponse(procedure), typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -94,6 +95,72 @@ namespace Empiria.Steps.WebApi {
     }
 
     #endregion Public APIs
+
+    #region Private methods
+
+    private ICollection BuildResponse(FixedList<Procedure> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var procedure in list) {
+        var item = new {
+          uid = procedure.UID,
+          name = procedure.Name,
+          url = procedure.URL,
+          stage = procedure.Stage,
+          category = procedure.Category,
+          theme = procedure.Theme,
+          entity = procedure.Authority.Entity.FullName,
+          office = procedure.Authority.Office.FullName,
+          status = Enum.GetName(typeof(GeneralObjectStatus), procedure.Status),
+        };
+        array.Add(item);
+      }
+      return array;
+    }
+
+    private object BuildResponse(Procedure procedure) {
+      return new {
+        uid = procedure.UID,
+        name = procedure.Name,
+        url = procedure.URL,
+        stage = procedure.Stage,
+        category = procedure.Category,
+        theme = procedure.Theme,
+        authority = BuildResponse(procedure.Authority),
+        legalInfo = procedure.Legal,
+        filingCondition = procedure.FilingCondition,
+        filingDocuments = procedure.FilingDocuments,
+        filingFee = procedure.FilingFee,
+        status = Enum.GetName(typeof(GeneralObjectStatus), procedure.Status),
+        statusNotes = procedure.StatusNotes,
+        msExcelNo = procedure.MSExcelNo
+      };
+    }
+
+    private object BuildResponse(Authority authority) {
+      return new {
+        entity = new {
+          uid = authority.Entity.UID,
+          name = authority.Entity.FullName,
+        },
+        office = new {
+          uid = authority.Office.UID,
+          name = authority.Office.FullName,
+        },
+        position = new {
+          uid = authority.Position.UID,
+          name = authority.Position.FullName,
+          phone = authority.Position.PhoneNumber
+        },
+        contact = new {
+          uid = authority.Position.Officer.UID,
+          name = authority.Position.Officer.FullName,
+          email = authority.Position.Officer.EMail
+        }
+      };
+    }
+
+    #endregion Private methods
 
   }  // class ProcedureController
 

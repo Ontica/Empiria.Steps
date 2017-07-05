@@ -128,9 +128,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
+    <Compile Include="Modeling\Authority.cs" />
+    <Compile Include="Modeling\FilingCondition.cs" />
+    <Compile Include="Modeling\FilingDocuments.cs" />
+    <Compile Include="Modeling\FilingFee.cs" />
+    <Compile Include="Modeling\LegalInfo.cs" />
     <Compile Include="Modeling\Position.cs" />
     <Compile Include="Modeling\Entity.cs" />
-    <Compile Include="Modeling\Authority.cs" />
+    <Compile Include="Modeling\Office.cs" />
     <Compile Include="Modeling\ProcessDefinition.cs" />
     <Compile Include="Modeling\Procedure.cs" />
     <Compile Include="Data\ProcedureData.cs" />

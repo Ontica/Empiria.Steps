@@ -44,17 +44,20 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
+
     [DataField("Name")]
     public string Name {
       get;
       private set;
     }
 
-    [DataField("Obligation")]
-    public string Obligation {
+
+    [DataField("Notes")]
+    public string Notes {
       get;
       private set;
     }
+
 
     [DataField("URL")]
     public string URL {
@@ -62,35 +65,6 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
-    [DataField("Entity")]
-    public string Entity {
-      get;
-      private set;
-    }
-
-    [DataField("Authority")]
-    public string Authority {
-      get;
-      private set;
-    }
-
-    [DataField("AuthorityContact")]
-    public string AuthorityContact {
-      get;
-      private set;
-    }
-
-    [DataField("IsRegulated")]
-    public bool IsRegulated {
-      get;
-      private set;
-    }
-
-    [DataField("Requirements")]
-    public string Requirements {
-      get;
-      private set;
-    }
 
     [DataField("Stage")]
     public string Stage {
@@ -98,11 +72,6 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
-    [DataField("StageInnerNo")]
-    public int StageInnerNo {
-      get;
-      private set;
-    }
 
     [DataField("Category")]
     public string Category {
@@ -110,80 +79,65 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
+
     [DataField("Theme")]
     public string Theme {
       get;
       private set;
     }
 
-    [DataField("ContractClausesAndAnnexes")]
-    public string ContractClausesAndAnnexes {
+
+    [DataObject]
+    public Authority Authority {
+      get;
+      private set;
+    } = Authority.Empty;
+
+
+    [DataObject]
+    public LegalInfo Legal {
+      get;
+      private set;
+    } = LegalInfo.Empty;
+
+    
+    [DataObject]
+    public FilingCondition FilingCondition {
+      get;
+      private set;
+    } = FilingCondition.Empty;
+
+    
+    [DataObject]
+    public FilingDocuments FilingDocuments {
+      get;
+      private set;
+    } = FilingDocuments.Empty;
+
+
+    [DataObject]
+    public FilingFee FilingFee {
+      get;
+      private set;
+    } = FilingFee.Empty;
+
+
+    [DataField("StatusNotes")]
+    public string StatusNotes {
       get;
       private set;
     }
 
-    [DataField("LegalBasis")]
-    public string LegalBasis {
+
+    [DataField("ProcedureStatus", Default = GeneralObjectStatus.Pending)]
+    public GeneralObjectStatus Status {
       get;
       private set;
     }
 
-    [DataField("StartsWhen")]
-    public string StartsWhen {
-      get;
-      private set;
-    }
 
-    [DataField("MaxComplianceTerm")]
-    public string MaxComplianceTerm {
-      get;
-      private set;
-    }
-
-    [DataField("EmissionLegalTerm")]
-    public string EmissionLegalTerm {
-      get;
-      private set;
-    }
-
-    [DataField("Deferrals")]
-    public string Deferrals {
-      get;
-      private set;
-    }
-
-    [DataField("DeferralsTerm")]
-    public string DeferralsTerm {
-      get;
-      private set;
-    }
-
-    [DataField("Cost")]
-    public string Cost {
-      get;
-      private set;
-    }
-
-    [DataField("CostLegalBasis")]
-    public string CostLegalBasis {
-      get;
-      private set;
-    }
-
-    [DataField("ValidityTermWhenEmitted")]
-    public string ValidityTermWhenEmitted {
-      get;
-      private set;
-    }
-
-    [DataField("SimultaneousDelivery")]
-    public string SimultaneousDelivery {
-      get;
-      private set;
-    }
-
-    [DataField("Notes")]
-    public string Notes {
+    [DataField("MSExcelNo")]
+    public int MSExcelNo {
       get;
       private set;
     }
@@ -214,29 +168,19 @@ namespace Empiria.Steps.Modeling {
 
     private void Load(JsonObject data) {
       this.Name = data.Get<string>("name", this.Name);
-      this.Obligation = data.Get<string>("obligation", this.Obligation);
+      this.Notes = data.Get<string>("notes", this.Notes);
       this.URL = data.Get<string>("url", this.URL);
-      this.Entity = data.Get<string>("entity", this.Entity);
-      this.Authority = data.Get<string>("authority", this.Authority);
-      this.AuthorityContact = data.Get<string>("authorityContact", this.AuthorityContact);
-      this.IsRegulated = data.Get<bool>("isRegulated", this.IsRegulated);
-      this.Requirements = data.Get<string>("requirements", this.Requirements);
+
       this.Stage = data.Get<string>("stage", this.Stage);
-      this.StageInnerNo = data.Get<int>("stageInnerNo", this.StageInnerNo);
       this.Category = data.Get<string>("category", this.Category);
       this.Theme = data.Get<string>("theme", this.Theme);
-      this.ContractClausesAndAnnexes = data.Get<string>("contractClausesAndAnnexes", this.ContractClausesAndAnnexes);
-      this.LegalBasis = data.Get<string>("legalBasis", this.LegalBasis);
-      this.StartsWhen = data.Get<string>("startsWhen", this.StartsWhen);
-      this.MaxComplianceTerm = data.Get<string>("maxComplianceTerm", this.MaxComplianceTerm);
-      this.EmissionLegalTerm = data.Get<string>("emissionLegalTerm", this.EmissionLegalTerm);
-      this.Deferrals = data.Get<string>("deferrals", this.Deferrals);
-      this.DeferralsTerm = data.Get<string>("deferralsTerm", this.DeferralsTerm);
-      this.Cost = data.Get<string>("cost", this.Cost);
-      this.CostLegalBasis = data.Get<string>("costLegalBasis", this.CostLegalBasis);
-      this.ValidityTermWhenEmitted = data.Get<string>("validityTermWhenEmitted", this.ValidityTermWhenEmitted);
-      this.SimultaneousDelivery = data.Get<string>("simultaneousDelivery", this.SimultaneousDelivery);
-      this.Notes = data.Get<string>("notes", this.Notes);
+
+      this.Authority = Authority.Parse(data.Slice("authority"));
+      this.Legal = LegalInfo.Parse(data.Slice("legalInfo"));
+      this.FilingCondition = FilingCondition.Parse(data.Slice("filingCondition"));
+      this.FilingDocuments = FilingDocuments.Parse(data.Slice("filingDocuments"));
+      this.FilingFee = FilingFee.Parse(data.Slice("filingFee"));
+
     }
 
     #endregion Private methods

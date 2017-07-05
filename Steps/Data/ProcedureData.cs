@@ -17,20 +17,28 @@ namespace Empiria.Steps.Modeling {
   static internal class ProcedureData {
 
     static internal FixedList<Procedure> GetProcedureList(string filter = "") {
-      DataTable table = GeneralDataOperations.GetEntities("BPMProcedures",
-                                                          filter, "Stage, StageInnerNo, Name");
+      DataTable table = GeneralDataOperations.GetEntities("vwBPMProcedures",
+                                                          filter, "Stage, MSExcelNo, Name");
 
       return BaseObject.ParseList<Procedure>(table).ToFixedList();
     }
 
     static internal void WriteProcedure(Procedure o) {
       var op = DataOperation.Parse("writeBPMProcedure",
-                        o.Id, o.UID, o.Name, o.Obligation, o.URL, o.Entity,
-                        o.Authority, o.AuthorityContact, o.IsRegulated, o.Requirements,
-                        o.Stage, o.StageInnerNo, o.Category, o.Theme, o.ContractClausesAndAnnexes,
-                        o.LegalBasis, o.StartsWhen, o.MaxComplianceTerm, o.EmissionLegalTerm,
-                        o.Deferrals, o.DeferralsTerm, o.Cost, o.CostLegalBasis,
-                        o.ValidityTermWhenEmitted, o.SimultaneousDelivery, o.Notes);
+                        o.Id, o.UID, o.Name, o.Notes, o.URL,
+                        o.Stage, o.Category, o.Theme,
+                        o.Authority.Entity.Id, o.Authority.Office.Id, o.Authority.Position.Id,
+                        o.Legal.IsRegulated, o.Legal.Obligation, o.Legal.LegalBasis,
+                        o.FilingCondition.StartsWhen, o.FilingCondition.StartsWhenTrigger,
+                        o.FilingCondition.MaxFilingTerm, o.FilingCondition.IssuanceLegalTerm,
+                        o.FilingCondition.HowToFile, o.FilingCondition.AllowsDeferrals,
+                        o.FilingCondition.DeferralsTermNotes, o.FilingCondition.DeferralsConditionNotes,
+                        o.FilingCondition.ValidityTermWhenIssued, o.FilingCondition.SimultaneousDelivery,
+                        o.FilingFee.FilingFeeType, o.FilingFee.FeeAmount,
+                        o.FilingFee.Rule, o.FilingFee.LegalBasis, o.StatusNotes, (char) o.Status,
+
+                        o.Legal.ContractClausesAndAnnexes, o.FilingDocuments.Notes, o.FilingCondition.StartsWhenNotes,
+                        o.FilingCondition.MaxFilingTermNotes, o.FilingCondition.IssuanceLegalTermNotes, o.MSExcelNo);
 
       DataWriter.Execute(op);
     }

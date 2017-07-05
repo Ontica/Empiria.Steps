@@ -81,12 +81,12 @@
     {
       "type": "WebApi.Client",
       "key": "Default.WebApiServer",
-      "value": "Microservices"
+      "value": "Steps"
     },
     {
       "type": "WebApi.Client",
-      "key": "WebApiServer.Microservices",
-      "value": "{{WEBAPISERVER.MICROSERVICES}}"
+      "key": "WebApiServer.Steps",
+      "value": "{{WEBAPISERVER.STEPS}}"
     },
     {
       "type": "WebApi.Client",
