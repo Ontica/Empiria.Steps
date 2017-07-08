@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using Empiria.Json;
 
 using Empiria.Contacts;
 
@@ -37,9 +36,9 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    public string PhoneNumber {
+    public string Phone {
       get {
-        return base.ExtendedData.Get("PhoneNumber", "No determinado");
+        return base.ExtendedData.Get("Phone", "No determinado");
       }
     }
 

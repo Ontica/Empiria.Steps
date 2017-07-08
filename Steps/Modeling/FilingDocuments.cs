@@ -39,7 +39,7 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    [DataField("RequirementsText")]
+    [DataField("RequirementsNotes")]
     public string Notes {
       get;
       private set;

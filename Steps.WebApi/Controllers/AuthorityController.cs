@@ -129,7 +129,7 @@ namespace Empiria.Steps.WebApi {
       return new {
         uid = position.UID,
         name = position.FullName,
-        phoneNumber = position.PhoneNumber,
+        phone = position.Phone,
         officer = new {
           uid = position.Officer.UID,
           name = position.Officer.FullName,

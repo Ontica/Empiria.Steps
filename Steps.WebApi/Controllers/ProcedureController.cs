@@ -105,6 +105,8 @@ namespace Empiria.Steps.WebApi {
         var item = new {
           uid = procedure.UID,
           name = procedure.Name,
+          shortName = procedure.ShortName,
+          code = procedure.Code,
           url = procedure.URL,
           stage = procedure.Stage,
           category = procedure.Category,
@@ -122,12 +124,14 @@ namespace Empiria.Steps.WebApi {
       return new {
         uid = procedure.UID,
         name = procedure.Name,
+        shortName = procedure.ShortName,
+        code = procedure.Code,
         url = procedure.URL,
         stage = procedure.Stage,
         category = procedure.Category,
         theme = procedure.Theme,
         authority = BuildResponse(procedure.Authority),
-        legalInfo = procedure.Legal,
+        legalInfo = procedure.LegalInfo,
         filingCondition = procedure.FilingCondition,
         filingDocuments = procedure.FilingDocuments,
         filingFee = procedure.FilingFee,
@@ -150,7 +154,7 @@ namespace Empiria.Steps.WebApi {
         position = new {
           uid = authority.Position.UID,
           name = authority.Position.FullName,
-          phone = authority.Position.PhoneNumber
+          phone = authority.Position.Phone
         },
         contact = new {
           uid = authority.Position.Officer.UID,

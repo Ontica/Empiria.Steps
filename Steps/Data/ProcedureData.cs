@@ -25,20 +25,22 @@ namespace Empiria.Steps.Modeling {
 
     static internal void WriteProcedure(Procedure o) {
       var op = DataOperation.Parse("writeBPMProcedure",
-                        o.Id, o.UID, o.Name, o.Notes, o.URL,
-                        o.Stage, o.Category, o.Theme,
-                        o.Authority.Entity.Id, o.Authority.Office.Id, o.Authority.Position.Id,
-                        o.Legal.IsRegulated, o.Legal.Obligation, o.Legal.LegalBasis,
-                        o.FilingCondition.StartsWhen, o.FilingCondition.StartsWhenTrigger,
-                        o.FilingCondition.MaxFilingTerm, o.FilingCondition.IssuanceLegalTerm,
-                        o.FilingCondition.HowToFile, o.FilingCondition.AllowsDeferrals,
-                        o.FilingCondition.DeferralsTermNotes, o.FilingCondition.DeferralsConditionNotes,
-                        o.FilingCondition.ValidityTermWhenIssued, o.FilingCondition.SimultaneousDelivery,
-                        o.FilingFee.FilingFeeType, o.FilingFee.FeeAmount,
-                        o.FilingFee.Rule, o.FilingFee.LegalBasis, o.StatusNotes, (char) o.Status,
+                o.Id, o.UID, o.Name, o.ShortName, o.Code, o.Notes, o.URL,
+                o.Stage, o.Category, o.Theme,
+                o.Authority.Entity.Id, o.Authority.Office.Id, o.Authority.Position.Id,
+                o.LegalInfo.IsRegulated, o.LegalInfo.Obligation, o.LegalInfo.LegalBasis,
+                o.FilingCondition.StartsWhen, o.FilingCondition.StartsWhenNotes, o.FilingCondition.StartsWhenTrigger,
+                o.FilingCondition.MaxFilingTerm, o.FilingCondition.MaxFilingTermNotes,
+                o.FilingCondition.IssuanceLegalTerm, o.FilingCondition.IssuanceLegalTermNotes,
 
-                        o.Legal.ContractClausesAndAnnexes, o.FilingDocuments.Notes, o.FilingCondition.StartsWhenNotes,
-                        o.FilingCondition.MaxFilingTermNotes, o.FilingCondition.IssuanceLegalTermNotes, o.MSExcelNo);
+                o.FilingCondition.HowToFile, o.FilingCondition.AllowsDeferrals,
+                o.FilingCondition.DeferralsTermNotes, o.FilingCondition.DeferralsConditionNotes,
+                o.FilingDocuments.Notes,
+                o.FilingCondition.ValidityTermWhenIssued, o.FilingCondition.SimultaneousDelivery,
+                o.FilingFee.FilingFeeType, o.FilingFee.FeeAmount,
+                o.FilingFee.Rule, o.FilingFee.LegalBasis, o.Keywords, o.StatusNotes, (char) o.Status,
+
+                o.LegalInfo.ContractClausesAndAnnexes, o.MSExcelNo);
 
       DataWriter.Execute(op);
     }

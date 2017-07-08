@@ -61,6 +61,13 @@ namespace Empiria.Steps.Modeling {
     } = String.Empty;
 
 
+    [DataField("StartsWhenNotes")]
+    public string StartsWhenNotes {
+      get;
+      private set;
+    } = String.Empty;
+
+
     [DataField("StartsWhenTrigger")]
     public string StartsWhenTrigger {
       get;
@@ -74,11 +81,26 @@ namespace Empiria.Steps.Modeling {
     } = String.Empty;
 
 
+    [DataField("MaxFilingTermNotes")]
+    public string MaxFilingTermNotes {
+      get;
+      private set;
+    } = String.Empty;
+
+
     [DataField("IssuanceLegalTerm")]
     public string IssuanceLegalTerm {
       get;
       private set;
     } = String.Empty;
+
+
+    [DataField("IssuanceLegalTermNotes")]
+    public string IssuanceLegalTermNotes {
+      get;
+      private set;
+    } = String.Empty;
+
 
     [DataField("HowToFile")]
     public string HowToFile {
@@ -94,14 +116,14 @@ namespace Empiria.Steps.Modeling {
     } = String.Empty;
 
 
-    [DataField("DeferralsTermText")]
+    [DataField("DeferralsTermNotes")]
     public string DeferralsTermNotes {
       get;
       private set;
     } = String.Empty;
 
 
-    [DataField("DeferralsConditionText")]
+    [DataField("DeferralsConditionNotes")]
     public string DeferralsConditionNotes {
       get;
       private set;
@@ -117,27 +139,6 @@ namespace Empiria.Steps.Modeling {
 
     [DataField("SimultaneousDelivery")]
     public string SimultaneousDelivery {
-      get;
-      private set;
-    } = String.Empty;
-
-
-    [DataField("StartsWhenText")]
-    public string StartsWhenNotes {
-      get;
-      private set;
-    } = String.Empty;
-
-
-    [DataField("MaxFilingTermText")]
-    public string MaxFilingTermNotes {
-      get;
-      private set;
-    } = String.Empty;
-
-
-    [DataField("IssuanceLegalTermText")]
-    public string IssuanceLegalTermNotes {
       get;
       private set;
     } = String.Empty;

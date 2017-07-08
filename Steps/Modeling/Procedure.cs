@@ -51,6 +51,17 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
+    [DataField("ShortName")]
+    public string ShortName {
+      get;
+      private set;
+    }
+
+    [DataField("Code")]
+    public string Code {
+      get;
+      private set;
+    }
 
     [DataField("Notes")]
     public string Notes {
@@ -58,6 +69,13 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
+    public string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.Theme, this.Stage,
+                                           this.Authority.Entity.Keywords,
+                                           this.LegalInfo.LegalBasis);
+      }
+    }
 
     [DataField("URL")]
     public string URL {
@@ -95,19 +113,19 @@ namespace Empiria.Steps.Modeling {
 
 
     [DataObject]
-    public LegalInfo Legal {
+    public LegalInfo LegalInfo {
       get;
       private set;
     } = LegalInfo.Empty;
 
-    
+
     [DataObject]
     public FilingCondition FilingCondition {
       get;
       private set;
     } = FilingCondition.Empty;
 
-    
+
     [DataObject]
     public FilingDocuments FilingDocuments {
       get;
@@ -176,7 +194,7 @@ namespace Empiria.Steps.Modeling {
       this.Theme = data.Get<string>("theme", this.Theme);
 
       this.Authority = Authority.Parse(data.Slice("authority"));
-      this.Legal = LegalInfo.Parse(data.Slice("legalInfo"));
+      this.LegalInfo = LegalInfo.Parse(data.Slice("legalInfo"));
       this.FilingCondition = FilingCondition.Parse(data.Slice("filingCondition"));
       this.FilingDocuments = FilingDocuments.Parse(data.Slice("filingDocuments"));
       this.FilingFee = FilingFee.Parse(data.Slice("filingFee"));
