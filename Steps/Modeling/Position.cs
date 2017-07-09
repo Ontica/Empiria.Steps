@@ -55,6 +55,6 @@ namespace Empiria.Steps.Modeling {
 
     #endregion Properties
 
-  }  // class Authority
+  }  // class Position
 
 }  // namespace Empiria.Steps.Modeling

@@ -135,6 +135,7 @@ namespace Empiria.Steps.WebApi {
         filingCondition = procedure.FilingCondition,
         filingDocuments = procedure.FilingDocuments,
         filingFee = procedure.FilingFee,
+        notes = procedure.Notes,
         status = Enum.GetName(typeof(GeneralObjectStatus), procedure.Status),
         statusNotes = procedure.StatusNotes,
         msExcelNo = procedure.MSExcelNo
