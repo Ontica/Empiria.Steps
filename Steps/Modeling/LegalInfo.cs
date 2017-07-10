@@ -28,8 +28,11 @@ namespace Empiria.Steps.Modeling {
       o.Obligation = data.Get<string>("obligation", o.Obligation);
       o.LegalBasis = data.Get<string>("legalBasis", o.LegalBasis);
 
-      o.ContractClausesAndAnnexes = data.Get<string>("contractClausesAndAnnexes",
-                                                      o.ContractClausesAndAnnexes);
+      o.Ronda13Consorcio = data.Get<string>("ronda13Consorcio", o.Ronda13Consorcio);
+      o.Ronda13Individual = data.Get<string>("ronda13Individual", o.Ronda13Individual);
+      o.Ronda14Consorcio = data.Get<string>("ronda14Consorcio", o.Ronda14Consorcio);
+      o.Ronda14Individual = data.Get<string>("ronda14Individual", o.Ronda14Individual);
+
       return o;
     }
 
@@ -64,8 +67,29 @@ namespace Empiria.Steps.Modeling {
     } = String.Empty;
 
 
-    [DataField("ContractClausesAndAnnexes")]
-    public string ContractClausesAndAnnexes {
+    [DataField("Ronda13Consorcio")]
+    public string Ronda13Consorcio {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("Ronda13Individual")]
+    public string Ronda13Individual {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("Ronda14Consorcio")]
+    public string Ronda14Consorcio {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("Ronda14Individual")]
+    public string Ronda14Individual {
       get;
       private set;
     } = String.Empty;

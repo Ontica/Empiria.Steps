@@ -186,6 +186,8 @@ namespace Empiria.Steps.Modeling {
 
     private void Load(JsonObject data) {
       this.Name = data.Get<string>("name", this.Name);
+      this.ShortName = data.Get<string>("shortName", this.Name);
+      this.Code = data.Get<string>("code", this.Code);
       this.Notes = data.Get<string>("notes", this.Notes);
       this.URL = data.Get<string>("url", this.URL);
 
@@ -198,7 +200,6 @@ namespace Empiria.Steps.Modeling {
       this.FilingCondition = FilingCondition.Parse(data.Slice("filingCondition"));
       this.FilingDocuments = FilingDocuments.Parse(data.Slice("filingDocuments"));
       this.FilingFee = FilingFee.Parse(data.Slice("filingFee"));
-
     }
 
     #endregion Private methods

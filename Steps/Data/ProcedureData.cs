@@ -40,7 +40,9 @@ namespace Empiria.Steps.Modeling {
                 o.FilingFee.FilingFeeType, o.FilingFee.FeeAmount,
                 o.FilingFee.Rule, o.FilingFee.LegalBasis, o.Keywords, o.StatusNotes, (char) o.Status,
 
-                o.LegalInfo.ContractClausesAndAnnexes, o.MSExcelNo);
+                o.LegalInfo.Ronda13Consorcio, o.LegalInfo.Ronda13Individual,
+                o.LegalInfo.Ronda14Consorcio, o.LegalInfo.Ronda14Individual,
+                o.MSExcelNo);
 
       DataWriter.Execute(op);
     }
