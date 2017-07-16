@@ -24,7 +24,7 @@ namespace Empiria.Steps.WebApi {
 
     #region Public APIs
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     [Route("v1/process-definitions")]
     public CollectionModel GetProcessDefinitionList() {
       try {
@@ -37,7 +37,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     [Route("v1/process-definitions/{processDef_ID}")]
     public SingleObjectModel GetProcessDefinition(string processDef_ID) {
       try {
@@ -52,7 +52,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpPost, AllowAnonymous]
+    [HttpPost]
     [Route("v1/process-definitions")]
     public SingleObjectModel CreateProcessDefinition([FromBody] object body) {
       try {
@@ -71,7 +71,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpPut, HttpPatch, AllowAnonymous]
+    [HttpPut, HttpPatch]
     [Route("v1/process-definitions/{processDef_ID}")]
     public SingleObjectModel UpdateProcessDefinition(string processDef_ID, [FromBody] object body) {
       try {

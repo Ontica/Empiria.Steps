@@ -23,7 +23,7 @@ namespace Empiria.Steps.WebApi {
 
     #region Public APIs
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     [Route("v1/modeling/entities")]
     public CollectionModel GetEntitiesList([FromUri] string filter = "") {
       try {
@@ -36,7 +36,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     [Route("v1/modeling/entities/{entityUID}")]
     public SingleObjectModel GetEntity([FromUri] string entityUID) {
       try {
@@ -51,7 +51,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     [Route("v1/modeling/offices/{officeUID}")]
     public SingleObjectModel GetOffice([FromUri] string officeUID) {
       try {

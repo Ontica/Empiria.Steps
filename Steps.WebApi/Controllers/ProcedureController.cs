@@ -24,7 +24,7 @@ namespace Empiria.Steps.WebApi {
 
     #region Public APIs
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     [Route("v1/procedures")]
     public CollectionModel GetProceduresList([FromUri] string filter = "") {
       try {
@@ -37,7 +37,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
     [Route("v1/procedures/{procedure_UID}")]
     public SingleObjectModel GetProcedure([FromUri] string procedure_UID) {
       try {
@@ -52,7 +52,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpPost, AllowAnonymous]
+    [HttpPost]
     [Route("v1/procedures")]
     public SingleObjectModel CreateProcedure([FromBody] object body) {
       try {
@@ -71,7 +71,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpPut, HttpPatch, AllowAnonymous]
+    [HttpPut, HttpPatch]
     [Route("v1/procedures/{procedure_UID}")]
     public SingleObjectModel UpdateProcedure([FromUri] string procedure_UID,
                                              [FromBody] object body) {
