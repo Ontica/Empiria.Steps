@@ -24,7 +24,7 @@ namespace Empiria.Steps.Modeling {
     static internal LegalInfo Parse(JsonObject data) {
       var o = new LegalInfo();
 
-      o.IsRegulated = data.Get<bool>("isRegulated", o.IsRegulated);
+      o.RegulationStatus = data.Get<string>("regulationStatus", o.RegulationStatus);
       o.Obligation = data.Get<string>("obligation", o.Obligation);
       o.LegalBasis = data.Get<string>("legalBasis", o.LegalBasis);
 
@@ -46,11 +46,11 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    [DataField("IsRegulated")]
-    public bool IsRegulated {
+    [DataField("RegulationStatus")]
+    public string RegulationStatus {
       get;
       private set;
-    } = true;
+    } = "Dependencia";
 
 
     [DataField("Obligation")]

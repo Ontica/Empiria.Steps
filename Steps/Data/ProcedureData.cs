@@ -28,7 +28,7 @@ namespace Empiria.Steps.Modeling {
                 o.Id, o.UID, o.Name, o.ShortName, o.Code, o.Notes, o.URL,
                 o.Stage, o.Category, o.Theme,
                 o.Authority.Entity.Id, o.Authority.Office.Id, o.Authority.Position.Id,
-                o.LegalInfo.IsRegulated, o.LegalInfo.Obligation, o.LegalInfo.LegalBasis,
+                o.LegalInfo.RegulationStatus, o.LegalInfo.Obligation, o.LegalInfo.LegalBasis,
                 o.FilingCondition.StartsWhen, o.FilingCondition.StartsWhenNotes, o.FilingCondition.StartsWhenTrigger,
                 o.FilingCondition.MaxFilingTerm, o.FilingCondition.MaxFilingTermNotes,
                 o.FilingCondition.IssuanceLegalTerm, o.FilingCondition.IssuanceLegalTermNotes,
