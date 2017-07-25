@@ -128,6 +128,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
+    <Compile Include="Legal\RelatedProcedure.cs" />
+    <Compile Include="Legal\Clause.cs" />
+    <Compile Include="Legal\LegalDocumentType.cs" />
+    <Compile Include="Legal\Contract.cs" />
+    <Compile Include="Legal\ContractsData.cs" />
     <Compile Include="Modeling\Authority.cs" />
     <Compile Include="Modeling\FilingCondition.cs" />
     <Compile Include="Modeling\FilingDocuments.cs" />
