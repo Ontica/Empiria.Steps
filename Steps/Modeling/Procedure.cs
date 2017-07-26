@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
+using Empiria.DataTypes;
 using Empiria.Json;
 
 namespace Empiria.Steps.Modeling {
@@ -36,6 +38,22 @@ namespace Empiria.Steps.Modeling {
 
     static public FixedList<Procedure> GetList(string filter = "") {
       return ProcedureData.GetProcedureList(filter);
+    }
+
+    static public FixedList<string> Themes {
+      get {
+        var list = GeneralList.Parse("Steps.ProcedureThemes.List");
+
+        return list.GetItems<string>();
+      }
+    }
+
+    static public FixedList<KeyValue> TimeValueTypes {
+      get {
+        var list = KeyValueList.Parse("Steps.TimeValueTypes.List");
+
+        return list.GetItems();
+      }
     }
 
     #endregion Constructors and parsers
