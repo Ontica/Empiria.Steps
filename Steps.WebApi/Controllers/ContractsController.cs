@@ -84,6 +84,7 @@ namespace Empiria.Steps.WebApi {
                                                [FromUri] string clauseUID) {
       try {
         var contract = Contract.Parse(contractUID);
+
         Clause clause = contract.GetClause(clauseUID);
 
         return new SingleObjectModel(this.Request, BuildResponseFull(clause),
@@ -124,6 +125,7 @@ namespace Empiria.Steps.WebApi {
                                                   [FromBody] object body) {
       try {
         base.RequireBody(body);
+
         var bodyAsJson = JsonObject.Parse(body);
 
         var contract = Contract.Parse(contractUID);
@@ -151,6 +153,7 @@ namespace Empiria.Steps.WebApi {
                                                                   [FromBody] object body) {
       try {
         base.RequireBody(body);
+
         var bodyAsJson = JsonObject.Parse(body);
 
         var contract = Contract.Parse(contractUID);
@@ -176,6 +179,7 @@ namespace Empiria.Steps.WebApi {
                                                                   [FromBody] object body) {
       try {
         base.RequireBody(body);
+
         var bodyAsJson = JsonObject.Parse(body);
 
         var contract = Contract.Parse(contractUID);
@@ -255,7 +259,12 @@ namespace Empiria.Steps.WebApi {
         sourcePageNo = documentItem.DocumentPageNo,
         notes = documentItem.Notes,
         status = documentItem.Status,
-        relatedProcedures = BuildResponse(documentItem.RelatedProcedures)
+        relatedProcedures = BuildResponse(documentItem.RelatedProcedures),
+        contract = new {
+          uid = documentItem.Contract.UID,
+          name = documentItem.Contract.Name,
+          url = documentItem.Contract.Url
+        }
       };
     }
 
