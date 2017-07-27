@@ -32,6 +32,11 @@ namespace Empiria.Steps.Legal {
     }
 
 
+    static internal Contract Parse(int id) {
+      return BaseObject.ParseId<Contract>(id);
+    }
+
+
     static public Contract Parse(string uid) {
       return BaseObject.ParseKey<Contract>(uid);
     }
@@ -109,6 +114,10 @@ namespace Empiria.Steps.Legal {
                                    $"was not found in contract with uid = '{this.UID}'");
 
       return item;
+    }
+
+    public Clause TryGetClause(Predicate<Clause> predicate) {
+      return clausesList.Value.Find(predicate);
     }
 
     #endregion Public methods

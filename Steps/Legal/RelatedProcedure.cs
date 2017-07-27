@@ -30,6 +30,9 @@ namespace Empiria.Steps.Legal {
       Assertion.AssertObject(data, "data");
 
       this.LegalDocumentItemId = legalDocumentItem.Id;
+
+      this.AssertIsValid(data);
+
       this.Load(data);
     }
 
@@ -62,6 +65,12 @@ namespace Empiria.Steps.Legal {
       private set;
     }
 
+
+    internal Clause Clause {
+      get {
+        return Clause.Parse(this.LegalDocumentItemId);
+      }
+    }
 
     [DataField("ProcedureId")]
     private int ProcedureId {
@@ -149,6 +158,7 @@ namespace Empiria.Steps.Legal {
     public void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
+      this.AssertIsValid(data);
       this.Load(data);
 
       this.Save();
@@ -157,6 +167,25 @@ namespace Empiria.Steps.Legal {
     #endregion Public methods
 
     #region Private methods
+
+    private void AssertIsValid(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+
+      Validate.HasValue(data, "procedure/uid",
+                        "Requiero conocer el uid del trámite relacionado a esta cláusula.");
+
+      var procedureUID = data.GetClean("procedure/uid");
+
+      if (this.IsNew) {
+        var relatedProcedure = this.Clause.TryGetRelatedProcedure((x) => x.Procedure.UID.Equals(procedureUID));
+
+        Validate.AlreadyExists(relatedProcedure, $"Esta claúsula ya tiene asociado ese mismo trámite.");
+      } else {
+        var relatedProcedure = this.Clause.TryGetRelatedProcedure((x) => x.Procedure.UID.Equals(procedureUID) &&
+                                                                         x.Id != this.Id);
+        Validate.AlreadyExists(relatedProcedure, $"La claúsula ya tiene relacionado ese mismo trámite.");
+      }
+    }
 
     private void Load(JsonObject data) {
       this.ProcedureId = Procedure.Parse(data.Get<string>("procedure/uid")).Id;

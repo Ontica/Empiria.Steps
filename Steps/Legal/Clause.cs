@@ -34,7 +34,15 @@ namespace Empiria.Steps.Legal {
       Assertion.AssertObject(data, "data");
 
       this.ContractId = legalDocument.Id;
+
+      this.AssertIsValid(data);
+
       this.Load(data);
+    }
+
+
+    static internal Clause Parse(int id) {
+      return BaseObject.ParseId<Clause>(id);
     }
 
 
@@ -71,6 +79,12 @@ namespace Empiria.Steps.Legal {
       private set;
     }
 
+
+    public Contract Contract {
+      get {
+        return Contract.Parse(this.ContractId);
+      }
+    }
 
     [DataField("ItemTypeId")]
     public int ItemTypeId {
@@ -171,8 +185,14 @@ namespace Empiria.Steps.Legal {
     }
 
 
+    public RelatedProcedure TryGetRelatedProcedure(Predicate<RelatedProcedure> predicate) {
+      return procedures.Value.Find(predicate);
+    }
+
     public void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");
+
+      this.AssertIsValid(data);
 
       this.Load(data);
 
@@ -183,9 +203,28 @@ namespace Empiria.Steps.Legal {
 
     #region Private methods
 
+    private void AssertIsValid(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+
+      Validate.HasValue(data, "clauseNo", "Requiero conocer el número de cláusula o anexo.");
+      Validate.HasValue(data, "title", "Necesito el nombre que describe a la cláusula o anexo.");
+
+      var clauseNo = data.GetClean("clauseNo");
+
+      if (this.IsNew) {
+        var clause = this.Contract.TryGetClause((x) => x.Number.Equals(clauseNo));
+        Validate.AlreadyExists(clause, $"Este contrato ya contiene una cláusula con el número '{clauseNo}'.");
+      } else {
+        var clause = this.Contract.TryGetClause((x) => x.Number.Equals(clauseNo) &&
+                                                       x.Id != this.Id);
+        Validate.AlreadyExists(clause, $"En este contrato ya existe otra cláusula con el número '{clauseNo}'.");
+      }
+    }
+
+
     private void Load(JsonObject data) {
-      this.Number = data.Get<string>("clauseNo", this.Number);
-      this.Title = data.Get<string>("title", this.Title);
+      this.Number = data.GetClean("clauseNo");
+      this.Title = data.GetClean("title");
       this.Text = data.Get<string>("text", this.Text);
       this.DocumentPageNo = data.Get<int>("sourcePageNo", this.DocumentPageNo);
       this.Notes = data.Get<string>("notes", this.Notes);
