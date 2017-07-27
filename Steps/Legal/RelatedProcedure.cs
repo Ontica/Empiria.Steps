@@ -93,15 +93,15 @@ namespace Empiria.Steps.Legal {
     } = -1;
 
 
-    [DataField("MaxFilingTermType")]
-    public string MaxFilingTermType {
+    [DataField("MaxFilingTermType", Default = TermTimeUnit.Undefined)]
+    public TermTimeUnit MaxFilingTermType {
       get;
       private set;
     }
 
 
-    [DataField("StartsWhen")]
-    public string StartsWhen {
+    [DataField("StartsWhen", Default = StartsWhen.Undefined)]
+    public StartsWhen StartsWhen {
       get;
       private set;
     }
@@ -189,10 +189,12 @@ namespace Empiria.Steps.Legal {
 
     private void Load(JsonObject data) {
       this.ProcedureId = Procedure.Parse(data.Get<string>("procedure/uid")).Id;
+
       this.MaxFilingTerm = data.Get<int>("maxFilingTerm", this.MaxFilingTerm);
-      this.MaxFilingTermType = data.Get<string>("maxFilingTermType", this.MaxFilingTermType);
-      this.StartsWhen = data.Get<string>("startsWhen", this.StartsWhen);
+      this.MaxFilingTermType = data.Get<TermTimeUnit>("maxFilingTermType", this.MaxFilingTermType);
+      this.StartsWhen = data.Get<StartsWhen>("startsWhen", this.StartsWhen);
       this.StartsWhenTrigger = data.Get<string>("startsWhenTrigger", this.StartsWhenTrigger);
+
       this.Notes = data.Get<string>("notes", this.Notes);
       this.Status = data.Get<GeneralObjectStatus>("status", this.Status);
     }

@@ -24,7 +24,7 @@ namespace Empiria.Steps.Modeling {
     static internal FilingCondition Parse(JsonObject data) {
       var o = new FilingCondition();
 
-      o.StartsWhen = data.Get<string>("startsWhen", o.StartsWhen);
+      o.StartsWhen = data.Get<StartsWhen>("startsWhen", o.StartsWhen);
       o.StartsWhenTrigger = data.Get<string>("startsWhenTrigger", o.StartsWhenTrigger);
 
       o.MaxFilingTerm = data.Get<string>("maxFilingTerm", o.MaxFilingTerm);
@@ -54,11 +54,11 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    [DataField("StartsWhen")]
-    public string StartsWhen {
+    [DataField("StartsWhen", Default = StartsWhen.Undefined)]
+    public StartsWhen StartsWhen {
       get;
       private set;
-    } = String.Empty;
+    }
 
 
     [DataField("StartsWhenNotes")]

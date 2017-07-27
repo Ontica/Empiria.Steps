@@ -25,10 +25,24 @@ namespace Empiria.Steps.WebApi {
     #region Public APIs
 
     [HttpGet]
+    [Route("v1/catalogues/procedure-starts-when")]
+    public CollectionModel GetProcedureStartsWhenList() {
+      try {
+        var list = Procedure.StartsWhenList;
+
+        return new CollectionModel(this.Request, list, typeof(StartsWhen).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/catalogues/procedure-themes")]
     public CollectionModel GetProcedureThemesList() {
       try {
-        var list = Procedure.Themes;
+        var list = Procedure.ThemesList;
 
         return new CollectionModel(this.Request, list, "Steps.Procedure.Theme");
 
@@ -39,12 +53,12 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/catalogues/time-value-types")]
-    public CollectionModel GetTimeValueTypesList() {
+    [Route("v1/catalogues/term-time-units")]
+    public CollectionModel GetTermTimeUnitsList() {
       try {
-        var list = Procedure.TimeValueTypes;
+        var list = Procedure.TermTimeUnitsList;
 
-        return new CollectionModel(this.Request, list, "Steps.Procedure.TimeValueType");
+        return new CollectionModel(this.Request, list, typeof(TermTimeUnit).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

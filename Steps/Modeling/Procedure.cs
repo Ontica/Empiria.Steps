@@ -40,7 +40,15 @@ namespace Empiria.Steps.Modeling {
       return ProcedureData.GetProcedureList(filter);
     }
 
-    static public FixedList<string> Themes {
+    static public FixedList<KeyValue> StartsWhenList {
+      get {
+        var list = KeyValueList.Parse("Steps.ProcedureStartsWhen.List");
+
+        return list.GetItems();
+      }
+    }
+
+    static public FixedList<string> ThemesList {
       get {
         var list = GeneralList.Parse("Steps.ProcedureThemes.List");
 
@@ -48,9 +56,9 @@ namespace Empiria.Steps.Modeling {
       }
     }
 
-    static public FixedList<KeyValue> TimeValueTypes {
+    static public FixedList<KeyValue> TermTimeUnitsList {
       get {
-        var list = KeyValueList.Parse("Steps.TimeValueTypes.List");
+        var list = KeyValueList.Parse("Steps.TermTimeUnits.List");
 
         return list.GetItems();
       }
