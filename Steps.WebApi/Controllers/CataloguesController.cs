@@ -25,6 +25,20 @@ namespace Empiria.Steps.WebApi {
     #region Public APIs
 
     [HttpGet]
+    [Route("v1/catalogues/activity-types")]
+    public CollectionModel GetActivityTypesList() {
+      try {
+        var list = ActivityType.GetList();
+
+        return new CollectionModel(this.Request, BuildResponse(list),
+                                   typeof(ActivityType).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpGet]
     [Route("v1/catalogues/procedure-starts-when")]
     public CollectionModel GetProcedureStartsWhenList() {
       try {
@@ -66,6 +80,23 @@ namespace Empiria.Steps.WebApi {
     }
 
     #endregion Public APIs
+
+    #region Private methods
+
+    private ICollection BuildResponse(FixedList<ActivityType> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var activityType in list) {
+        var item = new {
+          uid = activityType.UID,
+          name = activityType.Name,
+        };
+        array.Add(item);
+      }
+      return array;
+    }
+
+    #endregion Private methods
 
   }  // class CataloguesController
 

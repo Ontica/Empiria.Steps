@@ -145,6 +145,7 @@
     <Compile Include="Modeling\Procedure.cs" />
     <Compile Include="Data\ProcedureData.cs" />
     <Compile Include="Data\ProcessDefinitionData.cs" />
+    <Compile Include="RootTypes\ActivityType.cs" />
     <Compile Include="RootTypes\TermTimeUnit.cs" />
     <Compile Include="RootTypes\StartsWhen.cs" />
   </ItemGroup>
