@@ -37,10 +37,19 @@ namespace Empiria.Steps.Legal {
     }
 
 
+    static public RelatedProcedure Parse(int id) {
+      return BaseObject.ParseId<RelatedProcedure>(id);
+    }
+
     static public RelatedProcedure Parse(string uid) {
       return BaseObject.ParseKey<RelatedProcedure>(uid);
     }
 
+    static public RelatedProcedure Empty {
+      get {
+        return BaseObject.ParseEmpty<RelatedProcedure>();
+      }
+    }
 
     static internal List<RelatedProcedure> GetList(Clause documentItemId) {
       string filter = $"LegalDocumentItemId = {documentItemId.Id}";

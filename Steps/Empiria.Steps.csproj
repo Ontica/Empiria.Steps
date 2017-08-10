@@ -127,6 +127,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectManagement\ProjectData.cs" />
     <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
     <Compile Include="Legal\RelatedProcedure.cs" />
     <Compile Include="Legal\Clause.cs" />
@@ -145,6 +146,11 @@
     <Compile Include="Modeling\Procedure.cs" />
     <Compile Include="Data\ProcedureData.cs" />
     <Compile Include="Data\ProcessDefinitionData.cs" />
+    <Compile Include="ProjectManagement\ProjectItem.cs" />
+    <Compile Include="ProjectManagement\ProjectItemType.cs" />
+    <Compile Include="ProjectManagement\ProjectType.cs" />
+    <Compile Include="ProjectManagement\ResourceType.cs" />
+    <Compile Include="ProjectManagement\Resource.cs" />
     <Compile Include="ProjectManagement\Project.cs" />
     <Compile Include="RootTypes\ActivityType.cs" />
     <Compile Include="RootTypes\TermTimeUnit.cs" />

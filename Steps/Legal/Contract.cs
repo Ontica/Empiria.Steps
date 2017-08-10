@@ -27,6 +27,10 @@ namespace Empiria.Steps.Legal {
 
     #region Constructors and parsers
 
+    private Contract() {
+      // Required by Empiria Framework.
+    }
+
     protected Contract(LegalDocumentType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
@@ -41,6 +45,11 @@ namespace Empiria.Steps.Legal {
       return BaseObject.ParseKey<Contract>(uid);
     }
 
+    static public Contract Empty {
+      get {
+        return BaseObject.ParseEmpty<Contract>();
+      }
+    }
 
     static public FixedList<Contract> GetList(LegalDocumentType powertype) {
       string filter = $"ObjectTypeId = {powertype.Id}";
