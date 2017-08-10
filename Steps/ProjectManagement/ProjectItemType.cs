@@ -1,6 +1,6 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Legal Domain                  *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
 *  Assembly : Empiria.Steps.dll                                Pattern : Power type                          *
 *  Type     : ProjectItemType                                  License : Please read LICENSE.txt file        *
 *                                                                                                            *
@@ -34,14 +34,27 @@ namespace Empiria.Steps.ProjectManagement {
 
     #endregion Constructors and parsers
 
-    #region Public methods
+    #region Types constants
 
-    /// <summary>Factory method to create Project instances of this ProjectType.</summary>
-    internal ProjectItem CreateInstance() {
-      return base.CreateObject<ProjectItem>();
+    public static ProjectItemType ActivityType {
+      get {
+        return ObjectTypeInfo.Parse<ProjectItemType>("ObjectType.ProjectItem.Activity");
+      }
     }
 
-    #endregion Public methods
+    public static ProjectItemType EventType {
+      get {
+        return ObjectTypeInfo.Parse<ProjectItemType>("ObjectType.ProjectItem.Event");
+      }
+    }
+
+    public static ProjectItemType SummaryType {
+      get {
+        return ObjectTypeInfo.Parse<ProjectItemType>("ObjectType.ProjectItem.Activity.SummaryActivity");
+      }
+    }
+
+    #endregion Types constants
 
   } // class ProjectItemType
 

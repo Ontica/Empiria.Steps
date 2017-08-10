@@ -1,6 +1,6 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
 *  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
 *  Type     : Project                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
@@ -9,6 +9,7 @@ w  Summary  : Describes a project's involved resource.                          
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
 using Empiria.Ontology;
 
 namespace Empiria.Steps.ProjectManagement {
@@ -37,12 +38,12 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
-    static public FixedList<Resource> GetList() {
-      var list = BaseObject.GetList<Resource>();
+    static public FixedList<Resource> GetList(string filter = "") {
+      var owner = Contact.Parse(51);
+
+      var list = ResourcesData.GetResourcesList(owner);
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
-
-      list.Insert(0, Resource.Empty);
 
       return list.ToFixedList();
     }

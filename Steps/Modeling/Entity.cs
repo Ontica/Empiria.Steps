@@ -22,7 +22,7 @@ namespace Empiria.Steps.Modeling {
       // Required by Empiria Framework.
     }
 
-    static public Entity Parse(string uid) {
+    static public new Entity Parse(string uid) {
       return BaseObject.ParseKey<Entity>(uid);
     }
 

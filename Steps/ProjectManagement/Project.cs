@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 
 using Empiria.Contacts;
+using Empiria.Json;
 using Empiria.Ontology;
 
 using Empiria.Steps.Legal;
@@ -48,9 +49,9 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
     static public FixedList<Project> GetList(string filter = "") {
-      filter = "OwnerId = 51";
+      var ownerOrManager = Contact.Parse(51);
 
-      var list = BaseObject.GetList<Project>(filter);
+      var list = ProjectData.GetProjects(ownerOrManager);
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
@@ -126,18 +127,18 @@ namespace Empiria.Steps.ProjectManagement {
     public DateTime Deadline {
       get;
       private set;
-    }
+    } = ExecutionServer.DateMinValue;
 
 
-    [DataField("ProjectStatus")]
+    [DataField("Status")]
     public string Status {
       get;
       private set;
-    }
+    } = "A";
 
     #endregion Public properties
 
-    #region Public properties related to the project's structure
+    #region Properties related to the project's structure
 
     public FixedList<ProjectItem> Activities {
       get {
@@ -156,9 +157,47 @@ namespace Empiria.Steps.ProjectManagement {
       private set;
     } = new Project[0];
 
+    #endregion Properties related to the project's structure
 
-    #endregion Public properties related to the project's structure
+    #region Properties related to project's participants
 
+    public FixedList<Contact> Responsibles {
+      get {
+        return ProjectData.GetProjectResponsibles(this);
+      }
+    }
+
+    public FixedList<Contact> Requesters {
+      get {
+        return ProjectData.GetProjectRequesters(this);
+      }
+    }
+
+    public FixedList<Contact> TaskManagers {
+      get {
+        return ProjectData.GetProjectTaskManagers(this);
+      }
+    }
+
+    #endregion Properties related to project's participants
+
+    #region Public methods
+
+    public ProjectItem AddActivity(JsonObject data) {
+      var activity = new ProjectItem(this, ProjectItemType.ActivityType, data);
+
+      activity.Save();
+
+      activitiesList.Value.Add(activity);
+
+      return activity;
+    }
+
+    protected override void OnSave() {
+      //base.OnSave();
+    }
+
+    #endregion Public methods
 
   } // class Project
 

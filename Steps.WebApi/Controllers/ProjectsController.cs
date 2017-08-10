@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Web.Http;
 
+using Empiria.Json;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
@@ -42,9 +43,76 @@ namespace Empiria.Steps.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{project_UID}/activities")]
-    public CollectionModel GetProjectActivitiesList(string project_UID, [FromUri] string filter = "") {
+    public CollectionModel GetProjectActivitiesList(string project_UID,
+                                                    [FromUri] string filter = "") {
       try {
         var project = Project.Parse(project_UID);
+
+        return new CollectionModel(this.Request, BuildActivitiesResponse(project.Activities),
+                                   typeof(ProjectItem).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpGet]
+    [Route("v1/project-management/projects/{project_UID}/responsibles")]
+    public CollectionModel GetProjectResponsiblesList(string project_UID,
+                                                      [FromUri] string filter = "") {
+      try {
+        var project = Project.Parse(project_UID);
+
+        return new CollectionModel(this.Request, BuildResponse(project.Responsibles),
+                                   typeof(Contact).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpGet]
+    [Route("v1/project-management/projects/{project_UID}/requesters")]
+    public CollectionModel GetProjectRequestersList(string project_UID,
+                                                    [FromUri] string filter = "") {
+      try {
+        var project = Project.Parse(project_UID);
+
+        return new CollectionModel(this.Request, BuildResponse(project.Requesters),
+                                   typeof(Contact).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpGet]
+    [Route("v1/project-management/projects/{project_UID}/task-managers")]
+    public CollectionModel GetProjectTaskManagersList(string project_UID,
+                                                      [FromUri] string filter = "") {
+      try {
+        var project = Project.Parse(project_UID);
+
+        return new CollectionModel(this.Request, BuildResponse(project.TaskManagers),
+                                   typeof(Contact).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpPost]
+    [Route("v1/project-management/projects/{project_UID}/activities")]
+    public CollectionModel AppendActivity(string project_UID,
+                                          [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var project = Project.Parse(project_UID);
+
+        project.AddActivity(bodyAsJson);
 
         return new CollectionModel(this.Request, BuildActivitiesResponse(project.Activities),
                                    typeof(ProjectItem).FullName);
@@ -69,7 +137,7 @@ namespace Empiria.Steps.WebApi {
           start_date = activity.EstimatedStart.ToString("yyyy-MM-dd HH:mm"),
           duration = activity.EstimatedEnd.Subtract(activity.EstimatedStart).Days,
           progress = activity.CompletionProgress,
-          parent = activity.Parent.IsEmptyInstance ? (int?) null : activity.Parent.Id
+          parent = activity.Parent.IsEmptyInstance ? 0 : activity.Parent.Id
         };
         array.Add(item);
       }
@@ -95,6 +163,21 @@ namespace Empiria.Steps.WebApi {
       }
       return array;
     }
+
+    private ICollection BuildResponse(IList<Contact> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var contact in list) {
+        var item = new {
+          uid = contact.UID,
+          name = contact.FullName,
+          shortName = contact.Nickname
+        };
+        array.Add(item);
+      }
+      return array;
+    }
+
 
     private object BuildResponse(Contact contact) {
       return new {

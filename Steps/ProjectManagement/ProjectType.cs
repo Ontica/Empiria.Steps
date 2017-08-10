@@ -1,6 +1,6 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Legal Domain                  *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
 *  Assembly : Empiria.Steps.dll                                Pattern : Power type                          *
 *  Type     : ProjectType                                      License : Please read LICENSE.txt file        *
 *                                                                                                            *
