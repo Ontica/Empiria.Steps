@@ -8,6 +8,7 @@ w  Summary  : Describes a project as a set of well defined activities.          
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Json;
@@ -21,13 +22,19 @@ namespace Empiria.Steps.ProjectManagement {
   [PartitionedType(typeof(ProjectItemType))]
   public class ProjectItem : BaseObject {
 
+    #region Fields
+
+    private Lazy<List<Task>> tasksList = null;
+
+    #endregion Fields
+
     #region Constructors and parsers
 
     protected ProjectItem(ProjectItemType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal ProjectItem(Project project, ProjectItemType type, JsonObject data) : base(type) {
+    protected internal ProjectItem(Project project, ProjectItemType type, JsonObject data) : base(type) {
       Assertion.AssertObject(project, "project");
       Assertion.AssertObject(data, "data");
 
@@ -37,18 +44,18 @@ namespace Empiria.Steps.ProjectManagement {
       this.Load(data);
     }
 
-    static internal ProjectItem Parse(int id) {
+    static public ProjectItem Parse(int id) {
       return BaseObject.ParseId<ProjectItem>(id);
-    }
-
-    static public ProjectItem Parse(string uid) {
-      return BaseObject.ParseKey<ProjectItem>(uid);
     }
 
     static public ProjectItem Empty {
       get {
         return BaseObject.ParseEmpty<ProjectItem>();
       }
+    }
+
+    protected override void OnInitialize() {
+      tasksList = new Lazy<List<Task>>(() => ProjectData.GetProjectActivityTasks(this));
     }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
@@ -179,6 +186,12 @@ namespace Empiria.Steps.ProjectManagement {
     public ProjectItemStatus Status {
       get;
       private set;
+    }
+
+    public FixedList<Task> Tasks {
+      get {
+        return tasksList.Value.ToFixedList();
+      }
     }
 
     #endregion Public properties

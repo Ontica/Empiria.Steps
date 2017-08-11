@@ -30,11 +30,20 @@ namespace Empiria.Steps.ProjectManagement {
 
     static internal List<ProjectItem> GetProjectActivities(Project project) {
       string sql = $"SELECT * FROM BPMProjectItems " +
-                   $"WHERE ProjectId = {project.Id} AND Status <> 'X'";
+                   $"WHERE ProjectItemTypeId <> 667 AND ProjectId = {project.Id} AND Status <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetList<ProjectItem>(op, (x) => BaseObject.ParseList<ProjectItem>(x));
+    }
+
+    static internal List<Task> GetProjectActivityTasks(ProjectItem projectItem) {
+      string sql = $"SELECT * FROM BPMProjectItems " +
+                   $"WHERE ProjectItemTypeId = 667 AND Status <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetList<Task>(op, (x) => BaseObject.ParseList<Task>(x));
     }
 
     static internal FixedList<Contact> GetProjectResponsibles(Project project) {

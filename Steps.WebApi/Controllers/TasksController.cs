@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Steps Web API                       *
 *  Assembly : Empiria.Steps.WebApi.dll                         Pattern : Web Api Controller                  *
-*  Type     : ProjectsController                               License : Please read LICENSE.txt file        *
+*  Type     : TasksController                                  License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and set projects data.                                                  *
 *                                                                                                            *
@@ -22,33 +22,18 @@ using Empiria.Steps.ProjectManagement;
 namespace Empiria.Steps.WebApi {
 
   /// <summary>Public API to retrieve and set projects data.</summary>
-  public class ProjectsController : WebApiController {
+  public class TasksController : WebApiController {
 
     #region Public APIs
 
     [HttpGet]
-    [Route("v1/project-management/projects")]
-    public CollectionModel GetProjectsList([FromUri] string filter = "") {
-      try {
-        var list = Project.GetList(filter ?? String.Empty);
-
-
-        return new CollectionModel(this.Request, BuildResponse(list),
-                                   typeof(Project).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-    [HttpGet]
-    [Route("v1/project-management/projects/{project_UID}/activities")]
+    //[Route("v1/project-management/projects/{project_UID}/activities")]
     public CollectionModel GetProjectActivitiesList(string project_UID,
                                                     [FromUri] string filter = "") {
       try {
         var project = Project.Parse(project_UID);
 
-        return new CollectionModel(this.Request, BuildGanttResponse(project.Activities),
+        return new CollectionModel(this.Request, BuildActivitiesResponse(project.Activities),
                                    typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
@@ -57,7 +42,7 @@ namespace Empiria.Steps.WebApi {
     }
 
     [HttpGet]
-    [Route("v1/project-management/projects/{project_UID}/responsibles")]
+    //[Route("v1/project-management/projects/{project_UID}/responsibles")]
     public CollectionModel GetProjectResponsiblesList(string project_UID,
                                                       [FromUri] string filter = "") {
       try {
@@ -72,7 +57,7 @@ namespace Empiria.Steps.WebApi {
     }
 
     [HttpGet]
-    [Route("v1/project-management/projects/{project_UID}/requesters")]
+    //[Route("v1/project-management/projects/{project_UID}/requesters")]
     public CollectionModel GetProjectRequestersList(string project_UID,
                                                     [FromUri] string filter = "") {
       try {
@@ -87,7 +72,7 @@ namespace Empiria.Steps.WebApi {
     }
 
     [HttpGet]
-    [Route("v1/project-management/projects/{project_UID}/task-managers")]
+    //[Route("v1/project-management/projects/{project_UID}/task-managers")]
     public CollectionModel GetProjectTaskManagersList(string project_UID,
                                                       [FromUri] string filter = "") {
       try {
@@ -102,7 +87,7 @@ namespace Empiria.Steps.WebApi {
     }
 
     [HttpPost]
-    [Route("v1/project-management/projects/{project_UID}/activities")]
+    //[Route("v1/project-management/projects/{project_UID}/activities")]
     public CollectionModel AppendActivity(string project_UID,
                                           [FromBody] object body) {
       try {
@@ -114,90 +99,19 @@ namespace Empiria.Steps.WebApi {
 
         project.AddActivity(bodyAsJson);
 
-        return new CollectionModel(this.Request, BuildGanttResponse(project.Activities),
+        return new CollectionModel(this.Request, BuildActivitiesResponse(project.Activities),
                                    typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
-
-    [HttpGet]
-    [Route("v1/project-management/activities/{activityId}")]
-    public SingleObjectModel GetProjectActivity(int activityId) {
-      try {
-        var activity = ProjectItem.Parse(activityId);
-
-        return new SingleObjectModel(this.Request, BuildResponse(activity),
-                                     typeof(ProjectItem).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-    [HttpGet]
-    [Route("v1/project-management/activities/{activityId}/tasks")]
-    public CollectionModel GetProjectActivityTasks(int activityId) {
-      try {
-        var activity = ProjectItem.Parse(activityId);
-
-        return new CollectionModel(this.Request, BuildResponse(activity.Tasks),
-                                   typeof(ProjectItem).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-    [HttpGet]
-    [Route("v1/project-management/project-items/{projectItemId}")]
 
     #endregion Public APIs
 
     #region Private methods
 
-    private object BuildResponse(Project project) {
-      return new {
-        uid = project.UID,
-        type = project.ProjectType.Name,
-        name = project.Name,
-        notes = project.Notes,
-        ownerUID = project.Owner.UID,
-        managerUID = project.Manager.UID,
-        status = project.Status
-      };
-    }
-
-    private object BuildResponse(ProjectItem projectItem) {
-      return new {
-        type = projectItem.ProjectItemType.Name,
-        name = projectItem.Name,
-        notes = projectItem.Notes,
-        estimatedStart = projectItem.EstimatedStart,
-        estimatedEnd = projectItem.EstimatedEnd,
-        estimatedDuration = projectItem.EstimatedDuration,
-        completionProgress = projectItem.CompletionProgress,
-        requestedByUID = projectItem.RequestedBy.UID,
-        requestedTime = projectItem.RequestedTime,
-        responsibleUID = projectItem.Responsible.UID,
-        parentId = projectItem.Parent.Id,
-        projectUID = projectItem.Project.UID
-      };
-    }
-
-    private ICollection BuildResponse(IList<Task> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var task in list) {
-        var item = BuildResponse(task);
-
-        array.Add(item);
-      }
-      return array;
-    }
-
-    private ICollection BuildGanttResponse(IList<ProjectItem> list) {
+    private ICollection BuildActivitiesResponse(IList<ProjectItem> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var activity in list) {
@@ -283,6 +197,6 @@ namespace Empiria.Steps.WebApi {
 
     #endregion Private methods
 
-  }  // class ProjectsController
+  }  // class TasksController
 
 }  // namespace Empiria.Steps.WebApi

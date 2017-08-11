@@ -54,6 +54,12 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
+    public static ProjectItemType TaskType {
+      get {
+        return ObjectTypeInfo.Parse<ProjectItemType>("ObjectType.ProjectItem.Task");
+      }
+    }
+
     #endregion Types constants
 
   } // class ProjectItemType
