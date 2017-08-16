@@ -9,25 +9,26 @@ w  Summary  : Describes a task.                                                 
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
 using Empiria.Json;
 
 namespace Empiria.Steps.ProjectManagement {
 
   /// <summary>Describes a task.</summary>
-  public class Task : ProjectItem {
+  public class Task : ProjectObject {
 
     #region Constructors and parsers
 
-    protected Task(ProjectItemType powertype) : base(powertype) {
+    protected Task(ProjectObjectType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected Task() : this(ProjectItemType.TaskType) {
+    protected Task() : this(ProjectObjectType.TaskType) {
       // Required by Empiria Framework for all partitioned types.
     }
 
     protected internal Task(Project project, JsonObject data) :
-                                    base(project, ProjectItemType.TaskType, data) {
+                                    base(ProjectObjectType.TaskType, project, data) {
       this.AssertIsValid(data);
 
       this.Load(data);
@@ -51,16 +52,48 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Public properties
 
+    public Activity Activity {
+      get {
+        return base.Parent.IsEmptyInstance ?
+                          Activity.Empty : (Activity) base.Parent;
+      }
+    }
+
+
+    [DataField("ResponsibleId")]
+    public Contact AssignedTo {
+      get;
+      private set;
+    }
+
+
+    [DataField("RequestedTime")]
+    public DateTime AssignationTime {
+      get;
+      private set;
+    }
+
+
+    public bool IsAssigned {
+      get {
+        return !this.AssignedTo.IsEmptyInstance;
+      }
+    }
+
     #endregion Public properties
 
     #region Private methods
 
-    private void AssertIsValid(JsonObject data) {
+    protected override void AssertIsValid(JsonObject data) {
 
     }
 
-    private void Load(JsonObject data) {
+    protected override void Load(JsonObject data) {
 
+    }
+
+    protected override void OnSave() {
+      ProjectData.WriteTask(this);
     }
 
     #endregion Private methods

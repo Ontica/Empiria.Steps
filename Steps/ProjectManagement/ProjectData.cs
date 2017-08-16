@@ -18,33 +18,49 @@ namespace Empiria.Steps.ProjectManagement {
   /// <summary>Project's data read and write methods.</summary>
   static internal class ProjectData {
 
-    static internal List<Project> GetProjects(Contact contact) {
-      string sql = $"SELECT * FROM BPMProjects " +
-                   $"WHERE (OwnerId = {contact.Id} OR ManagerId = {contact.Id}) " +
+    static internal List<Project> GetProjects(Contact ownerOrManager) {
+      string sql = $"SELECT * FROM BPMProjectObjects " +
+                   $"WHERE ProjectObjectTypeId = {ProjectObjectType.ProjectType.Id} AND " +
+                   $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
                    $"AND Status <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList<Project>(op, (x) => BaseObject.ParseList<Project>(x));
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Project>(x));
     }
 
-    static internal List<ProjectItem> GetProjectActivities(Project project) {
-      string sql = $"SELECT * FROM BPMProjectItems " +
-                   $"WHERE ProjectItemTypeId <> 667 AND ProjectId = {project.Id} AND Status <> 'X'";
+    static internal FixedList<Activity> GetAllProjectActivities(Project project) {
+      string sql = $"SELECT * FROM BPMProjectObjects " +
+                   $"WHERE ProjectObjectTypeId = {ProjectObjectType.ActivityType.Id} AND " +
+                   $"BaseProjectId = {project.Id} AND Status <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList<ProjectItem>(op, (x) => BaseObject.ParseList<ProjectItem>(x));
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Activity>(x))
+                       .ToFixedList();
     }
 
-    static internal List<Task> GetProjectActivityTasks(ProjectItem projectItem) {
-      string sql = $"SELECT * FROM BPMProjectItems " +
-                   $"WHERE ProjectItemTypeId = 667 AND Status <> 'X'";
+    static internal List<Activity> GetChildrenActivities(ProjectObject parent) {
+      string sql = $"SELECT * FROM BPMProjectObjects " +
+                   $"WHERE ProjectObjectTypeId = {ProjectObjectType.ActivityType.Id} AND " +
+                   $"ParentId = {parent.Id} AND Status <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList<Task>(op, (x) => BaseObject.ParseList<Task>(x));
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Activity>(x));
     }
+
+
+    static internal List<Task> GetProjectActivityTasks(Activity activity) {
+      string sql = $"SELECT * FROM BPMProjectObjects " +
+                   $"WHERE ProjectObjectTypeId = {ProjectObjectType.TaskType.Id} AND " +
+                   $"ParentId = {activity.Id} AND Status <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Task>(x));
+    }
+
 
     static internal FixedList<Contact> GetProjectResponsibles(Project project) {
       string sql = $"SELECT * FROM Contacts " +
@@ -52,9 +68,10 @@ namespace Empiria.Steps.ProjectManagement {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList<Contact>(op, (x) => BaseObject.ParseList<Contact>(x))
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
                        .ToFixedList();
     }
+
 
     static internal FixedList<Contact> GetProjectRequesters(Project project) {
       string sql = $"SELECT * FROM Contacts " +
@@ -62,9 +79,10 @@ namespace Empiria.Steps.ProjectManagement {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList<Contact>(op, (x) => BaseObject.ParseList<Contact>(x))
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
                        .ToFixedList();
     }
+
 
     static internal FixedList<Contact> GetProjectTaskManagers(Project project) {
       string sql = $"SELECT * FROM Contacts " +
@@ -72,17 +90,47 @@ namespace Empiria.Steps.ProjectManagement {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList<Contact>(op, (x) => BaseObject.ParseList<Contact>(x))
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
                        .ToFixedList();
     }
 
-    static internal void WriteProjectItem(ProjectItem o) {
-      var op = DataOperation.Parse("writeBPMProjectItem",
-                o.Id, o.ProjectItemType.Id, o.Project.Id,
+
+    static internal void WriteActivity(Activity o) {
+      var op = DataOperation.Parse("writeBPMProjectObject",
+                o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
+                o.ExtensionData.ToString(),
+                o.EstimatedStart, o.EstimatedEnd, o.EstimatedDuration,
+                o.ActualStart, o.ActualEnd, o.CompletionProgress,
                 o.RelatedProcedure.Id, o.Resource.Id,
-                o.Name, o.Notes, "", o.EstimatedStart, o.EstimatedEnd, o.EstimatedDuration,
-                o.ActualStart, o.ActualEnd, o.CompletionProgress, o.Responsible.Id,
-                o.RequestedTime, o.RequestedBy.Id, o.Parent.Id, (char) o.Status);
+                o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
+                o.Project.Id, o.Parent.Id, (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
+
+    static internal void WriteProject(Project o) {
+      var op = DataOperation.Parse("writeBPMProjectObject",
+                o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
+                o.ExtensionData.ToString(),
+                o.EstimatedStart, o.EstimatedEnd, o.EstimatedDuration,
+                o.ActualStart, o.ActualEnd, o.CompletionProgress,
+                o.RelatedProcedure.Id, o.Resource.Id,
+                o.Owner.Id, o.Manager.Id, ExecutionServer.DateMinValue, Contact.Empty.Id,
+                Project.Empty.Id, Project.Empty.Id, (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
+    static internal void WriteTask(Task o) {
+      var op = DataOperation.Parse("writeBPMProjectObject",
+                o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
+                o.ExtensionData.ToString(),
+                o.EstimatedStart, o.EstimatedEnd, o.EstimatedDuration,
+                o.ActualStart, o.ActualEnd, o.CompletionProgress,
+                o.RelatedProcedure.Id, Resource.Empty.Id,
+                o.Owner.Id, o.AssignedTo.Id, o.AssignationTime, o.AssignedTo,
+                o.Activity.Project.Id, o.Activity.Id, (char) o.Status);
 
       DataWriter.Execute(op);
     }

@@ -19,51 +19,39 @@ using Empiria.Steps.Legal;
 namespace Empiria.Steps.ProjectManagement {
 
   /// <summary>Describes a project as a set of well defined activities.</summary>
-  [PartitionedType(typeof(ProjectItemType))]
-  public class ProjectItem : BaseObject {
-
-    #region Fields
-
-    private Lazy<List<Task>> tasksList = null;
-
-    #endregion Fields
+  [PartitionedType(typeof(ProjectObjectType))]
+  public class ProjectObject : BaseObject {
 
     #region Constructors and parsers
 
-    protected ProjectItem(ProjectItemType powertype) : base(powertype) {
+    protected ProjectObject(ProjectObjectType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal ProjectItem(Project project, ProjectItemType type, JsonObject data) : base(type) {
-      Assertion.AssertObject(project, "project");
+    protected internal ProjectObject(ProjectObjectType type,
+                                     ProjectObject parent, JsonObject data) : base(type) {
+      Assertion.AssertObject(parent, "parent");
       Assertion.AssertObject(data, "data");
 
-      this.Project = project;
+      this.Parent = parent;
       this.AssertIsValid(data);
 
       this.Load(data);
     }
 
-    static public ProjectItem Parse(int id) {
-      return BaseObject.ParseId<ProjectItem>(id);
+    static public ProjectObject Parse(int id) {
+      return BaseObject.ParseId<ProjectObject>(id);
     }
 
-    static public ProjectItem Empty {
+    static public ProjectObject Empty {
       get {
-        return BaseObject.ParseEmpty<ProjectItem>();
+        return BaseObject.ParseEmpty<ProjectObject>();
       }
     }
 
-    protected override void OnInitialize() {
-      tasksList = new Lazy<List<Task>>(() => ProjectData.GetProjectActivityTasks(this));
-    }
-
     protected override void OnLoadObjectData(System.Data.DataRow row) {
-      this.Project = Project.Parse((int) row["ProjectId"]);
-      this.Resource = Resource.Parse((int) row["AssociatedResourceId"]);
-
-      if ((int) row["ProjectItemId"] != -1) {
-        this.Parent = ProjectItem.Parse((int) row["ParentId"]);
+      if ((int) row["ProjectObjectId"] != -1) {
+        this.Parent = ProjectObject.Parse((int) row["ParentId"]);
       } else {
         this.Parent = this;
       }
@@ -73,30 +61,18 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Public properties
 
-    public ProjectItemType ProjectItemType {
+    public ProjectObjectType ProjectObjectType {
       get {
-        return (ProjectItemType) base.GetEmpiriaType();
+        return (ProjectObjectType) base.GetEmpiriaType();
       }
     }
 
 
-    public Project Project {
+    [DataField("UID")]
+    public string UID {
       get;
       private set;
     }
-
-
-    [DataField("RelatedProcedureId")]
-    public RelatedProcedure RelatedProcedure {
-      get;
-      private set;
-    } = RelatedProcedure.Empty;
-
-
-    public Resource Resource {
-      get;
-      private set;
-    } = Resource.Empty;
 
 
     [DataField("Name")]
@@ -155,32 +131,23 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
 
-    [DataField("ResponsibleId")]
-    public Contact Responsible {
-      get;
-      private set;
-    } = Contact.Empty;
-
-
-    [DataField("RequestedTime")]
-    public DateTime RequestedTime {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
-    [DataField("RequestedById")]
-    public Contact RequestedBy {
-      get;
-      private set;
-    } = Contact.Empty;
-
-
-    public ProjectItem Parent {
+    [DataField("OwnerId")]
+    public Contact Owner {
       get;
       private set;
     }
 
+
+    protected ProjectObject Parent {
+      get;
+      private set;
+    }
+
+    [DataField("ExtData")]
+    protected internal JsonObject ExtensionData {
+      get;
+      private set;
+    }
 
     [DataField("Status", Default = ProjectItemStatus.Inactive)]
     public ProjectItemStatus Status {
@@ -188,17 +155,19 @@ namespace Empiria.Steps.ProjectManagement {
       private set;
     }
 
-    public FixedList<Task> Tasks {
-      get {
-        return tasksList.Value.ToFixedList();
-      }
-    }
+
+    [DataField("RelatedProcedureId")]
+    public RelatedProcedure RelatedProcedure {
+      get;
+      private set;
+    } = RelatedProcedure.Empty;
+
 
     #endregion Public properties
 
     #region Private methods
 
-    private void AssertIsValid(JsonObject data) {
+    protected virtual void AssertIsValid(JsonObject data) {
       //Assertion.AssertObject(data, "data");
 
       //Validate.HasValue(data, "clauseNo", "Requiero conocer el número de cláusula o anexo.");
@@ -216,22 +185,24 @@ namespace Empiria.Steps.ProjectManagement {
       //}
     }
 
-    private void Load(JsonObject data) {
-      this.Resource = Resource.Parse(data.Get<string>("resourceUID"));
+    protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
       this.EstimatedStart = data.Get<DateTime>("estimatedStart", this.EstimatedStart);
       this.EstimatedEnd = data.Get<DateTime>("estimatedEnd", this.EstimatedEnd);
       this.EstimatedDuration = data.GetClean("estimatedDuration", this.EstimatedDuration);
       this.CompletionProgress = data.Get<decimal>("completionProgress", this.CompletionProgress);
-      this.Responsible = Contact.Parse(data.Get<string>("responsibleUID"));
-      this.RequestedTime = data.Get<DateTime>("requestedTime", this.RequestedTime);
-      this.RequestedBy = Contact.Parse(data.Get<string>("requestedByUID"));
-      this.Parent = ProjectItem.Parse(data.Get<int>("parentId"));
+      this.Parent = ProjectObject.Parse(data.Get<int>("parentId"));
+    }
+
+    protected override void OnBeforeSave() {
+      if (this.IsNew) {
+        this.UID = EmpiriaString.BuildRandomString(32);
+      }
     }
 
     protected override void OnSave() {
-      ProjectData.WriteProjectItem(this);
+      throw Assertion.AssertNoReachThisCode();
     }
 
     public void Update(JsonObject data) {

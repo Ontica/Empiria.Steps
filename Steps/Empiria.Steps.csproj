@@ -127,6 +127,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectManagement\Activity.cs" />
     <Compile Include="ProjectManagement\Task.cs" />
     <Compile Include="ProjectManagement\ResourcesData.cs" />
     <Compile Include="ProjectManagement\ProjectData.cs" />
@@ -148,8 +149,8 @@
     <Compile Include="Modeling\Procedure.cs" />
     <Compile Include="Data\ProcedureData.cs" />
     <Compile Include="Data\ProcessDefinitionData.cs" />
-    <Compile Include="ProjectManagement\ProjectItem.cs" />
-    <Compile Include="ProjectManagement\ProjectItemType.cs" />
+    <Compile Include="ProjectManagement\ProjectObject.cs" />
+    <Compile Include="ProjectManagement\ProjectObjectType.cs" />
     <Compile Include="ProjectManagement\ProjectType.cs" />
     <Compile Include="ProjectManagement\ResourceType.cs" />
     <Compile Include="ProjectManagement\Resource.cs" />

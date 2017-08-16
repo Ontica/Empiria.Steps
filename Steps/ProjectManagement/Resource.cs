@@ -24,7 +24,7 @@ namespace Empiria.Steps.ProjectManagement {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static internal Resource Parse(int id) {
+    static public Resource Parse(int id) {
       return BaseObject.ParseId<Resource>(id);
     }
 

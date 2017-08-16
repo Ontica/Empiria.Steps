@@ -12,29 +12,31 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Json;
-using Empiria.Ontology;
 
 using Empiria.Steps.Legal;
 
 namespace Empiria.Steps.ProjectManagement {
 
   /// <summary>Describes a project as a set of well defined activities.</summary>
-  [PartitionedType(typeof(ProjectType))]
-  public class Project : BaseObject {
+  public class Project : ProjectObject {
 
     #region Fields
 
-    private Lazy<List<ProjectItem>> activitiesList = null;
+    private Lazy<List<Activity>> activitiesList = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected Project(ProjectType powertype) : base(powertype) {
+    protected Project() : this(ProjectObjectType.ProjectType) {
+
+    }
+
+    protected Project(ProjectObjectType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static internal Project Parse(int id) {
+    static internal new Project Parse(int id) {
       return BaseObject.ParseId<Project>(id);
     }
 
@@ -42,7 +44,7 @@ namespace Empiria.Steps.ProjectManagement {
       return BaseObject.ParseKey<Project>(uid);
     }
 
-    static public Project Empty {
+    static public new Project Empty {
       get {
         return BaseObject.ParseEmpty<Project>();
       }
@@ -59,11 +61,12 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
     protected override void OnInitialize() {
-      activitiesList = new Lazy<List<ProjectItem>>(() => ProjectData.GetProjectActivities(this));
+      activitiesList = new Lazy<List<Activity>>(() => ProjectData.GetChildrenActivities(this));
     }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
-      this.Contract = Contract.Parse((int) row["ContractId"]);
+      //this.Contract = Contract.Parse((int) row["ContractId"]);
+      //this.Resource = Resource.Parse((int) row["ResourceId"]);
     }
 
     #endregion Constructors and parsers
@@ -76,86 +79,48 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
-    [DataField("UID")]
-    public string UID {
-      get;
-      private set;
-    }
 
-
-    [DataField("Name")]
-    public string Name {
-      get;
-      private set;
-    }
-
-
-    [DataField("Notes")]
-    public string Notes {
-      get;
-      private set;
-    }
-
-
-    [DataField("OwnerId")]
-    public Contact Owner {
-      get;
-      private set;
-    }
-
-
-    [DataField("ManagerId")]
+    [DataField("ResponsibleId")]
     public Contact Manager {
       get;
       private set;
     }
 
+
+    [DataField("ExtData.ContractId")]
     public Contract Contract {
       get;
       private set;
     } = Contract.Empty;
 
 
-    //[DataField("AppliedToId")]
-    //public Resource AppliedTo {
-    //  get;
-    //  private set;
-    //} = Resource.Empty;
-
-
-    [DataField("Deadline")]
+    //[DataField("Deadline")]
     public DateTime Deadline {
       get;
       private set;
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("Status")]
-    public string Status {
+    [DataField("ResourceId")]
+    public Resource Resource {
       get;
       private set;
-    } = "A";
+    } = Resource.Empty;
+
 
     #endregion Public properties
 
     #region Properties related to the project's structure
 
-    public FixedList<ProjectItem> Activities {
+    public FixedList<Activity> Activities {
       get {
         return activitiesList.Value.ToFixedList();
       }
     }
 
-    public Project Parent {
-      get;
-      private set;
+    public FixedList<Activity> GetAllActivities() {
+      return ProjectData.GetAllProjectActivities(this);
     }
-
-
-    public Project[] Subprojects {
-      get;
-      private set;
-    } = new Project[0];
 
     #endregion Properties related to the project's structure
 
@@ -183,8 +148,8 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Public methods
 
-    public ProjectItem AddActivity(JsonObject data) {
-      var activity = new ProjectItem(this, ProjectItemType.ActivityType, data);
+    public ProjectObject AddActivity(JsonObject data) {
+      var activity = new Activity(this, data);
 
       activity.Save();
 
@@ -194,7 +159,7 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
     protected override void OnSave() {
-      //base.OnSave();
+      ProjectData.WriteProject(this);
     }
 
     #endregion Public methods
