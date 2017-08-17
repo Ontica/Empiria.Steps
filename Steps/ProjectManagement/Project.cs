@@ -73,12 +73,6 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Public properties
 
-    public ProjectType ProjectType {
-      get {
-        return (ProjectType) base.GetEmpiriaType();
-      }
-    }
-
 
     [DataField("ResponsibleId")]
     public Contact Manager {

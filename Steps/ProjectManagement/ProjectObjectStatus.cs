@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Steps.ProjectManagement {
 
   /// <summary>Represents the status of a project item.</summary>
-  public enum ProjectItemStatus {
+  public enum ProjectObjectStatus {
 
     Undefined = 'U',
 

@@ -154,9 +154,6 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    [HttpGet]
-    [Route("v1/project-management/project-items/{projectItemId}")]
-
     #endregion Public APIs
 
     #region Private methods
@@ -264,38 +261,6 @@ namespace Empiria.Steps.WebApi {
         array.Add(item);
       }
       return array;
-    }
-
-
-    private object BuildResponse(Contact contact) {
-      return new {
-        uid = contact.UID,
-        name = contact.FullName,
-        shortName = contact.Nickname
-      };
-    }
-
-    private object BuildResponse(Resource resource) {
-      return new {
-        uid = resource.UID,
-        type= BuildResponse(resource.ResourceType),
-        name = resource.Name,
-        notes = resource.Notes
-      };
-    }
-
-    private object BuildResponse(ProjectType projectType) {
-      return new {
-        id = projectType.Id,
-        name = projectType.DisplayName
-      };
-    }
-
-    private object BuildResponse(ResourceType resourceType) {
-      return new {
-        id = resourceType.Id,
-        name = resourceType.DisplayName
-      };
     }
 
     #endregion Private methods

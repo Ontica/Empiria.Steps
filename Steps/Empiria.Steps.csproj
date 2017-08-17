@@ -151,7 +151,6 @@
     <Compile Include="Data\ProcessDefinitionData.cs" />
     <Compile Include="ProjectManagement\ProjectObject.cs" />
     <Compile Include="ProjectManagement\ProjectObjectType.cs" />
-    <Compile Include="ProjectManagement\ProjectType.cs" />
     <Compile Include="ProjectManagement\ResourceType.cs" />
     <Compile Include="ProjectManagement\Resource.cs" />
     <Compile Include="ProjectManagement\Project.cs" />
@@ -200,6 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Government\" />
+    <Folder Include="WorkflowDefinition\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

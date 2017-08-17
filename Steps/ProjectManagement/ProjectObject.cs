@@ -2,13 +2,12 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
 *  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
-*  Type     : ProjectItem                                      License : Please read LICENSE.txt file        *
+*  Type     : ProjectObject                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project as a set of well defined activities.                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Json;
@@ -20,7 +19,7 @@ namespace Empiria.Steps.ProjectManagement {
 
   /// <summary>Describes a project as a set of well defined activities.</summary>
   [PartitionedType(typeof(ProjectObjectType))]
-  public class ProjectObject : BaseObject {
+  public abstract class ProjectObject : BaseObject {
 
     #region Constructors and parsers
 
@@ -143,14 +142,16 @@ namespace Empiria.Steps.ProjectManagement {
       private set;
     }
 
+
     [DataField("ExtData")]
     protected internal JsonObject ExtensionData {
       get;
       private set;
     }
 
-    [DataField("Status", Default = ProjectItemStatus.Inactive)]
-    public ProjectItemStatus Status {
+
+    [DataField("Status", Default = ProjectObjectStatus.Inactive)]
+    public ProjectObjectStatus Status {
       get;
       private set;
     }
@@ -168,21 +169,7 @@ namespace Empiria.Steps.ProjectManagement {
     #region Private methods
 
     protected virtual void AssertIsValid(JsonObject data) {
-      //Assertion.AssertObject(data, "data");
-
-      //Validate.HasValue(data, "clauseNo", "Requiero conocer el número de cláusula o anexo.");
-      //Validate.HasValue(data, "title", "Necesito el nombre que describe a la cláusula o anexo.");
-
-      //var clauseNo = data.GetClean("clauseNo");
-
-      //if (this.IsNew) {
-      //  var clause = this.Contract.TryGetClause((x) => x.Number.Equals(clauseNo));
-      //  Validate.AlreadyExists(clause, $"Este contrato ya contiene una cláusula con el número '{clauseNo}'.");
-      //} else {
-      //  var clause = this.Contract.TryGetClause((x) => x.Number.Equals(clauseNo) &&
-      //                                                 x.Id != this.Id);
-      //  Validate.AlreadyExists(clause, $"En este contrato ya existe otra cláusula con el número '{clauseNo}'.");
-      //}
+      Assertion.AssertObject(data, "data");
     }
 
     protected virtual void Load(JsonObject data) {
@@ -213,6 +200,6 @@ namespace Empiria.Steps.ProjectManagement {
 
     #endregion Private methods
 
-  } // class ProjectItem
+  } // class ProjectObject
 
 } // namespace Empiria.Steps.ProjectManagement

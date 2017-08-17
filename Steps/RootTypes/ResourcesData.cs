@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
 *  Assembly : Empiria.Steps.dll                                Pattern : Data Service                        *
-*  Type     : ProjectData                                      License : Please read LICENSE.txt file        *
+*  Type     : ResourcesData                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Project's data read and write methods.                                                         *
+*  Summary  : Resource read and write data methods.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using Empiria.Data;
 using Empiria.Contacts;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.Steps {
 
-  /// <summary>Project's data read and write methods.</summary>
+  /// <summary>Resource read and write data methods.</summary>
   static internal class ResourcesData {
 
     static internal List<Resource> GetResourcesList(Contact contact) {
@@ -27,6 +27,6 @@ namespace Empiria.Steps.ProjectManagement {
       return DataReader.GetList<Resource>(op, (x) => BaseObject.ParseList<Resource>(x));
     }
 
-  }  // class ProjectData
+  }  // class ResourcesData
 
-}  // namespace Empiria.Steps.ProjectManagement
+}  // namespace Empiria.Steps

@@ -4,17 +4,17 @@
 *  Assembly : Empiria.Steps.dll                                Pattern : Power type                          *
 *  Type     : ResourceType                                     License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Power type that defines a resource such as a product, service or result achieved by a project. *
+*  Summary  : Powertype that defines a resource such as a product, service or result.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Ontology;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.Steps {
 
-  /// <summary>Power type that defines a resource such as a product, service
-  /// or result achieved by a project.</summary>
+  /// <summary>Powertype that defines a resource such as a product, service
+  /// or result achieved by a project or used or defined by a workflow.</summary>
   [Powertype(typeof(Resource))]
   public sealed class ResourceType : Powertype {
 
@@ -45,4 +45,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   } // class ResourceType
 
-} // namespace Empiria.Steps.ProjectManagement
+} // namespace Empiria.Steps

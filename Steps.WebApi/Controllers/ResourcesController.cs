@@ -48,20 +48,13 @@ namespace Empiria.Steps.WebApi {
       foreach (var resource in list) {
         var item = new {
           uid = resource.UID,
-          type = this.BuildResponse(resource.ResourceType),
+          type = resource.ResourceType.Name,
           name = resource.Name,
           notes = resource.Notes,
         };
         array.Add(item);
       }
       return array;
-    }
-
-    private object BuildResponse(ResourceType resourceType) {
-      return new {
-        id = resourceType.Id,
-        name = resourceType.DisplayName
-      };
     }
 
     #endregion Private methods

@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
 *  Type     : Project                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a project's involved resource.                                                       *
+w  Summary  : Describes a project or workflow involved resource.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -12,9 +12,9 @@ using System;
 using Empiria.Contacts;
 using Empiria.Ontology;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.Steps {
 
-  /// <summary>Describes a project's involved resource.</summary>
+  /// <summary>Describes a project or workflow involved resource.</summary>
   [PartitionedType(typeof(ResourceType))]
   public class Resource : BaseObject {
 
@@ -82,4 +82,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   } // class Resource
 
-} // namespace Empiria.Steps.ProjectManagement
+} // namespace Empiria.Steps
