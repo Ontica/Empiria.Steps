@@ -122,6 +122,7 @@ namespace Empiria.Steps.ProjectManagement {
       DataWriter.Execute(op);
     }
 
+
     static internal void WriteTask(Task o) {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,

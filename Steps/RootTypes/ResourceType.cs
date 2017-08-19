@@ -34,14 +34,15 @@ namespace Empiria.Steps {
 
     #endregion Constructors and parsers
 
-    #region Public methods
+    #region Types constants
 
-    /// <summary>Factory method to create Resources instances of this ResourceType.</summary>
-    internal Resource CreateInstance() {
-      return base.CreateObject<Resource>();
+    public static ResourceType Empty {
+      get {
+        return ObjectTypeInfo.Parse<ResourceType>("ObjectType.Resource.Empty");
+      }
     }
 
-    #endregion Public methods
+    #endregion Types constants
 
   } // class ResourceType
 

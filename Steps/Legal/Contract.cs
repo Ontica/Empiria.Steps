@@ -52,7 +52,7 @@ namespace Empiria.Steps.Legal {
     }
 
     static public FixedList<Contract> GetList(LegalDocumentType powertype) {
-      string filter = $"ObjectTypeId = {powertype.Id}";
+      string filter = $"";
 
       return Contract.GetList<Contract>(filter)
                      .ToFixedList();

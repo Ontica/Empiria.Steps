@@ -8,11 +8,18 @@ w  Summary  : Describes a workflow model as an a activity network.              
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 
 namespace Empiria.Steps.WorkflowDefinition {
 
   /// <summary>Describes a workflow model as an a activity network.</summary>
   public class Process : WorkflowObject {
+
+    #region Fields
+
+    //private Lazy<List<ProcessActivity>> transitionsTable = null;
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -47,7 +54,7 @@ namespace Empiria.Steps.WorkflowDefinition {
     }
 
     protected override void OnInitialize() {
-
+      // transitionsTable = new Lazy<List<ProcessActivity>>(() => ProjectModelData.GetProcessActivitiesList(this));
     }
 
     #endregion Constructors and parsers

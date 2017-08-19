@@ -42,21 +42,9 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
-    public static ProjectObjectType EventType {
-      get {
-        return ObjectTypeInfo.Parse<ProjectObjectType>("ObjectType.ProjectObject.Event");
-      }
-    }
-
     public static ProjectObjectType ProjectType {
       get {
         return ObjectTypeInfo.Parse<ProjectObjectType>("ObjectType.ProjectObject.Project");
-      }
-    }
-
-    public static ProjectObjectType SummaryType {
-      get {
-        return ObjectTypeInfo.Parse<ProjectObjectType>("ObjectType.ProjectObject.SummaryActivity");
       }
     }
 

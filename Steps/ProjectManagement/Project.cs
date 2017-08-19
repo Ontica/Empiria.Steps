@@ -64,11 +64,6 @@ namespace Empiria.Steps.ProjectManagement {
       activitiesList = new Lazy<List<Activity>>(() => ProjectData.GetChildrenActivities(this));
     }
 
-    protected override void OnLoadObjectData(System.Data.DataRow row) {
-      //this.Contract = Contract.Parse((int) row["ContractId"]);
-      //this.Resource = Resource.Parse((int) row["ResourceId"]);
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
@@ -88,11 +83,11 @@ namespace Empiria.Steps.ProjectManagement {
     } = Contract.Empty;
 
 
-    //[DataField("Deadline")]
-    public DateTime Deadline {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
+    // [DataField("Deadline")]
+    //public DateTime Deadline {
+    //  get;
+    //  private set;
+    //} = ExecutionServer.DateMinValue;
 
 
     [DataField("ResourceId")]
@@ -104,7 +99,7 @@ namespace Empiria.Steps.ProjectManagement {
 
     #endregion Public properties
 
-    #region Properties related to the project's structure
+    #region Project structure
 
     public FixedList<Activity> Activities {
       get {
@@ -116,9 +111,9 @@ namespace Empiria.Steps.ProjectManagement {
       return ProjectData.GetAllProjectActivities(this);
     }
 
-    #endregion Properties related to the project's structure
+    #endregion Project structure
 
-    #region Properties related to project's participants
+    #region Project participants
 
     public FixedList<Contact> Responsibles {
       get {
@@ -138,11 +133,11 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
-    #endregion Properties related to project's participants
+    #endregion Project participants
 
     #region Public methods
 
-    public ProjectObject AddActivity(JsonObject data) {
+    public Activity AddActivity(JsonObject data) {
       var activity = new Activity(this, data);
 
       activity.Save();

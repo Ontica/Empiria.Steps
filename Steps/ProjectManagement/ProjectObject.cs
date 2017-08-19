@@ -19,7 +19,7 @@ namespace Empiria.Steps.ProjectManagement {
 
   /// <summary>Describes a project as a set of well defined activities.</summary>
   [PartitionedType(typeof(ProjectObjectType))]
-  public abstract class ProjectObject : BaseObject {
+  public class ProjectObject : BaseObject {
 
     #region Constructors and parsers
 
@@ -33,6 +33,7 @@ namespace Empiria.Steps.ProjectManagement {
       Assertion.AssertObject(data, "data");
 
       this.Parent = parent;
+
       this.AssertIsValid(data);
 
       this.Load(data);

@@ -8,9 +8,9 @@ w  Summary  : Slice of a workflow process that serves as an activity model to bu
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Contacts;
+using Empiria.Json;
 
 using Empiria.Steps.WorkflowDefinition;
 
@@ -34,7 +34,7 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
 
-    internal static ProjectModel Parse(Process baseProcess) {
+    static public ProjectModel Parse(Process baseProcess) {
       Assertion.AssertObject(baseProcess, "baseProcess");
 
       return new ProjectModel(baseProcess);
@@ -61,17 +61,21 @@ namespace Empiria.Steps.ProjectManagement {
       get;
     }
 
-    #endregion Public properties
-
-    #region Project structure
-
     public FixedList<ProcessActivity> Steps {
       get {
         return stepsList.Value;
       }
     }
 
-    #endregion Project structure
+    #endregion Public properties
+
+    #region Methods
+
+    public Project CreateInstance(Project baseProject, JsonObject data) {
+      return baseProject;
+    }
+
+    #endregion Methods
 
   } // class ProjectModel
 
