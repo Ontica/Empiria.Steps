@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
 *  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
-*  Type     : ProcessDefinition                                License : Please read LICENSE.txt file        *
+*  Type     : BpmnDiagram                                      License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Provides services that gets process definition models.                                         *
 *                                                                                                            *
@@ -10,67 +10,85 @@
 using System;
 using Empiria.Json;
 
-namespace Empiria.Steps.Modeling {
+namespace Empiria.Steps.WorkflowDefinition {
 
-  public class ProcessDefinition : BaseObject {
+  public class BpmnDiagram : BaseObject {
 
     #region Constructors and parsers
 
-    private ProcessDefinition() {
+    private BpmnDiagram() {
       // Required by Empiria Framework.
     }
 
-    public ProcessDefinition(JsonObject data) {
+    public BpmnDiagram(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
-      this.Name = data.Get<string>("name");
-      this.Version = data.Get("version", String.Empty);
-      this.BpmnXml = data.Get<string>("bpmnXml", String.Empty);
+      this.AssertIsValid(data);
+      this.Load(data);
     }
 
-    static public ProcessDefinition Parse(string uid) {
-      return BaseObject.ParseKey<ProcessDefinition>(uid);
+    static public BpmnDiagram Parse(string uid) {
+      return BaseObject.ParseKey<BpmnDiagram>(uid);
     }
 
-    static public FixedList<ProcessDefinition> GetList() {
-      return ProcessDefinitionData.GetProcessDefinitionList();
+    static public FixedList<BpmnDiagram> GetList() {
+      return BaseObject.GetList<BpmnDiagram>(sort: "ObjectName")
+                       .ToFixedList();
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
-
-    [DataField("UID")]
+    [DataField("ObjectKey")]
     public string UID {
       get;
       private set;
     }
 
 
-    [DataField("Name")]
+    [DataField("ObjectName")]
     public string Name {
       get;
       private set;
     }
 
 
-    [DataField("Version")]
-    public string Version {
+    [DataField("ObjectExtData")]
+    public string Xml {
       get;
       private set;
     }
 
 
-    [DataField("BpmnXML")]
-    public string BpmnXml {
+    [DataField("ObjectStatus", Default = ObjectStatus.Active)]
+    public ObjectStatus Status {
       get;
       private set;
+    }
+
+    internal string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.Name);
+      }
     }
 
     #endregion Public properties
 
     #region Public methods
+
+
+    protected virtual void AssertIsValid(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+
+    }
+
+
+    protected virtual void Load(JsonObject data) {
+      this.Name = data.GetClean("name", this.Name);
+      this.Xml = data.Get<string>("xml", String.Empty);
+    }
+
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
@@ -78,20 +96,22 @@ namespace Empiria.Steps.Modeling {
       }
     }
 
+
     protected override void OnSave() {
-      ProcessDefinitionData.WriteProcessDefinition(this);
+      WorkflowDefinitionData.WriteBpmnDiagram(this);
     }
+
 
     public void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
-      this.Name = data.Get<string>("name", this.Name);
-      this.Version = data.Get<string>("version", this.Version);
-      this.BpmnXml = data.Get<string>("bpmnXml", this.BpmnXml);
+      this.AssertIsValid(data);
+      this.Load(data);
     }
+
 
     #endregion Public methods
 
-  }  // class ProcessDefinition
+  }  // class BpmnDiagram
 
-}  // namespace Empiria.Steps.Modeling
+}  // namespace Empiria.Steps.WorkflowDefinition

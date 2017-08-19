@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Steps Web API                       *
 *  Assembly : Empiria.Steps.WebApi.dll                         Pattern : Web Api Controller                  *
-*  Type     : ProcessDefinitionController                      License : Please read LICENSE.txt file        *
+*  Type     : BpmnDiagramController                            License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Provides services that gets process definition models.                                         *
+*  Summary  : Provides services for read and write BPMN diagrams.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,13 +14,13 @@ using Empiria.Json;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
-using Empiria.Steps.Modeling;
 using System.Collections;
+using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.WebApi {
 
-  /// <summary>Provides services that gets or sets process definition models.</summary>
-  public class ProcessDefinitionController : WebApiController {
+  /// <summary>Provides services for read and write BPMN diagrams.</summary>
+  public class BpmnDiagramController : WebApiController {
 
     #region Public APIs
 
@@ -28,9 +28,9 @@ namespace Empiria.Steps.WebApi {
     [Route("v1/process-definitions")]
     public CollectionModel GetProcessDefinitionList() {
       try {
-        var list = ProcessDefinition.GetList();
+        var list = BpmnDiagram.GetList();
 
-        return new CollectionModel(this.Request, this.BuildResponse(list), typeof(ProcessDefinition).FullName);
+        return new CollectionModel(this.Request, this.BuildResponse(list), typeof(BpmnDiagram).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -43,9 +43,10 @@ namespace Empiria.Steps.WebApi {
       try {
         base.RequireResource(processDef_ID, "processDef_ID");
 
-        var processDefinition = ProcessDefinition.Parse(processDef_ID);
+        var processDefinition = BpmnDiagram.Parse(processDef_ID);
 
-        return new SingleObjectModel(this.Request, processDefinition);
+        return new SingleObjectModel(this.Request, BuildResponse(processDefinition),
+                                     typeof(BpmnDiagram).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -60,7 +61,7 @@ namespace Empiria.Steps.WebApi {
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        var processDefinition = new ProcessDefinition(bodyAsJson);
+        var processDefinition = new BpmnDiagram(bodyAsJson);
 
         processDefinition.Save();
 
@@ -80,7 +81,7 @@ namespace Empiria.Steps.WebApi {
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        var processDefinition = ProcessDefinition.Parse(processDef_ID);
+        var processDefinition = BpmnDiagram.Parse(processDef_ID);
 
         processDefinition.Update(bodyAsJson);
 
@@ -95,20 +96,29 @@ namespace Empiria.Steps.WebApi {
 
     #endregion Public APIs
 
-    private ICollection BuildResponse(FixedList<ProcessDefinition> list) {
+    private ICollection BuildResponse(FixedList<BpmnDiagram> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var processDefinition in list) {
         var item = new {
           uid = processDefinition.UID,
           name = processDefinition.Name,
-          version = processDefinition.Version,
+          version = "1.0",
         };
         array.Add(item);
       }
       return array;
     }
 
-  }  // class ProcessDefinitionController
+    private object BuildResponse(BpmnDiagram bpmnDiagram) {
+      return new {
+          uid = bpmnDiagram.UID,
+          name = bpmnDiagram.Name,
+          version = "1.0",
+          bpmnXml = bpmnDiagram.Xml,
+      };
+    }
+
+  }  // class BpmnDiagramController
 
 }  // namespace Empiria.Steps.WebApi

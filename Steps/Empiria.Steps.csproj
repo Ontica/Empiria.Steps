@@ -127,16 +127,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectManagement\Activity.cs" />
-    <Compile Include="ProjectManagement\Task.cs" />
-    <Compile Include="ProjectManagement\ResourcesData.cs" />
-    <Compile Include="ProjectManagement\ProjectData.cs" />
-    <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
-    <Compile Include="Legal\RelatedProcedure.cs" />
     <Compile Include="Legal\Clause.cs" />
-    <Compile Include="Legal\LegalDocumentType.cs" />
     <Compile Include="Legal\Contract.cs" />
     <Compile Include="Legal\ContractsData.cs" />
+    <Compile Include="Legal\LegalDocumentType.cs" />
+    <Compile Include="Legal\RelatedProcedure.cs" />
+    <Compile Include="ProjectManagement\Activity.cs" />
+    <Compile Include="ProjectManagement\Task.cs" />
+    <Compile Include="RootTypes\ResourcesData.cs" />
+    <Compile Include="ProjectManagement\ProjectData.cs" />
+    <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
     <Compile Include="Modeling\Authority.cs" />
     <Compile Include="Modeling\FilingCondition.cs" />
     <Compile Include="Modeling\FilingDocuments.cs" />
@@ -145,19 +145,22 @@
     <Compile Include="Modeling\Position.cs" />
     <Compile Include="Modeling\Entity.cs" />
     <Compile Include="Modeling\Office.cs" />
-    <Compile Include="Modeling\ProcessDefinition.cs" />
+    <Compile Include="WorkflowDefinition\BpmnDiagram.cs" />
     <Compile Include="Modeling\Procedure.cs" />
     <Compile Include="Data\ProcedureData.cs" />
-    <Compile Include="Data\ProcessDefinitionData.cs" />
     <Compile Include="ProjectManagement\ProjectObject.cs" />
     <Compile Include="ProjectManagement\ProjectObjectType.cs" />
-    <Compile Include="ProjectManagement\ResourceType.cs" />
-    <Compile Include="ProjectManagement\Resource.cs" />
+    <Compile Include="RootTypes\ResourceType.cs" />
+    <Compile Include="RootTypes\Resource.cs" />
     <Compile Include="ProjectManagement\Project.cs" />
-    <Compile Include="ProjectManagement\ProjectItemStatus.cs" />
+    <Compile Include="ProjectManagement\ProjectObjectStatus.cs" />
     <Compile Include="RootTypes\ActivityType.cs" />
     <Compile Include="RootTypes\TermTimeUnit.cs" />
     <Compile Include="RootTypes\StartsWhen.cs" />
+    <Compile Include="WorkflowDefinition\Process.cs" />
+    <Compile Include="WorkflowDefinition\WorkflowDefinitionData.cs" />
+    <Compile Include="WorkflowDefinition\WorkflowObject.cs" />
+    <Compile Include="WorkflowDefinition\WorkflowObjectType.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -199,7 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Government\" />
-    <Folder Include="WorkflowDefinition\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
