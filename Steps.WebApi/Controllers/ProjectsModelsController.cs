@@ -12,11 +12,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Web.Http;
 
-using Empiria.Json;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
-using Empiria.Contacts;
+using Empiria.Steps.ProjectManagement;
 using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.WebApi {
@@ -27,29 +26,44 @@ namespace Empiria.Steps.WebApi {
     #region Public APIs
 
     [HttpGet]
-    [Route("v1/projects/process-models")]
-    public CollectionModel GetProjectsProcessModelsList() {
+    [Route("v1/projects/activities-models")]
+    public CollectionModel GetProjectsActivityModelsList() {
       try {
 
-        var list = Process.GetList();
+        var list = ProjectModel.GetActivitiesModelsList();
 
         return new CollectionModel(this.Request, BuildResponse(list),
-                                   typeof(Process).FullName);
+                                   typeof(ProjectModel).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
 
+    [HttpGet]
+    [Route("v1/projects/events-models")]
+    public CollectionModel GetProjectsEventsModelsList() {
+      try {
+
+        var list = ProjectModel.GetEventsModelsList();
+
+        return new CollectionModel(this.Request, BuildResponse(list),
+                                   typeof(ProjectModel).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
 
     #endregion Public APIs
 
     #region Private methods
 
-    private ICollection BuildResponse(IList<Process> list) {
+    private ICollection BuildResponse(IList<ProjectModel> list) {
       ArrayList array = new ArrayList(list.Count);
 
-      foreach (var process in list) {
+      foreach (var model in list) {
+        var process = model.BaseProcess;
         var item = new {
           uid = process.UID,
           type = process.WorkflowObjectType.Name,
@@ -57,8 +71,30 @@ namespace Empiria.Steps.WebApi {
           notes = process.Notes,
           ownerUID = process.Owner.UID,
           resourceTypeId = process.ResourceType.Id,
-          status = process.Status,
-          links = process.Links
+          links = process.Links,
+          steps = BuildResponse(model.Steps)
+        };
+        array.Add(item);
+      }
+      return array;
+    }
+
+    private ICollection BuildResponse(IList<ProcessActivity> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var activity in list) {
+        var item = new {
+          uid = activity.UID,
+          taskType = activity.TaskType,
+          involvedParty = activity.InvolvedParty.IsEmptyInstance
+                                        ? String.Empty : activity.InvolvedParty.Alias,
+          stepNo = activity.InnerTag,
+          name = activity.Name,
+          notes = activity.Notes,
+          ownerUID = activity.Owner.UID,
+          resourceTypeId = activity.ResourceType.Id,
+          status = activity.Status,
+          links = activity.Links
         };
         array.Add(item);
       }

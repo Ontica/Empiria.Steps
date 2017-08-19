@@ -225,7 +225,7 @@ namespace Empiria.Steps.WebApi {
           start_date = activity.EstimatedStart.ToString("yyyy-MM-dd HH:mm"),
           duration = activity.EstimatedEnd.Subtract(activity.EstimatedStart).Days,
           progress = activity.CompletionProgress,
-          parent = activity.Parent.IsEmptyInstance ? 0 : activity.Parent.Id
+          parent = activity.Parent is Activity ? activity.Parent.Id : 0
         };
         array.Add(item);
       }

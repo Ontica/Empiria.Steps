@@ -96,8 +96,8 @@ namespace Empiria.Steps.WorkflowDefinition {
     }
 
 
-    [DataField("GlobalTag")]
-    public string GlobalTag {
+    [DataField("Categories")]
+    public string Categories {
       get;
       private set;
     }

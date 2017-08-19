@@ -28,12 +28,18 @@ namespace Empiria.Steps.Modeling {
       this.Load(data);
     }
 
-    static internal Procedure Parse(int id) {
+    static public Procedure Parse(int id) {
       return BaseObject.ParseId<Procedure>(id);
     }
 
     static public Procedure Parse(string uid) {
       return BaseObject.ParseKey<Procedure>(uid);
+    }
+
+    static public Procedure Empty {
+      get {
+        return BaseObject.ParseEmpty<Procedure>();
+      }
     }
 
     static public FixedList<Procedure> GetList(string filter = "") {

@@ -133,7 +133,9 @@
     <Compile Include="Legal\LegalDocumentType.cs" />
     <Compile Include="Legal\RelatedProcedure.cs" />
     <Compile Include="ProjectManagement\Activity.cs" />
+    <Compile Include="ProjectManagement\ProjectModel.cs" />
     <Compile Include="ProjectManagement\Task.cs" />
+    <Compile Include="ProjectManagement\ProjectModelData.cs" />
     <Compile Include="RootTypes\ResourcesData.cs" />
     <Compile Include="ProjectManagement\ProjectData.cs" />
     <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
@@ -157,6 +159,7 @@
     <Compile Include="RootTypes\ActivityType.cs" />
     <Compile Include="RootTypes\TermTimeUnit.cs" />
     <Compile Include="RootTypes\StartsWhen.cs" />
+    <Compile Include="WorkflowDefinition\ProcessActivity.cs" />
     <Compile Include="WorkflowDefinition\Process.cs" />
     <Compile Include="WorkflowDefinition\WorkflowDefinitionData.cs" />
     <Compile Include="WorkflowDefinition\WorkflowObject.cs" />
