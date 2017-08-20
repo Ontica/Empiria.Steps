@@ -106,10 +106,10 @@ namespace Empiria.Steps.ProjectManagement {
 
 
     [DataField("EstimatedDuration")]
-    public string EstimatedDuration {
+    public Duration EstimatedDuration {
       get;
       private set;
-    }
+    } = Duration.Empty;
 
 
     [DataField("ActualStart")]
@@ -180,7 +180,7 @@ namespace Empiria.Steps.ProjectManagement {
       this.Notes = data.GetClean("notes", this.Notes);
       this.EstimatedStart = data.Get<DateTime>("estimatedStart", this.EstimatedStart);
       this.EstimatedEnd = data.Get<DateTime>("estimatedEnd", this.EstimatedEnd);
-      this.EstimatedDuration = data.GetClean("estimatedDuration", this.EstimatedDuration);
+      this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration", this.EstimatedDuration.ToString()));
       this.CompletionProgress = data.Get<decimal>("completionProgress", this.CompletionProgress);
       this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
       if (!this.IsEmptyInstance) {
@@ -197,6 +197,13 @@ namespace Empiria.Steps.ProjectManagement {
 
     protected override void OnSave() {
       throw Assertion.AssertNoReachThisCode();
+    }
+
+    internal void SetEstimatedDates(DateTime startDate, DateTime endDate) {
+      this.EstimatedStart = startDate;
+      this.EstimatedEnd = endDate;
+
+      this.Save();
     }
 
     public virtual void Update(JsonObject data) {

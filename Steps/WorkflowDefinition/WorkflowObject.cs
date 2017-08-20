@@ -10,7 +10,6 @@ w  Summary  : Describes a project as a set of well defined activities.          
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
 
@@ -122,6 +121,13 @@ namespace Empiria.Steps.WorkflowDefinition {
       get;
       private set;
     }
+
+
+    [DataField("EstimatedDuration")]
+    public Duration EstimatedDuration {
+      get;
+      private set;
+    } = Duration.Empty;
 
 
     [DataField("OwnerId")]

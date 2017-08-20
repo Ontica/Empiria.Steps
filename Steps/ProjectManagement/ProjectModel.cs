@@ -79,23 +79,39 @@ namespace Empiria.Steps.ProjectManagement {
 
       Activity baseActivity = baseProject.AddActivity(data);
 
+      DateTime startDate = baseActivity.EstimatedStart;
+
+      int daysAccumulator = 0;
+
       foreach (var step in this.Steps) {
-        var stepAsJson = this.ConvertStepToJson(baseActivity, step);
+        var stepAsJson = this.ConvertStepToJson(baseActivity, step, daysAccumulator);
 
         baseActivity.AddActivity(stepAsJson);
+
+        daysAccumulator += step.EstimatedDuration.Value;
+      }
+
+      if (baseActivity.EstimatedEnd == ExecutionServer.DateMaxValue) {
+        baseActivity.SetEstimatedDates(startDate, startDate.AddDays(daysAccumulator));
       }
 
       return baseProject;
     }
 
 
-    private JsonObject ConvertStepToJson(Activity parent, ProcessActivity step) {
+    private JsonObject ConvertStepToJson(Activity parent, ProcessActivity step,
+                                         int daysAccumulator) {
       var json = new JsonObject();
 
       json.Add(new JsonItem("name", step.Name));
 
-      json.Add(new JsonItem("estimatedStart", parent.EstimatedStart));
-      json.Add(new JsonItem("estimatedEnd", parent.EstimatedEnd));
+      json.Add(new JsonItem("estimatedStart",
+                   parent.EstimatedStart.AddDays(daysAccumulator)));
+
+      json.Add(new JsonItem("estimatedEnd",
+                   parent.EstimatedStart.AddDays(step.EstimatedDuration.Value + daysAccumulator)));
+
+      json.Add(new JsonItem("estimatedDuration", step.EstimatedDuration.ToString()));
 
       json.Add(new JsonItem("resourceUID", parent.Resource.UID));
 
