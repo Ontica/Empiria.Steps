@@ -138,8 +138,24 @@ namespace Empiria.Steps.ProjectManagement {
     #region Public methods
 
     public Activity AddActivity(JsonObject data) {
-      var activity = new Activity(this, data);
+      Assertion.AssertObject(data, "data");
 
+      Activity activity = null;
+
+      int parentId = data.Get<int>("parentId", -1);
+
+      if (parentId == -1) {
+        activity = new Activity(this, data);
+      } else {
+        var parent = this.Activities.Find((x) => x.Id == parentId);
+
+        if (parent != null) {
+          activity = new Activity(parent, data);
+        } else {
+          throw new ValidationException("UnrecognizedActivityParent",
+                                        $"Invalid activity parent ({parentId}) for project ({this.Id}).");
+        }
+      }
       activity.Save();
 
       activitiesList.Value.Add(activity);

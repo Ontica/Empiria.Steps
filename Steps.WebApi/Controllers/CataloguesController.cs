@@ -8,10 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections;
 using System.Web.Http;
 
-using Empiria.DataTypes;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
@@ -22,21 +20,7 @@ namespace Empiria.Steps.WebApi {
   /// <summary>Get and set apis for very basic entities or value objects.</summary>
   public class CataloguesController : WebApiController {
 
-    #region Public APIs
-
-    [HttpGet]
-    [Route("v1/catalogues/activity-types")]
-    public CollectionModel GetActivityTypesList() {
-      try {
-        var list = ActivityType.GetList();
-
-        return new CollectionModel(this.Request, BuildResponse(list),
-                                   typeof(ActivityType).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
+    #region GET methods
 
     [HttpGet]
     [Route("v1/catalogues/procedure-starts-when")]
@@ -79,24 +63,7 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-    #endregion Public APIs
-
-    #region Private methods
-
-    private ICollection BuildResponse(FixedList<ActivityType> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var activityType in list) {
-        var item = new {
-          uid = activityType.UID,
-          name = activityType.Name,
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-    #endregion Private methods
+    #endregion GET methods
 
   }  // class CataloguesController
 

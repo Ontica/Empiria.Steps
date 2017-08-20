@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Steps Web API                       *
 *  Assembly : Empiria.Steps.WebApi.dll                         Pattern : Response methods                    *
-*  Type     : ContactResponseMethods                           License : Please read LICENSE.txt file        *
+*  Type     : ContactResponseModels                            License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Response static methods for contact entities.                                                  *
 *                                                                                                            *
@@ -16,7 +16,7 @@ using Empiria.Contacts;
 namespace Empiria.Steps.WebApi {
 
   /// <summary>Response static methods for contact entities.</summary>
-  static internal class ContactResponseMethods {
+  static internal class ContactResponseModels {
 
     static internal ICollection ToResponse(this IList<Contact> list) {
       ArrayList array = new ArrayList(list.Count);
@@ -32,6 +32,6 @@ namespace Empiria.Steps.WebApi {
       return array;
     }
 
-  }  // class ContactResponseMethods
+  }  // class ContactResponseModels
 
 }  // namespace Empiria.Steps.WebApi

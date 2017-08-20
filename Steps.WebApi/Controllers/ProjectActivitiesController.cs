@@ -15,7 +15,6 @@ using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
 using Empiria.Steps.ProjectManagement;
-using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.WebApi {
 
@@ -78,7 +77,7 @@ namespace Empiria.Steps.WebApi {
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities")]
     public SingleObjectModel AddActivity(string projectUID,
-                                        [FromBody] object body) {
+                                         [FromBody] object body) {
       try {
         base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
@@ -86,32 +85,6 @@ namespace Empiria.Steps.WebApi {
         var project = Project.Parse(projectUID);
 
         project.AddActivity(bodyAsJson);
-
-        var fullActivitiesList = project.GetAllActivities();
-
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
-                                     typeof(ProjectObject).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-
-    [HttpPost]
-    [Route("v1/project-management/projects/{projectUID}/create-from-process-model/{processModelUID}")]
-    public SingleObjectModel CreateActivitiesFromProcessModel(string projectUID, string processModelUID,
-                                                              [FromBody] object body) {
-      try {
-        base.RequireBody(body);
-        var bodyAsJson = JsonObject.Parse(body);
-
-        var project = Project.Parse(projectUID);
-        var process = Process.Parse(processModelUID);
-
-        ProjectModel projectModel = ProjectModel.Parse(process);
-
-        projectModel.CreateInstance(project, bodyAsJson);
 
         var fullActivitiesList = project.GetAllActivities();
 

@@ -38,8 +38,12 @@ namespace Empiria.Steps.ProjectManagement {
 
     protected internal Activity(ProjectObject parent, JsonObject data) :
                                 base(ProjectObjectType.ActivityType, parent, data) {
+      if (parent is Activity) {
+        this.Project = ((Activity) parent).Project;
+      } else {
+        this.Project = (Project) parent;
+      }
       this.AssertIsValid(data);
-
       this.Load(data);
     }
 
@@ -82,7 +86,6 @@ namespace Empiria.Steps.ProjectManagement {
       get;
       private set;
     } = ExecutionServer.DateMinValue;
-
 
 
     public Contact RequestedBy {

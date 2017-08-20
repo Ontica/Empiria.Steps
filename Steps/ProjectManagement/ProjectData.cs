@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-using System.Data;
+
 using Empiria.Contacts;
 using Empiria.Data;
 
@@ -101,7 +101,7 @@ namespace Empiria.Steps.ProjectManagement {
                 o.ExtensionData.ToString(),
                 o.EstimatedStart, o.EstimatedEnd, o.EstimatedDuration,
                 o.ActualStart, o.ActualEnd, o.CompletionProgress,
-                o.RelatedProcedure.Id, o.Resource.Id,
+                o.WorkflowObject.Id, o.Resource.Id,
                 o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
                 o.Project.Id, o.Parent.Id, (char) o.Status);
 
@@ -115,7 +115,7 @@ namespace Empiria.Steps.ProjectManagement {
                 o.ExtensionData.ToString(),
                 o.EstimatedStart, o.EstimatedEnd, o.EstimatedDuration,
                 o.ActualStart, o.ActualEnd, o.CompletionProgress,
-                o.RelatedProcedure.Id, o.Resource.Id,
+                o.WorkflowObject.Id, o.Resource.Id,
                 o.Owner.Id, o.Manager.Id, ExecutionServer.DateMinValue, Contact.Empty.Id,
                 Project.Empty.Id, Project.Empty.Id, (char) o.Status);
 
@@ -129,7 +129,7 @@ namespace Empiria.Steps.ProjectManagement {
                 o.ExtensionData.ToString(),
                 o.EstimatedStart, o.EstimatedEnd, o.EstimatedDuration,
                 o.ActualStart, o.ActualEnd, o.CompletionProgress,
-                o.RelatedProcedure.Id, Resource.Empty.Id,
+                o.WorkflowObject.Id, Resource.Empty.Id,
                 o.Owner.Id, o.AssignedTo.Id, o.AssignationTime, o.AssignedTo,
                 o.Activity.Project.Id, o.Activity.Id, (char) o.Status);
 

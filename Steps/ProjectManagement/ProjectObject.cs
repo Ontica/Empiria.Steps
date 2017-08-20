@@ -13,7 +13,7 @@ using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Ontology;
 
-using Empiria.Steps.Legal;
+using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.ProjectManagement {
 
@@ -29,10 +29,12 @@ namespace Empiria.Steps.ProjectManagement {
 
     protected internal ProjectObject(ProjectObjectType type,
                                      ProjectObject parent, JsonObject data) : base(type) {
+      Assertion.AssertObject(type, "type");
       Assertion.AssertObject(parent, "parent");
       Assertion.AssertObject(data, "data");
 
       this.Parent = parent;
+      this.Owner = parent.Owner;
 
       this.AssertIsValid(data);
 
@@ -158,11 +160,11 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
 
-    [DataField("RelatedProcedureId")]
-    public RelatedProcedure RelatedProcedure {
+    [DataField("WorkflowObjectId")]
+    public WorkflowObject WorkflowObject {
       get;
       private set;
-    } = RelatedProcedure.Empty;
+    } = WorkflowObject.Empty;
 
 
     #endregion Public properties
@@ -180,7 +182,7 @@ namespace Empiria.Steps.ProjectManagement {
       this.EstimatedEnd = data.Get<DateTime>("estimatedEnd", this.EstimatedEnd);
       this.EstimatedDuration = data.GetClean("estimatedDuration", this.EstimatedDuration);
       this.CompletionProgress = data.Get<decimal>("completionProgress", this.CompletionProgress);
-      this.Parent = ProjectObject.Parse(data.Get<int>("parentId"));
+      this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
     }
 
     protected override void OnBeforeSave() {

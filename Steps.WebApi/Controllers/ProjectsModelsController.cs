@@ -10,10 +10,12 @@
 using System;
 using System.Web.Http;
 
+using Empiria.Json;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
 using Empiria.Steps.ProjectManagement;
+using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.WebApi {
 
@@ -54,6 +56,35 @@ namespace Empiria.Steps.WebApi {
     }
 
     #endregion GET methods
+
+    #region UPDATE methods
+
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/create-from-process-model/{processModelUID}")]
+    public SingleObjectModel CreateActivitiesFromProcessModel(string projectUID, string processModelUID,
+                                                             [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var project = Project.Parse(projectUID);
+        var process = Process.Parse(processModelUID);
+
+        ProjectModel projectModel = ProjectModel.Parse(process);
+
+        projectModel.CreateInstance(project, bodyAsJson);
+
+        var fullActivitiesList = project.GetAllActivities();
+
+        return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
+                                     typeof(ProjectObject).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    #endregion UPDATE methods
 
   }  // class ProjectsModelsController
 

@@ -72,11 +72,45 @@ namespace Empiria.Steps.ProjectManagement {
     #region Methods
 
     public Project CreateInstance(Project baseProject, JsonObject data) {
+      Assertion.AssertObject(baseProject, "baseProject");
+      Assertion.AssertObject(data, "data");
+
+      data.Add(new JsonItem("workflowObjectId", BaseProcess.Id));
+
+      Activity baseActivity = baseProject.AddActivity(data);
+
+      foreach (var step in this.Steps) {
+        var stepAsJson = this.ConvertStepToJson(baseActivity, step);
+
+        baseActivity.AddActivity(stepAsJson);
+      }
+
       return baseProject;
     }
 
-    #endregion Methods
 
-  } // class ProjectModel
+    private JsonObject ConvertStepToJson(Activity parent, ProcessActivity step) {
+      var json = new JsonObject();
+
+      json.Add(new JsonItem("name", step.Name));
+
+      json.Add(new JsonItem("estimatedStart", parent.EstimatedStart));
+      json.Add(new JsonItem("estimatedEnd", parent.EstimatedEnd));
+
+      json.Add(new JsonItem("resourceUID", parent.Resource.UID));
+
+      json.Add(new JsonItem("requestedByUID", parent.RequestedBy.UID));
+      json.Add(new JsonItem("requestedTime", parent.RequestedTime));
+      json.Add(new JsonItem("responsibleUID", parent.Responsible.UID));
+
+      json.Add(new JsonItem("workflowObjectId", step.Id));
+      json.Add(new JsonItem("parentId", parent.Id));
+
+      return json;
+    }
+
+  #endregion Methods
+
+} // class ProjectModel
 
 } // namespace Empiria.Steps.ProjectManagement

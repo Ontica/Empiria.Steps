@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Steps Web API                       *
 *  Assembly : Empiria.Steps.WebApi.dll                         Pattern : Response methods                    *
-*  Type     : ProjectResponseMethods                           License : Please read LICENSE.txt file        *
+*  Type     : ProjectResponseModels                            License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Response static methods for project entities.                                                  *
 *                                                                                                            *
@@ -17,7 +17,7 @@ using Empiria.Steps.WorkflowDefinition;
 namespace Empiria.Steps.WebApi {
 
   /// <summary>Response static methods for project entities.</summary>
-  static internal class ProjectResponseMethods {
+  static internal class ProjectResponseModels {
 
     #region Collections response methods
 
@@ -166,6 +166,6 @@ namespace Empiria.Steps.WebApi {
 
     #endregion Single objects response methods
 
-  }  // class ProjectResponseMethods
+  }  // class ProjectResponseModels
 
 }  // namespace Empiria.Steps.WebApi

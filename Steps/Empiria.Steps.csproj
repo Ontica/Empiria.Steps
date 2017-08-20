@@ -156,7 +156,6 @@
     <Compile Include="RootTypes\Resource.cs" />
     <Compile Include="ProjectManagement\Project.cs" />
     <Compile Include="ProjectManagement\ProjectObjectStatus.cs" />
-    <Compile Include="RootTypes\ActivityType.cs" />
     <Compile Include="RootTypes\TermTimeUnit.cs" />
     <Compile Include="RootTypes\StartsWhen.cs" />
     <Compile Include="WorkflowDefinition\ProcessActivity.cs" />
