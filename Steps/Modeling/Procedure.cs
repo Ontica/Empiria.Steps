@@ -202,7 +202,7 @@ namespace Empiria.Steps.Modeling {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(32);
+        this.UID = EmpiriaString.BuildRandomString(6, 24);
       }
     }
 
