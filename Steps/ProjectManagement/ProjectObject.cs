@@ -183,11 +183,15 @@ namespace Empiria.Steps.ProjectManagement {
       this.EstimatedDuration = data.GetClean("estimatedDuration", this.EstimatedDuration);
       this.CompletionProgress = data.Get<decimal>("completionProgress", this.CompletionProgress);
       this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
+      if (!this.IsEmptyInstance) {
+        int parentId = data.Get<int>("parentId", -1);
+        this.Parent = parentId != -1 ? ProjectObject.Parse(parentId) : this.Parent;
+      }
     }
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(32);
+        this.UID = EmpiriaString.BuildRandomString(6, 24);
       }
     }
 
@@ -195,9 +199,10 @@ namespace Empiria.Steps.ProjectManagement {
       throw Assertion.AssertNoReachThisCode();
     }
 
-    public void Update(JsonObject data) {
+    public virtual void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
+      this.AssertIsValid(data);
       this.Load(data);
     }
 

@@ -96,6 +96,35 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
+
+    [HttpPut, HttpPatch]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityId}")]
+    public SingleObjectModel UpdateActivity(string projectUID, int activityId,
+                                            [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var project = Project.Parse(projectUID);
+        var activity = Activity.Parse(activityId);
+
+        Assertion.Assert(activity.Project.Equals(project),
+                         $"Activity with id ({activityId}) is not part of project with uid ({projectUID}).");
+
+        activity.Update(bodyAsJson);
+
+        activity.Save();
+
+        var fullActivitiesList = project.GetAllActivities();
+
+        return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
+                                     typeof(ProjectObject).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
     #endregion UPDATE methods
 
   }  // class ProjectActivitiesController
