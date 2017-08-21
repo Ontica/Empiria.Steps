@@ -108,6 +108,7 @@
     <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\BpmnDiagramController.cs" />
     <Compile Include="Empiria.Steps.WebApi.AssemblyInfo.cs" />
+    <Compile Include="Models\BpmnDiagramResponseModel.cs" />
     <Compile Include="Models\ContactResponseModels.cs" />
     <Compile Include="Models\ProjectResponseModels.cs" />
   </ItemGroup>

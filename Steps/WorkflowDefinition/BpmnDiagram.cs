@@ -83,10 +83,9 @@ namespace Empiria.Steps.WorkflowDefinition {
 
     }
 
-
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
-      this.Xml = data.Get<string>("xml", String.Empty);
+      this.Xml = data.GetClean("xml");
     }
 
 

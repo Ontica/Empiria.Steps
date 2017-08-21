@@ -14,7 +14,6 @@ using Empiria.Json;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
-using System.Collections;
 using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.WebApi {
@@ -22,7 +21,7 @@ namespace Empiria.Steps.WebApi {
   /// <summary>Provides services for read and write BPMN diagrams.</summary>
   public class BpmnDiagramController : WebApiController {
 
-    #region Public APIs
+    #region GET methods
 
     [HttpGet]
     [Route("v1/process-definitions")]
@@ -30,12 +29,14 @@ namespace Empiria.Steps.WebApi {
       try {
         var list = BpmnDiagram.GetList();
 
-        return new CollectionModel(this.Request, this.BuildResponse(list), typeof(BpmnDiagram).FullName);
+        return new CollectionModel(this.Request, list.ToResponse(),
+                                   typeof(BpmnDiagram).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpGet]
     [Route("v1/process-definitions/{processDef_ID}")]
@@ -45,13 +46,17 @@ namespace Empiria.Steps.WebApi {
 
         var processDefinition = BpmnDiagram.Parse(processDef_ID);
 
-        return new SingleObjectModel(this.Request, BuildResponse(processDefinition),
+        return new SingleObjectModel(this.Request, processDefinition.ToResponse(),
                                      typeof(BpmnDiagram).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
+
+    #endregion GET methods
+
+    #region UPDATE methods
 
     [HttpPost]
     [Route("v1/process-definitions")]
@@ -65,12 +70,14 @@ namespace Empiria.Steps.WebApi {
 
         processDefinition.Save();
 
-        return new SingleObjectModel(this.Request, processDefinition);
+        return new SingleObjectModel(this.Request, processDefinition.ToResponse(),
+                                     typeof(BpmnDiagram).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpPut, HttpPatch]
     [Route("v1/process-definitions/{processDef_ID}")]
@@ -87,37 +94,15 @@ namespace Empiria.Steps.WebApi {
 
         processDefinition.Save();
 
-        return new SingleObjectModel(this.Request, processDefinition);
+        return new SingleObjectModel(this.Request, processDefinition.ToResponse(),
+                                     typeof(BpmnDiagram).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
 
-    #endregion Public APIs
-
-    private ICollection BuildResponse(FixedList<BpmnDiagram> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var processDefinition in list) {
-        var item = new {
-          uid = processDefinition.UID,
-          name = processDefinition.Name,
-          version = "1.0",
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-    private object BuildResponse(BpmnDiagram bpmnDiagram) {
-      return new {
-          uid = bpmnDiagram.UID,
-          name = bpmnDiagram.Name,
-          version = "1.0",
-          bpmnXml = bpmnDiagram.Xml,
-      };
-    }
+    #endregion UPDATE methods
 
   }  // class BpmnDiagramController
 
