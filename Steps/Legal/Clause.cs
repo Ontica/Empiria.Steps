@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Data;
 using Empiria.Json;
 
 namespace Empiria.Steps.Legal {
@@ -52,9 +53,31 @@ namespace Empiria.Steps.Legal {
 
 
     static internal List<Clause> GetList(Contract legalDocument) {
-      string filter = $"LegalDocumentId = {legalDocument.Id}";
+      string filter = $"DocumentId = {legalDocument.Id}";
 
-      return BaseObject.GetList<Clause>(filter, "ItemNumber, ItemPosition");
+      return BaseObject.GetList<Clause>(filter, "ItemOrdering, ItemSection, ItemNumber");
+    }
+
+    static internal List<Clause> GetList(Contract legalDocument, string keywords) {
+      string filter = $"DocumentId = {legalDocument.Id}";
+
+      keywords = keywords.Replace("'", "");
+
+      if (keywords.Length != 0) {
+        var keywordsFilter = SearchExpression.ParseAndLike("Keywords", keywords);
+
+        filter = GeneralDataOperations.BuildSqlAndFilter(filter, keywordsFilter);
+      }
+
+      return BaseObject.GetList<Clause>(filter, "ItemOrdering, ItemSection, ItemNumber");
+    }
+
+    static public void UpdateAll() {
+      var clauses = BaseObject.GetList<Clause>();
+
+      foreach (var clause in clauses) {
+        clause.Save();
+      }
     }
 
 
@@ -73,7 +96,7 @@ namespace Empiria.Steps.Legal {
     }
 
 
-    [DataField("LegalDocumentId")]
+    [DataField("DocumentId")]
     internal int ContractId {
       get;
       private set;
@@ -86,11 +109,12 @@ namespace Empiria.Steps.Legal {
       }
     }
 
-    [DataField("ItemTypeId")]
-    public int ItemTypeId {
+
+    [DataField("ItemSection")]
+    public string Section {
       get;
       private set;
-    } = -1;
+    }
 
 
     [DataField("ItemTitle")]
@@ -114,10 +138,29 @@ namespace Empiria.Steps.Legal {
     }
 
 
-    [DataField("ItemPosition")]
-    public int Position {
-      get;
-      private set;
+    public string Ordering {
+      get {
+        var temp = this.Section.Trim();
+
+        if (temp.Equals("Cláusulas")) {
+          temp = String.Empty;
+
+        } else if ((temp.LastIndexOf(' ') == temp.Length - 2) &&
+                    EmpiriaString.IsInteger(temp.Substring(temp.Length - 1))) {
+          temp = temp.Replace(" " + temp.Substring(temp.Length - 1), " 0" + temp.Substring(temp.Length - 1)) + ".";
+
+        } else {
+          temp = temp + ".";
+        }
+
+        var number = this.Number.Trim().Replace(".", ".0");
+        if (number.Length == 1) {
+          number = "0" + number;
+        } else if (number.Substring(1, 1) == ".") {
+          number = "0" + number;
+        }
+        return temp + number;
+      }
     }
 
 
@@ -142,6 +185,19 @@ namespace Empiria.Steps.Legal {
     }
 
 
+    internal string Keywords {
+      get {
+        string temp = String.Empty;
+
+        foreach (var i in this.RelatedProcedures) {
+          temp += i.Procedure.Code + " " + EmpiriaString.BuildKeywords(i.Procedure.Name, i.Procedure.EntityName);
+          temp += " ";
+        }
+        return this.Number + " " + EmpiriaString.BuildKeywords(this.Title, temp, this.Text);
+      }
+    }
+
+
     public FixedList<RelatedProcedure> RelatedProcedures {
       get {
         return procedures.Value.ToFixedList();
@@ -162,6 +218,16 @@ namespace Empiria.Steps.Legal {
       return relatedProcedure;
     }
 
+    internal RelatedProcedure AddRelatedProcedure(Modeling.Procedure procedure) {
+      var relatedProcedure = new RelatedProcedure(this, procedure);
+
+      relatedProcedure.Save();
+
+      procedures.Value.Add(relatedProcedure);
+
+      return relatedProcedure;
+    }
+
 
     public RelatedProcedure GetRelatedProcedure(string relatedProcedureUID) {
       RelatedProcedure item = procedures.Value.Find((x) => x.UID == relatedProcedureUID);
@@ -174,7 +240,7 @@ namespace Empiria.Steps.Legal {
 
 
     protected override void OnBeforeSave() {
-      if (this.IsNew) {
+      if (this.UID.Length == 0) {
         this.UID = EmpiriaString.BuildRandomString(6, 24);
       }
     }
@@ -188,6 +254,7 @@ namespace Empiria.Steps.Legal {
     public RelatedProcedure TryGetRelatedProcedure(Predicate<RelatedProcedure> predicate) {
       return procedures.Value.Find(predicate);
     }
+
 
     public void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");
@@ -223,6 +290,7 @@ namespace Empiria.Steps.Legal {
 
 
     private void Load(JsonObject data) {
+      this.Section = data.GetClean("section");
       this.Number = data.GetClean("clauseNo");
       this.Title = data.GetClean("title");
       this.Text = data.Get<string>("text", this.Text);

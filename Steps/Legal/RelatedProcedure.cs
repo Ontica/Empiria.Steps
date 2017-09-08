@@ -36,6 +36,13 @@ namespace Empiria.Steps.Legal {
       this.Load(data);
     }
 
+    internal RelatedProcedure(Clause legalDocumentItem, Procedure procedure) {
+      Assertion.AssertObject(legalDocumentItem, "legalDocumentItem");
+      Assertion.AssertObject(procedure, "procedure");
+
+      this.LegalDocumentItemId = legalDocumentItem.Id;
+      this.ProcedureId = procedure.Id;
+    }
 
     static public RelatedProcedure Parse(int id) {
       return BaseObject.ParseId<RelatedProcedure>(id);
@@ -183,7 +190,7 @@ namespace Empiria.Steps.Legal {
       Validate.HasValue(data, "procedure/uid",
                         "Requiero conocer el uid del trámite relacionado a esta cláusula.");
 
-      var procedureUID = data.GetClean("procedure/uid");
+      var procedureUID = data.Get<string>("procedure/uid");
 
       if (this.IsNew) {
         var relatedProcedure = this.Clause.TryGetRelatedProcedure((x) => x.Procedure.UID.Equals(procedureUID));

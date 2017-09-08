@@ -44,12 +44,16 @@ namespace Empiria.Steps.WebApi {
 
     [HttpGet]
     [Route("v1/contracts/{contractUID}")]
-    public SingleObjectModel GetContract([FromUri] string contractUID) {
+    public SingleObjectModel GetContract([FromUri] string contractUID,
+                                         [FromUri] string keywords = "") {
       try {
+        keywords = keywords ?? String.Empty;
 
         var contract = Contract.Parse(contractUID);
 
-        return new SingleObjectModel(this.Request, BuildResponse(contract),
+        FixedList<Clause> clausesList = contract.GetClauses(keywords);
+
+        return new SingleObjectModel(this.Request, BuildResponse(contract, clausesList),
                                      typeof(Contract).FullName);
 
       } catch (Exception e) {
@@ -63,11 +67,14 @@ namespace Empiria.Steps.WebApi {
 
     [HttpGet]
     [Route("v1/contracts/{contractUID}/clauses")]
-    public CollectionModel GetContractClausesList([FromUri] string contractUID) {
+    public CollectionModel GetContractClausesList([FromUri] string contractUID,
+                                                  [FromUri] string keywords = "") {
       try {
+        keywords = keywords ?? String.Empty;
+
         var contract = Contract.Parse(contractUID);
 
-        FixedList<Clause> clausesList = contract.Clauses;
+        FixedList<Clause> clausesList = contract.GetClauses(keywords);
 
         return new CollectionModel(this.Request, BuildResponse(clausesList),
                                    typeof(Clause).FullName);
@@ -112,6 +119,18 @@ namespace Empiria.Steps.WebApi {
         return new SingleObjectModel(this.Request, BuildResponse(clause),
                                      typeof(Clause).FullName);
 
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/contracts/{contractUID}/clauses/update-all")]
+    public void UpdateAllContractClause() {
+      try {
+
+        Clause.UpdateAll();
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
@@ -217,12 +236,13 @@ namespace Empiria.Steps.WebApi {
     }
 
 
-    private object BuildResponse(Contract legalDocument) {
+    private object BuildResponse(Contract legalDocument,
+                                 FixedList<Clause> clauses = null) {
       return new {
         uid = legalDocument.UID,
         name = legalDocument.Name,
         url = legalDocument.Url,
-        clauses = BuildResponse(legalDocument.Clauses),
+        clauses = BuildResponse(clauses ?? legalDocument.Clauses),
       };
     }
 
@@ -242,6 +262,8 @@ namespace Empiria.Steps.WebApi {
     private object BuildResponse(Clause documentItem) {
       return new {
         uid = documentItem.UID,
+        contractUID = documentItem.Contract.UID,
+        section = documentItem.Section,
         clauseNo = documentItem.Number,
         title = documentItem.Title,
         text = documentItem.Text,
@@ -253,6 +275,8 @@ namespace Empiria.Steps.WebApi {
     private object BuildResponseFull(Clause documentItem) {
       return new {
         uid = documentItem.UID,
+        contractUID = documentItem.Contract.UID,
+        section = documentItem.Section,
         clauseNo = documentItem.Number,
         title = documentItem.Title,
         text = documentItem.Text,
@@ -285,10 +309,10 @@ namespace Empiria.Steps.WebApi {
       return new {
         uid = relatedProcedure.UID,
         procedure = BuildResponse(relatedProcedure.Procedure),
-        maxFilingTerm = relatedProcedure.MaxFilingTerm,
-        maxFilingTermType = relatedProcedure.MaxFilingTermType,
-        startsWhen = relatedProcedure.StartsWhen,
-        startsWhenTrigger = relatedProcedure.StartsWhenTrigger,
+        //maxFilingTerm = relatedProcedure.MaxFilingTerm,
+        //maxFilingTermType = relatedProcedure.MaxFilingTermType,
+        //startsWhen = relatedProcedure.StartsWhen,
+        //startsWhenTrigger = relatedProcedure.StartsWhenTrigger,
         notes = relatedProcedure.Notes
       };
     }
@@ -300,6 +324,11 @@ namespace Empiria.Steps.WebApi {
         shortName = procedure.ShortName,
         name = procedure.Name,
         code = procedure.Code,
+        theme = procedure.Theme,
+        executionMode = procedure.ExecutionMode,
+        projectType = procedure.ProjectType,
+        officialUrl = procedure.OfficialURL,
+        regulationUrl = procedure.RegulationURL,
         entity = procedure.Authority.Entity.Nickname
       };
     }

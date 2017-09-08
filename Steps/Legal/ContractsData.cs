@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Data;
 
 using Empiria.Data;
 
@@ -18,10 +17,10 @@ namespace Empiria.Steps.Legal {
   static internal class ContractsData {
 
     static internal void WriteClause(Clause o) {
-      var op = DataOperation.Parse("writeBPMLegalDocumentItems",
-                        o.Id, o.UID, o.ContractId, o.ItemTypeId,
-                        o.Title, o.Number, o.Text, -1, o.DocumentPageNo,
-                        o.Notes, o.Status);
+      var op = DataOperation.Parse("writeBPMDocumentItems",
+                        o.Id, o.UID, o.ContractId, o.Section, o.Number,
+                        o.Ordering, o.Title, o.DocumentPageNo, o.Text,
+                        o.Notes, o.Keywords, o.Status);
 
       DataWriter.Execute(op);
     }

@@ -87,7 +87,6 @@ namespace Empiria.Steps.Legal {
       private set;
     }
 
-
     [DataField("ObjectExtData.url")]
     public string Url {
       get;
@@ -123,6 +122,14 @@ namespace Empiria.Steps.Legal {
                                    $"was not found in contract with uid = '{this.UID}'");
 
       return item;
+    }
+
+    public FixedList<Clause> GetClauses(string keywords) {
+      if (keywords.Length == 0) {
+        return this.Clauses;
+      }
+      return Clause.GetList(this, keywords)
+                   .ToFixedList();
     }
 
     public Clause TryGetClause(Predicate<Clause> predicate) {
