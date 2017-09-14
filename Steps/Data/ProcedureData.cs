@@ -18,31 +18,14 @@ namespace Empiria.Steps.Modeling {
 
     static internal FixedList<Procedure> GetProcedureList(string filter = "") {
       DataTable table = GeneralDataOperations.GetEntities("vwBPMProcedures",
-                                                          filter, "Stage, MSExcelNo, Name");
+                                                          filter, "ProcedureName, ProcedureId");
 
       return BaseObject.ParseList<Procedure>(table).ToFixedList();
     }
 
     static internal void WriteProcedure(Procedure o) {
       var op = DataOperation.Parse("writeBPMProcedure",
-                o.Id, o.UID, o.Name, o.ShortName, o.Code, o.Notes, o.URL,
-                o.Stage, o.Category, o.Theme,
-                o.Authority.Entity.Id, o.Authority.Office.Id, o.Authority.Position.Id,
-                o.LegalInfo.RegulationStatus, o.LegalInfo.Obligation, o.LegalInfo.LegalBasis,
-                o.FilingCondition.StartsWhen, o.FilingCondition.StartsWhenNotes, o.FilingCondition.StartsWhenTrigger,
-                o.FilingCondition.MaxFilingTerm, o.FilingCondition.MaxFilingTermNotes,
-                o.FilingCondition.IssuanceLegalTerm, o.FilingCondition.IssuanceLegalTermNotes,
-
-                o.FilingCondition.HowToFile, o.FilingCondition.AllowsDeferrals,
-                o.FilingCondition.DeferralsTermNotes, o.FilingCondition.DeferralsConditionNotes,
-                o.FilingDocuments.Notes,
-                o.FilingCondition.ValidityTermWhenIssued, o.FilingCondition.SimultaneousDelivery,
-                o.FilingFee.FilingFeeType, o.FilingFee.FeeAmount,
-                o.FilingFee.Rule, o.FilingFee.LegalBasis, o.Keywords, o.StatusNotes, (char) o.Status,
-
-                o.LegalInfo.Ronda13Consorcio, o.LegalInfo.Ronda13Individual,
-                o.LegalInfo.Ronda14Consorcio, o.LegalInfo.Ronda14Individual,
-                o.MSExcelNo);
+                                    o.Id, o.UID, o.Keywords, o.BpmnDiagram.Id);
 
       DataWriter.Execute(op);
     }

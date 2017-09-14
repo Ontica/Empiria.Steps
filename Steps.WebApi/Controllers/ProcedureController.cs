@@ -52,6 +52,22 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
+
+    [HttpGet]
+    [Route("v1/procedures/{procedure_UID}/bpmn-diagram")]
+    public SingleObjectModel GetProcedureBpmnDiagram([FromUri] string procedure_UID) {
+      try {
+        base.RequireResource(procedure_UID, "procedure_UID");
+
+        var procedure = Procedure.Parse(procedure_UID);
+
+        return new SingleObjectModel(this.Request, procedure.BpmnDiagram.ToResponse(), typeof(WorkflowDefinition.BpmnDiagram).FullName);
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     [HttpPost]
     [Route("v1/procedures")]
     public SingleObjectModel CreateProcedure([FromBody] object body) {
@@ -66,6 +82,17 @@ namespace Empiria.Steps.WebApi {
 
         return new SingleObjectModel(this.Request, BuildResponse(procedure), typeof(Procedure).FullName);
 
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpPost]
+    [Route("v1/procedures/update-all")]
+    public void UpdateAllProcedures() {
+      try {
+
+        Procedure.UpdateAll();
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
@@ -107,13 +134,14 @@ namespace Empiria.Steps.WebApi {
           name = procedure.Name,
           shortName = procedure.ShortName,
           code = procedure.Code,
-          url = procedure.URL,
-          stage = procedure.Stage,
-          category = procedure.Category,
           theme = procedure.Theme,
-          entity = procedure.Authority.Entity.FullName,
-          office = procedure.Authority.Office.FullName,
-          status = Enum.GetName(typeof(GeneralObjectStatus), procedure.Status),
+          executionMode = procedure.ExecutionMode,
+          projectType = procedure.ProjectType,
+          officialUrl = procedure.OfficialURL,
+          regulationUrl = procedure.RegulationURL,
+          entity = procedure.Authority.Entity.Alias,
+          office = procedure.Authority.Office.FullName
+          //status = Enum.GetName(typeof(GeneralObjectStatus), procedure.Status),
         };
         array.Add(item);
       }
@@ -126,19 +154,24 @@ namespace Empiria.Steps.WebApi {
         name = procedure.Name,
         shortName = procedure.ShortName,
         code = procedure.Code,
-        url = procedure.URL,
-        stage = procedure.Stage,
-        category = procedure.Category,
         theme = procedure.Theme,
+
+        executionMode = procedure.ExecutionMode,
+        projectType = procedure.ProjectType,
+        officialUrl = procedure.OfficialURL,
+        regulationUrl = procedure.RegulationURL,
+
+        entityName = procedure.EntityName,
+        authorityName = procedure.AuthorityName,
+        authorityTitle = procedure.AuthorityTitle,
+        authorityContact = procedure.AuthorityContact,
+
         authority = BuildResponse(procedure.Authority),
         legalInfo = procedure.LegalInfo,
         filingCondition = procedure.FilingCondition,
         filingDocuments = procedure.FilingDocuments,
         filingFee = procedure.FilingFee,
-        notes = procedure.Notes,
-        status = Enum.GetName(typeof(GeneralObjectStatus), procedure.Status),
-        statusNotes = procedure.StatusNotes,
-        msExcelNo = procedure.MSExcelNo
+        notes = procedure.Notes
       };
     }
 

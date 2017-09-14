@@ -25,8 +25,7 @@ namespace Empiria.Steps.Modeling {
       var o = new FilingFee();
 
       o.FilingFeeType = data.Get<string>("filingFeeType", o.FilingFeeType);
-      o.FeeAmount = data.Get<decimal>("feeAmount", o.FeeAmount);
-      o.Rule = data.Get<string>("rule", o.Rule);
+      o.FeeAmount = data.Get<string>("feeAmount", o.FeeAmount);
       o.LegalBasis = data.Get<string>("legalBasis", o.LegalBasis);
 
       return o;
@@ -50,14 +49,7 @@ namespace Empiria.Steps.Modeling {
 
 
     [DataField("FilingFeeAmount")]
-    public decimal FeeAmount {
-      get;
-      private set;
-    } = decimal.Zero;
-
-
-    [DataField("FilingFeeRule")]
-    public string Rule {
+    public string FeeAmount {
       get;
       private set;
     } = String.Empty;

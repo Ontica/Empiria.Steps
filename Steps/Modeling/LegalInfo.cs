@@ -24,7 +24,7 @@ namespace Empiria.Steps.Modeling {
     static internal LegalInfo Parse(JsonObject data) {
       var o = new LegalInfo();
 
-      o.RegulationStatus = data.Get<string>("regulationStatus", o.RegulationStatus);
+      o.RegulationMode = data.Get<string>("regulationMode", o.RegulationMode);
       o.Obligation = data.Get<string>("obligation", o.Obligation);
       o.LegalBasis = data.Get<string>("legalBasis", o.LegalBasis);
 
@@ -32,7 +32,8 @@ namespace Empiria.Steps.Modeling {
       o.Ronda13Individual = data.Get<string>("ronda13Individual", o.Ronda13Individual);
       o.Ronda14Consorcio = data.Get<string>("ronda14Consorcio", o.Ronda14Consorcio);
       o.Ronda14Individual = data.Get<string>("ronda14Individual", o.Ronda14Individual);
-
+      o.Ronda21Consorcio = data.Get<string>("ronda21Consorcio", o.Ronda21Consorcio);
+      o.Ronda21Individual = data.Get<string>("ronda21Individual", o.Ronda21Individual);
       return o;
     }
 
@@ -46,11 +47,11 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    [DataField("RegulationStatus")]
-    public string RegulationStatus {
+    [DataField("RegulationMode")]
+    public string RegulationMode {
       get;
       private set;
-    } = "Dependencia";
+    } = String.Empty;
 
 
     [DataField("Obligation")]
@@ -94,6 +95,19 @@ namespace Empiria.Steps.Modeling {
       private set;
     } = String.Empty;
 
+
+    [DataField("Ronda21Consorcio")]
+    public string Ronda21Consorcio {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("Ronda21Individual")]
+    public string Ronda21Individual {
+      get;
+      private set;
+    } = String.Empty;
 
     #endregion Properties
 

@@ -24,22 +24,27 @@ namespace Empiria.Steps.Modeling {
     static internal FilingCondition Parse(JsonObject data) {
       var o = new FilingCondition();
 
-      o.StartsWhen = data.Get<StartsWhen>("startsWhen", o.StartsWhen);
-      o.StartsWhenTrigger = data.Get<string>("startsWhenTrigger", o.StartsWhenTrigger);
+      //o.StartsWhen = data.Get<StartsWhen>("startsWhen", o.StartsWhen);
+      //o.StartsWhenTrigger = data.Get<string>("startsWhenTrigger", o.StartsWhenTrigger);
 
       o.MaxFilingTerm = data.Get<string>("maxFilingTerm", o.MaxFilingTerm);
+      o.MaxFilingTermUnit = data.Get<string>("maxFilingTermUnit", o.MaxFilingTermUnit);
       o.IssuanceLegalTerm = data.Get<string>("issuanceLegalTerm", o.IssuanceLegalTerm);
+      o.IssuanceLegalTermUnit = data.Get<string>("issuanceLegalTermUnit", o.IssuanceLegalTermUnit);
       o.HowToFile = data.Get<string>("howToFile", o.HowToFile);
+      o.HowToFileAddress = data.Get<string>("howToFileAddress", o.HowToFileAddress);
 
-      o.AllowsDeferrals = data.Get<string>("allowsDeferrals", o.AllowsDeferrals);
+      o.DeferralsTerm = data.Get<string>("deferralsTerm", o.DeferralsTerm);
+      o.DeferralsTermUnit = data.Get<string>("deferralsTermUnit", o.DeferralsTermUnit);
       o.DeferralsTermNotes = data.Get<string>("deferralsTermNotes", o.DeferralsTermNotes);
-      o.DeferralsConditionNotes = data.Get<string>("deferralsConditionNotes", o.DeferralsConditionNotes);
-      o.ValidityTermWhenIssued = data.Get<string>("validityTermWhenIssued", o.ValidityTermWhenIssued);
 
-      o.SimultaneousDelivery = data.Get<string>("simultaneousDelivery", o.SimultaneousDelivery);
+      o.ValidityTermWhenIssued = data.Get<string>("validityTermWhenIssued", o.ValidityTermWhenIssued);
+      o.ValidityTermUnitWhenIssued = data.Get<string>("validityTermUnitWhenIssued", o.ValidityTermUnitWhenIssued);
+      o.Ficta = data.Get<string>("ficta", o.Ficta);
+
+      o.HasInnerInteraction = data.Get<string>("simultaneousDelivery", o.HasInnerInteraction);
       o.StartsWhenNotes = data.Get<string>("startsWhenNotes", o.StartsWhenNotes);
       o.MaxFilingTermNotes = data.Get<string>("maxFilingTermNotes", o.MaxFilingTermNotes);
-      o.IssuanceLegalTermNotes = data.Get<string>("issuanceLegalTermNotes", o.IssuanceLegalTermNotes);
 
       return o;
     }
@@ -54,8 +59,8 @@ namespace Empiria.Steps.Modeling {
 
     #region Properties
 
-    [DataField("StartsWhen", Default = StartsWhen.Undefined)]
-    public StartsWhen StartsWhen {
+    [DataField("StartsWhen")]
+    public string StartsWhen {
       get;
       private set;
     }
@@ -74,12 +79,19 @@ namespace Empiria.Steps.Modeling {
       private set;
     } = String.Empty;
 
+
     [DataField("MaxFilingTerm")]
     public string MaxFilingTerm {
       get;
       private set;
     } = String.Empty;
 
+
+    [DataField("MaxFilingTermUnit")]
+    public string MaxFilingTermUnit {
+      get;
+      private set;
+    } = String.Empty;
 
     [DataField("MaxFilingTermNotes")]
     public string MaxFilingTermNotes {
@@ -94,9 +106,8 @@ namespace Empiria.Steps.Modeling {
       private set;
     } = String.Empty;
 
-
-    [DataField("IssuanceLegalTermNotes")]
-    public string IssuanceLegalTermNotes {
+    [DataField("IssuanceLegalTermUnit")]
+    public string IssuanceLegalTermUnit {
       get;
       private set;
     } = String.Empty;
@@ -109,8 +120,22 @@ namespace Empiria.Steps.Modeling {
     } = String.Empty;
 
 
-    [DataField("AllowsDeferrals")]
-    public string AllowsDeferrals {
+    [DataField("HowToFileAddress")]
+    public string HowToFileAddress {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("DeferralsTerm")]
+    public string DeferralsTerm {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("DeferralsTermUnit")]
+    public string DeferralsTermUnit {
       get;
       private set;
     } = String.Empty;
@@ -123,13 +148,6 @@ namespace Empiria.Steps.Modeling {
     } = String.Empty;
 
 
-    [DataField("DeferralsConditionNotes")]
-    public string DeferralsConditionNotes {
-      get;
-      private set;
-    } = String.Empty;
-
-
     [DataField("ValidityTermWhenIssued")]
     public string ValidityTermWhenIssued {
       get;
@@ -137,8 +155,22 @@ namespace Empiria.Steps.Modeling {
     } = String.Empty;
 
 
-    [DataField("SimultaneousDelivery")]
-    public string SimultaneousDelivery {
+    [DataField("ValidityTermUnitWhenIssued")]
+    public string ValidityTermUnitWhenIssued {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("Ficta")]
+    public string Ficta {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    [DataField("HasInnerInteraction")]
+    public string HasInnerInteraction {
       get;
       private set;
     } = String.Empty;

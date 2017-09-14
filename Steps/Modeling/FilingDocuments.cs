@@ -24,8 +24,6 @@ namespace Empiria.Steps.Modeling {
     static internal FilingDocuments Parse(JsonObject data) {
       var o = new FilingDocuments();
 
-      o.Notes = data.Get<string>("notes", o.Notes);
-
       return o;
     }
 
@@ -38,12 +36,6 @@ namespace Empiria.Steps.Modeling {
     #endregion Constructors and parsers
 
     #region Properties
-
-    [DataField("RequirementsNotes")]
-    public string Notes {
-      get;
-      private set;
-    } = String.Empty;
 
     #endregion Properties
 

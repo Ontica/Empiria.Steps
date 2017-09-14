@@ -8,9 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
 
 using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.Steps.Legal;
+using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.Modeling {
 
@@ -70,6 +73,54 @@ namespace Empiria.Steps.Modeling {
       }
     }
 
+    static public void UpdateAll() {
+      var procedures = BaseObject.GetList<Procedure>();
+
+      foreach (var procedure in procedures) {
+        procedure.Save();
+
+        UpdateAllRelatedClauses(procedure, Legal.Contract.Parse(565), procedure.LegalInfo.Ronda13Consorcio);
+        UpdateAllRelatedClauses(procedure, Legal.Contract.Parse(566), procedure.LegalInfo.Ronda13Individual);
+        UpdateAllRelatedClauses(procedure, Legal.Contract.Parse(567), procedure.LegalInfo.Ronda14Consorcio);
+        UpdateAllRelatedClauses(procedure, Legal.Contract.Parse(568), procedure.LegalInfo.Ronda14Individual);
+        UpdateAllRelatedClauses(procedure, Legal.Contract.Parse(569), procedure.LegalInfo.Ronda21Consorcio);
+        UpdateAllRelatedClauses(procedure, Legal.Contract.Parse(570), procedure.LegalInfo.Ronda21Individual);
+      }
+    }
+
+    internal void SetBpmnDiagram(BpmnDiagram diagram) {
+      this.BpmnDiagram = diagram;
+      Save();
+    }
+
+    private static void UpdateAllRelatedClauses(Procedure procedure,
+                                                Contract contract, string clausesAsText) {
+      if (clausesAsText.Contains("Anexo")) {
+        return;
+      }
+
+      clausesAsText = clausesAsText.Replace(',', ' ')
+                                   .Replace(';', ' ');
+
+      var clauseTextParts = clausesAsText.Split(' ')
+                                         .Where((x) => EmpiriaString.IsQuantity(x));
+
+      if (clauseTextParts == null) {
+        return;
+      }
+      var clauses = contract.Clauses.FindAll((x) => clauseTextParts.Contains(x.Number) && x.Section == "Cláusulas");
+
+      if (clauses == null || clauses.Count == 0) {
+        return;
+      }
+      foreach (var clause in clauses) {
+        if (clause.RelatedProcedures.Contains((x) => x.Procedure.Equals(procedure))) {
+          continue;
+        }
+        clause.AddRelatedProcedure(procedure);
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -81,7 +132,7 @@ namespace Empiria.Steps.Modeling {
     }
 
 
-    [DataField("Name")]
+    [DataField("ProcedureName")]
     public string Name {
       get;
       private set;
@@ -107,28 +158,20 @@ namespace Empiria.Steps.Modeling {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.Theme, this.Stage,
-                                           this.Authority.Entity.Keywords,
-                                           this.LegalInfo.LegalBasis);
+        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.EntityName,
+                                           this.LegalInfo.LegalBasis, this.LegalInfo.Obligation, this.ProjectType);
       }
     }
 
-    [DataField("URL")]
-    public string URL {
+    [DataField("OfficialURL")]
+    public string OfficialURL {
       get;
       private set;
     }
 
 
-    [DataField("Stage")]
-    public string Stage {
-      get;
-      private set;
-    }
-
-
-    [DataField("Category")]
-    public string Category {
+    [DataField("RegulationURL")]
+    public string RegulationURL {
       get;
       private set;
     }
@@ -140,6 +183,41 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
+    [DataField("ExecutionMode")]
+    public string ExecutionMode {
+      get;
+      private set;
+    }
+
+    [DataField("ProjectType")]
+    public string ProjectType {
+      get;
+      private set;
+    }
+
+    [DataField("Entity")]
+    public string EntityName {
+      get;
+      private set;
+    }
+
+    [DataField("Authority")]
+    public string AuthorityName {
+      get;
+      private set;
+    }
+
+    [DataField("AuthorityTitle")]
+    public string AuthorityTitle {
+      get;
+      private set;
+    }
+
+    [DataField("AuthorityContact")]
+    public string AuthorityContact {
+      get;
+      private set;
+    }
 
     [DataObject]
     public Authority Authority {
@@ -176,22 +254,8 @@ namespace Empiria.Steps.Modeling {
     } = FilingFee.Empty;
 
 
-    [DataField("StatusNotes")]
-    public string StatusNotes {
-      get;
-      private set;
-    }
-
-
-    [DataField("ProcedureStatus", Default = GeneralObjectStatus.Pending)]
-    public GeneralObjectStatus Status {
-      get;
-      private set;
-    }
-
-
-    [DataField("MSExcelNo")]
-    public int MSExcelNo {
+    [DataField("BpmnDiagramId")]
+    public BpmnDiagram BpmnDiagram {
       get;
       private set;
     }
@@ -201,7 +265,7 @@ namespace Empiria.Steps.Modeling {
     #region Public methods
 
     protected override void OnBeforeSave() {
-      if (this.IsNew) {
+      if (this.UID.Length == 0) {
         this.UID = EmpiriaString.BuildRandomString(6, 24);
       }
     }
@@ -225,11 +289,8 @@ namespace Empiria.Steps.Modeling {
       this.ShortName = data.Get<string>("shortName", this.Name);
       this.Code = data.Get<string>("code", this.Code);
       this.Notes = data.Get<string>("notes", this.Notes);
-      this.URL = data.Get<string>("url", this.URL);
-
-      this.Stage = data.Get<string>("stage", this.Stage);
-      this.Category = data.Get<string>("category", this.Category);
-      this.Theme = data.Get<string>("theme", this.Theme);
+      this.OfficialURL = data.Get<string>("officialUrl", this.OfficialURL);
+      this.RegulationURL = data.Get<string>("regulationUrl", this.OfficialURL);
 
       this.Authority = Authority.Parse(data.Slice("authority"));
       this.LegalInfo = LegalInfo.Parse(data.Slice("legalInfo"));
