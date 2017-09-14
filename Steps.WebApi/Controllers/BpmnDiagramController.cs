@@ -102,6 +102,18 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v1/process-definitions/load-from-files")]
+    public void LoadFromFiles() {
+      try {
+        BpmnDiagram.LoadFromFiles();
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
     #endregion UPDATE methods
 
   }  // class BpmnDiagramController

@@ -27,13 +27,54 @@ namespace Empiria.Steps.WorkflowDefinition {
       this.Load(data);
     }
 
+    static internal BpmnDiagram Parse(int id) {
+      return BaseObject.ParseId<BpmnDiagram>(id);
+    }
+
     static public BpmnDiagram Parse(string uid) {
       return BaseObject.ParseKey<BpmnDiagram>(uid);
+    }
+
+    static public BpmnDiagram Empty {
+      get {
+        return BaseObject.ParseEmpty<BpmnDiagram>();
+      }
     }
 
     static public FixedList<BpmnDiagram> GetList() {
       return BaseObject.GetList<BpmnDiagram>(sort: "ObjectName")
                        .ToFixedList();
+    }
+
+    static public void LoadFromFiles() {
+      var directory = new System.IO.DirectoryInfo(@"E:\empiria.files\covar.steps\bpmn.diagrams\");
+
+      var files = directory.GetFiles("*.bpmn");
+
+      foreach (var file in files) {
+        var diagramName = file.Name.Replace(".bpmn", String.Empty);
+        var procedureId = -1;
+        if (EmpiriaString.IsInteger(diagramName)) {
+          procedureId = EmpiriaString.ToInteger(diagramName);
+          var procedure = Modeling.Procedure.Parse(procedureId);
+          diagramName =  procedure.Name;
+          diagramName = procedure.Code.Contains("-") ? procedure.Code : procedure.Name;
+        }
+
+        var xml = System.IO.File.ReadAllText(file.FullName);
+
+        var diagram = new BpmnDiagram();
+
+        diagram.Name = diagramName;
+        diagram.Xml = xml;
+
+        diagram.Save();
+
+        if (procedureId != -1) {
+          var procedure = Modeling.Procedure.Parse(procedureId);
+          procedure.SetBpmnDiagram(diagram);
+        }
+      }
     }
 
     #endregion Constructors and parsers
@@ -66,6 +107,7 @@ namespace Empiria.Steps.WorkflowDefinition {
       get;
       private set;
     }
+
 
     internal string Keywords {
       get {
