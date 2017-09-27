@@ -183,6 +183,9 @@ namespace Empiria.Steps.ProjectManagement {
       this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration", this.EstimatedDuration.ToString()));
       this.CompletionProgress = data.Get<decimal>("completionProgress", this.CompletionProgress);
       this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
+      if (this.Name.Length == 0) {
+        this.Name = this.WorkflowObject.Name;
+      }
       if (!this.IsEmptyInstance) {
         int parentId = data.Get<int>("parentId", -1);
         this.Parent = parentId != -1 ? ProjectObject.Parse(parentId) : this.Parent;

@@ -91,9 +91,7 @@ namespace Empiria.Steps.ProjectManagement {
         daysAccumulator += step.EstimatedDuration.Value;
       }
 
-      if (baseActivity.EstimatedEnd == ExecutionServer.DateMaxValue) {
-        baseActivity.SetEstimatedDates(startDate, startDate.AddDays(daysAccumulator));
-      }
+      baseActivity.SetEstimatedDates(startDate, startDate.AddDays(daysAccumulator));
 
       return baseProject;
     }

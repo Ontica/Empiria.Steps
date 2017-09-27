@@ -135,14 +135,16 @@ namespace Empiria.Steps.ProjectManagement {
       base.AssertIsValid(data);
     }
 
+
     protected override void Load(JsonObject data) {
       base.Load(data);
 
-      this.Resource = Resource.Parse(data.Get<string>("resourceUID"));
-      this.Responsible = Contact.Parse(data.Get<string>("responsibleUID"));
+      this.Resource = Resource.Parse(data.Get("resourceUID", "Undefined"));
+      this.Responsible = Contact.Parse(data.Get("responsibleUID", "Undefined"));
       this.RequestedTime = data.Get<DateTime>("requestedTime", this.RequestedTime);
-      this.RequestedBy = Contact.Parse(data.Get<string>("requestedByUID"));
+      this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Undefined"));
     }
+
 
     public Activity AddActivity(JsonObject data) {
       var activity = new Activity(this, data);
@@ -153,6 +155,7 @@ namespace Empiria.Steps.ProjectManagement {
 
       return activity;
     }
+
 
     protected override void OnSave() {
       ProjectData.WriteActivity(this);

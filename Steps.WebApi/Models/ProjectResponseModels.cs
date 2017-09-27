@@ -136,6 +136,7 @@ namespace Empiria.Steps.WebApi {
         uid = activity.UID,
         name = activity.Name,
         notes = activity.Notes,
+        resourceUID = activity.Resource.UID,
         estimatedStart = activity.EstimatedStart,
         estimatedEnd = activity.EstimatedEnd,
         estimatedDuration = activity.EstimatedDuration.ToString(),
@@ -144,7 +145,9 @@ namespace Empiria.Steps.WebApi {
         requestedTime = activity.RequestedTime,
         responsibleUID = activity.Responsible.UID,
         parentId = activity.Parent.Id,
-        projectUID = activity.Project.UID
+        projectUID = activity.Project.UID,
+        isMilestone = false,
+        createSubproject = false,
       };
     }
 
