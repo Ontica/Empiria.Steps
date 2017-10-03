@@ -26,9 +26,13 @@ namespace Empiria.Steps.WebApi {
 
     [HttpGet]
     [Route("v1/procedures")]
-    public CollectionModel GetProceduresList([FromUri] string filter = "") {
+    public CollectionModel GetProceduresList([FromUri] string filter = "",
+                                             [FromUri] string keywords = "") {
       try {
-        var list = Procedure.GetList(filter ?? String.Empty);
+        filter = filter ?? String.Empty;
+        keywords = keywords ?? String.Empty;
+
+        var list = Procedure.GetList(filter, keywords);
 
         return new CollectionModel(this.Request, BuildResponse(list), typeof(Procedure).FullName);
 

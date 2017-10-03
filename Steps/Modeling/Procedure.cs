@@ -45,8 +45,8 @@ namespace Empiria.Steps.Modeling {
       }
     }
 
-    static public FixedList<Procedure> GetList(string filter = "") {
-      return ProcedureData.GetProcedureList(filter);
+    static public FixedList<Procedure> GetList(string filter = "", string keywords = "") {
+      return ProcedureData.GetProcedureList(filter, keywords);
     }
 
     static public FixedList<KeyValue> StartsWhenList {

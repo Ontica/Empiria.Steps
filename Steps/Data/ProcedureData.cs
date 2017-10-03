@@ -16,11 +16,17 @@ namespace Empiria.Steps.Modeling {
 
   static internal class ProcedureData {
 
-    static internal FixedList<Procedure> GetProcedureList(string filter = "") {
-      DataTable table = GeneralDataOperations.GetEntities("vwBPMProcedures",
-                                                          filter, "ProcedureName, ProcedureId");
+    static internal FixedList<Procedure> GetProcedureList(string filter = "", string keywords = "") {
+      var sql = "SELECT * FROM vwBPMProcedures";
 
-      return BaseObject.ParseList<Procedure>(table).ToFixedList();
+      if (keywords.Length != 0) {
+        keywords = SearchExpression.ParseAndLike("Keywords", keywords);
+      }
+      filter = GeneralDataOperations.BuildSqlAndFilter(filter, keywords);
+      sql += GeneralDataOperations.GetFilterSortSqlString(filter, "ProcedureName, ProcedureId");
+
+      return DataReader.GetList(DataOperation.Parse(sql), x => BaseObject.ParseList<Procedure>(x))
+                       .ToFixedList();
     }
 
     static internal void WriteProcedure(Procedure o) {
