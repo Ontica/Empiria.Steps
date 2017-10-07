@@ -83,6 +83,18 @@ namespace Empiria.Steps.WebApi {
       return array;
     }
 
+    static internal ICollection ToResponse(this IList<ProjectObject> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var item in list) {
+        if (item is Activity) {
+          array.Add(((Activity) item).ToResponse());
+        } else if (item is Summary) {
+          array.Add(((Summary) item).ToResponse());
+        }
+      }
+      return array;
+    }
 
     static internal ICollection ToResponse(this IList<Task> list) {
       ArrayList array = new ArrayList(list.Count);
@@ -95,21 +107,17 @@ namespace Empiria.Steps.WebApi {
       return array;
     }
 
+
     /// <summary>Converts a list of project activities as a response useful for the Gantt component.</summary>
-    static internal ICollection ToGanttResponse(this IList<Activity> list) {
+    static internal ICollection ToGanttResponse(this IList<ProjectObject> list) {
       ArrayList array = new ArrayList(list.Count);
 
-      foreach (var activity in list) {
-        var item = new {
-          id = activity.Id,
-          type = activity.ProjectObjectType.Name,
-          text = activity.Name,
-          start_date = activity.EstimatedStart.ToString("yyyy-MM-dd HH:mm"),
-          duration = activity.EstimatedEnd.Subtract(activity.EstimatedStart).Days,
-          progress = activity.CompletionProgress,
-          parent = activity.Parent is Activity ? activity.Parent.Id : 0
-        };
-        array.Add(item);
+      foreach (var item in list) {
+        if (item is Activity) {
+          array.Add(((Activity) item).ToGanttResponse());
+        } else if (item is Summary) {
+          array.Add(((Summary) item).ToGanttResponse());
+        }
       }
       return array;
     }
@@ -117,6 +125,36 @@ namespace Empiria.Steps.WebApi {
     #endregion Collections response methods
 
     #region Single objects response methods
+
+    static internal object ToGanttResponse(this Activity activity) {
+      return new {
+        id = activity.Id,
+        type = activity.ProjectObjectType.Name,
+        text = activity.Name,
+        start_date = (activity.EndDate < ExecutionServer.DateMaxValue ?
+                            activity.StartDate : activity.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
+        duration = activity.EndDate <  ExecutionServer.DateMaxValue ?
+                            (int) activity.EndDate.Subtract(activity.StartDate).TotalDays : activity.EstimatedDuration.Value,
+        progress = activity.Progress,
+        parent = activity.Parent is Summary ? activity.Parent.Id : 0
+      };
+    }
+
+
+    static internal object ToGanttResponse(this Summary summary) {
+      return new {
+        id = summary.Id,
+        type = summary.ProjectObjectType.Name,
+        text = summary.Name,
+        level = summary.Level,
+        start_date = (summary.StartDate < ExecutionServer.DateMaxValue ?
+                                  summary.StartDate : summary.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
+        duration = summary.EndDate < ExecutionServer.DateMaxValue ?
+                           (int) summary.EndDate.Subtract(summary.StartDate).TotalDays : summary.EstimatedDuration.Value,
+        progress = summary.Progress,
+        parent = summary.Parent is Summary ? summary.Parent.Id : 0
+      };
+    }
 
     static internal object ToResponse(this Project project) {
       return new {
@@ -134,33 +172,101 @@ namespace Empiria.Steps.WebApi {
       return new {
         id = activity.Id,
         uid = activity.UID,
+        type = activity.ProjectObjectType.Name,
         name = activity.Name,
         notes = activity.Notes,
-        resourceUID = activity.Resource.UID,
-        estimatedStart = activity.EstimatedStart,
-        estimatedEnd = activity.EstimatedEnd,
+        project = new {
+          uid = activity.Project.UID,
+          name = activity.Project.Name,
+        },
+        resource = new {
+          uid = activity.Resource.UID,
+          name = activity.Resource.Name,
+        },
+        responsible = new {
+          uid = activity.Responsible.UID,
+          name = activity.Responsible.Nickname,
+        },
+        requestedBy = new {
+          uid = activity.RequestedBy.UID,
+          name = activity.RequestedBy.Nickname,
+        },
+        parent = new {
+          id = activity.Parent.Id,
+          uid = activity.Parent.UID,
+          type = activity.Parent.ProjectObjectType.Name,
+          name = activity.Parent.Name,
+        },
+        procedure = new {
+          uid = activity.WorkflowObject.Procedure.UID,
+          name = activity.WorkflowObject.Procedure.Name,
+          code = activity.WorkflowObject.Procedure.Code,
+          entity = activity.WorkflowObject.Procedure.EntityName
+        },
         estimatedDuration = activity.EstimatedDuration.ToString(),
-        completionProgress = activity.CompletionProgress,
-        requestedByUID = activity.RequestedBy.UID,
-        requestedTime = activity.RequestedTime,
-        responsibleUID = activity.Responsible.UID,
-        parentId = activity.Parent.Id,
-        projectUID = activity.Project.UID,
-        isMilestone = false,
-        createSubproject = false,
+        startDate = activity.StartDate.ToResponse(),
+        targetDate = activity.TargetDate.ToResponse(),
+        endDate = activity.EndDate.ToResponse(),
+        dueDate = activity.DueDate.ToResponse(),
+        progress = activity.Progress,
+        stage = activity.Stage
       };
     }
 
+
+    static internal object ToResponse(this Summary summary) {
+      return new {
+        id = summary.Id,
+        uid = summary.UID,
+        type = summary.ProjectObjectType.Name,
+        name = summary.Name,
+        level = summary.Level,
+        notes = summary.Notes,
+        project = new {
+          uid = summary.Project.UID,
+          name = summary.Project.Name,
+        },
+        resource = new {
+          uid = summary.Resource.UID,
+          name = summary.Resource.Name,
+        },
+        parent = new {
+          id = summary.Parent.Id,
+          uid = summary.Parent.UID,
+          type = summary.Parent.ProjectObjectType.Name,
+          name = summary.Parent.Name,
+        },
+        estimatedDuration = summary.EstimatedDuration.ToString(),
+        startDate = summary.StartDate.ToResponse(),
+        targetDate = summary.TargetDate.ToResponse(),
+        endDate = summary.EndDate.ToResponse(),
+        dueDate = summary.DueDate.ToResponse(),
+        progress = summary.Progress,
+        stage = summary.Stage
+      };
+    }
+
+    static internal string ToResponse(this DateTime date) {
+      if (date == ExecutionServer.DateMaxValue) {
+        return String.Empty;
+      } else if (date == ExecutionServer.DateMinValue) {
+        return String.Empty;
+      } else {
+        return date.ToString("yyyy-MM-ddTHH:mm:ss");
+      }
+    }
 
     static internal object ToResponse(this Task task) {
       return new {
         uid = task.UID,
         name = task.Name,
         notes = task.Notes,
-        estimatedStart = task.EstimatedStart,
-        estimatedEnd = task.EstimatedEnd,
+        startDate = task.StartDate,
+        targetDate = task.TargetDate,
+        endDate = task.EndDate,
+        dueDate = task.DueDate,
         estimatedDuration = task.EstimatedDuration.ToString(),
-        completionProgress = task.CompletionProgress,
+        progress = task.Progress,
         assignedToUID = task.AssignedTo.UID,
         assignationTime = task.AssignationTime,
         state = task.Status,

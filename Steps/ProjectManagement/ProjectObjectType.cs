@@ -48,6 +48,11 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
+    public static ProjectObjectType SummaryType {
+      get {
+        return ObjectTypeInfo.Parse<ProjectObjectType>("ObjectType.ProjectObject.Summary");
+      }
+    }
     public static ProjectObjectType TaskType {
       get {
         return ObjectTypeInfo.Parse<ProjectObjectType>("ObjectType.ProjectObject.Task");

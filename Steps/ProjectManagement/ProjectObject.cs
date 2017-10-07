@@ -54,8 +54,10 @@ namespace Empiria.Steps.ProjectManagement {
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       if ((int) row["ProjectObjectId"] != -1) {
         this.Parent = ProjectObject.Parse((int) row["ParentId"]);
+        this.CreatedFrom = ProjectObject.Parse((int) row["CreatedFromId"]);
       } else {
         this.Parent = this;
+        this.CreatedFrom = this;
       }
     }
 
@@ -63,12 +65,12 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Public properties
 
+
     public ProjectObjectType ProjectObjectType {
       get {
         return (ProjectObjectType) base.GetEmpiriaType();
       }
     }
-
 
     [DataField("UID")]
     public string UID {
@@ -91,20 +93,6 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
 
-    [DataField("EstimatedStart")]
-    public DateTime EstimatedStart {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
-    [DataField("EstimatedEnd")]
-    public DateTime EstimatedEnd {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
     [DataField("EstimatedDuration")]
     public Duration EstimatedDuration {
       get;
@@ -112,22 +100,56 @@ namespace Empiria.Steps.ProjectManagement {
     } = Duration.Empty;
 
 
-    [DataField("ActualStart")]
-    public DateTime ActualStart {
+    [DataField("StartDate")]
+    public DateTime StartDate {
       get;
       private set;
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("ActualEnd")]
-    public DateTime ActualEnd {
+    [DataField("TargetDate")]
+    public DateTime TargetDate {
       get;
       private set;
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("CompletionProgress")]
-    public decimal CompletionProgress {
+    [DataField("EndDate")]
+    public DateTime EndDate {
+      get;
+      private set;
+    } = ExecutionServer.DateMinValue;
+
+
+    [DataField("DueDate")]
+    public DateTime DueDate {
+      get;
+      private set;
+    } = ExecutionServer.DateMinValue;
+
+
+    [DataField("Progress")]
+    public int Progress {
+      get;
+      private set;
+    }
+
+
+    [DataField("Tags")]
+    public string Tags {
+      get;
+      private set;
+    }
+
+
+    public string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.Name, this.Tags);
+      }
+    }
+
+    [DataField("ItemOrdering")]
+    public int Ordering {
       get;
       private set;
     }
@@ -146,6 +168,12 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
 
+    protected internal ProjectObject CreatedFrom {
+      get;
+      private set;
+    }
+
+
     [DataField("ExtData")]
     protected internal JsonObject ExtensionData {
       get;
@@ -155,6 +183,13 @@ namespace Empiria.Steps.ProjectManagement {
 
     [DataField("Status", Default = ProjectObjectStatus.Inactive)]
     public ProjectObjectStatus Status {
+      get;
+      private set;
+    }
+
+
+    [DataField("Stage", Default = ItemStage.Backlog)]
+    public ItemStage Stage {
       get;
       private set;
     }
@@ -175,13 +210,58 @@ namespace Empiria.Steps.ProjectManagement {
       Assertion.AssertObject(data, "data");
     }
 
+    public virtual void Close(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+
+      this.AssertIsValid(data);
+      this.Load(data);
+
+      this.EndDate = data.Get<DateTime>("endDate", this.EndDate);
+      this.StartDate = this.StartDate == ExecutionServer.DateMaxValue
+                            ? this.EndDate : this.StartDate;
+
+      this.Progress = 100;
+      this.Stage = ItemStage.Done;
+      this.Status = ProjectObjectStatus.Completed;
+
+      this.Save();
+
+
+      //FixedList<WorkflowObject> nextSteps = this.WorkflowObject.NextSteps();
+
+      //foreach (var step in nextSteps) {
+
+      //}
+
+      //int daysCount = 0;
+
+      //foreach (var step in nextSteps) {
+      //  if (step is Process) {
+
+      //  } else if (step is ProcessActivity) {
+      //    this.Add
+      //  }
+
+      //}
+
+      //    var stepAsJson = this.ConvertStepToJson(baseActivity, step, daysCount);
+
+      //  baseActivity.AddActivity(stepAsJson);
+
+      //  daysCount += step.EstimatedDuration.Value;
+      //}
+
+      //baseActivity.SetDates(startDate, startDate.AddDays(daysCount));
+    }
+
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
-      this.EstimatedStart = data.Get<DateTime>("estimatedStart", this.EstimatedStart);
-      this.EstimatedEnd = data.Get<DateTime>("estimatedEnd", this.EstimatedEnd);
-      this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration", this.EstimatedDuration.ToString()));
-      this.CompletionProgress = data.Get<decimal>("completionProgress", this.CompletionProgress);
+      this.StartDate = data.Get<DateTime>("startDate", this.StartDate);
+      this.TargetDate = data.Get<DateTime>("targetDate", this.TargetDate);
+      this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
+                                                            this.EstimatedDuration.ToString()));
+      this.Progress = data.Get<int>("progress", this.Progress);
       this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
       if (this.Name.Length == 0) {
         this.Name = this.WorkflowObject.Name;
@@ -189,6 +269,9 @@ namespace Empiria.Steps.ProjectManagement {
       if (!this.IsEmptyInstance) {
         int parentId = data.Get<int>("parentId", -1);
         this.Parent = parentId != -1 ? ProjectObject.Parse(parentId) : this.Parent;
+
+        int createdFromId = data.Get<int>("createdFromId", -1);
+        this.CreatedFrom = createdFromId != -1 ? ProjectObject.Parse(createdFromId) : this.Parent;
       }
     }
 
@@ -202,9 +285,9 @@ namespace Empiria.Steps.ProjectManagement {
       throw Assertion.AssertNoReachThisCode();
     }
 
-    internal void SetEstimatedDates(DateTime startDate, DateTime endDate) {
-      this.EstimatedStart = startDate;
-      this.EstimatedEnd = endDate;
+    internal void SetDates(DateTime startDate, DateTime dueDate) {
+      this.StartDate = startDate;
+      this.DueDate = dueDate;
 
       this.Save();
     }

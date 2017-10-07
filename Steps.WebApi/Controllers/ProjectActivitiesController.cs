@@ -32,6 +32,24 @@ namespace Empiria.Steps.WebApi {
 
         var fullActivitiesList = project.GetAllActivities();
 
+        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
+                                     typeof(ProjectObject).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/project-management/projects/{projectUID}/activities/as-gantt")]
+    public SingleObjectModel GetProjectActivitiesListAsGantt(string projectUID,
+                                                            [FromUri] string filter = "") {
+      try {
+        var project = Project.Parse(projectUID);
+
+        var fullActivitiesList = project.GetAllActivities();
+
         return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
                                      typeof(ProjectObject).FullName);
 
@@ -42,10 +60,15 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/activities/{activityId}")]
-    public SingleObjectModel GetProjectActivity(int activityId) {
+    [Route("v1/project-management/activities/{activityUID}")]
+    public SingleObjectModel GetProjectActivity(string activityUID) {
       try {
-        var activity = Activity.Parse(activityId);
+        Activity activity = null;
+        if (EmpiriaString.IsInteger(activityUID)) {
+          activity = Activity.Parse(int.Parse(activityUID));
+        } else {
+          activity = Activity.Parse(activityUID);
+        }
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(ProjectObject).FullName);
@@ -57,10 +80,16 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/activities/{activityId}/tasks")]
-    public CollectionModel GetActivityTasks(int activityId) {
+    [Route("v1/project-management/activities/{activityUID}/tasks")]
+    public CollectionModel GetActivityTasks(string activityUID) {
       try {
-        var activity = Activity.Parse(activityId);
+        Activity activity = null;
+        if (EmpiriaString.IsInteger(activityUID)) {
+          activity = Activity.Parse(int.Parse(activityUID));
+        } else {
+          activity = Activity.Parse(activityUID);
+        }
+
 
         return new CollectionModel(this.Request, activity.Tasks.ToResponse(),
                                    typeof(ProjectObject).FullName);
@@ -84,11 +113,11 @@ namespace Empiria.Steps.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        project.AddActivity(bodyAsJson);
+        project.AddItem(bodyAsJson);
 
         var fullActivitiesList = project.GetAllActivities();
 
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
+        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
                                      typeof(ProjectObject).FullName);
 
       } catch (Exception e) {
@@ -96,20 +125,57 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/close")]
+    public SingleObjectModel CloseActivity(string projectUID, string activityUID,
+                                           [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var project = Project.Parse(projectUID);
+
+        Activity activity = null;
+        if (EmpiriaString.IsInteger(activityUID)) {
+          activity = Activity.Parse(int.Parse(activityUID));
+        } else {
+          activity = Activity.Parse(activityUID);
+        }
+
+        Assertion.Assert(activity.Project.Equals(project),
+                         $"Activity with uid ({activityUID}) is not part of project with uid ({projectUID}).");
+
+        activity.Close(bodyAsJson);
+
+        var fullActivitiesList = project.GetAllActivities();
+
+        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
+                                     typeof(ProjectObject).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
 
     [HttpPut, HttpPatch]
-    [Route("v1/project-management/projects/{projectUID}/activities/{activityId}")]
-    public SingleObjectModel UpdateActivity(string projectUID, int activityId,
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}")]
+    public SingleObjectModel UpdateActivity(string projectUID, string activityUID,
                                             [FromBody] object body) {
       try {
         base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
 
         var project = Project.Parse(projectUID);
-        var activity = Activity.Parse(activityId);
+
+        Activity activity = null;
+        if (EmpiriaString.IsInteger(activityUID)) {
+          activity = Activity.Parse(int.Parse(activityUID));
+        } else {
+          activity = Activity.Parse(activityUID);
+        }
 
         Assertion.Assert(activity.Project.Equals(project),
-                         $"Activity with id ({activityId}) is not part of project with uid ({projectUID}).");
+                         $"Activity with uid ({activityUID}) is not part of project with uid ({projectUID}).");
 
         activity.Update(bodyAsJson);
 
@@ -117,7 +183,7 @@ namespace Empiria.Steps.WebApi {
 
         var fullActivitiesList = project.GetAllActivities();
 
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
+        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
                                      typeof(ProjectObject).FullName);
 
       } catch (Exception e) {

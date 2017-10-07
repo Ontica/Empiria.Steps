@@ -77,37 +77,37 @@ namespace Empiria.Steps.ProjectManagement {
 
       data.Add(new JsonItem("workflowObjectId", BaseProcess.Id));
 
-      Activity baseActivity = baseProject.AddActivity(data);
+      ProjectObject baseItem = baseProject.AddItem(data);
 
-      DateTime startDate = baseActivity.EstimatedStart;
+      DateTime startDate = DateTime.Now < baseProject.StartDate ?
+                                    DateTime.Now : baseProject.StartDate;
 
-      int daysAccumulator = 0;
-
+      int daysCount = 0;
       foreach (var step in this.Steps) {
-        var stepAsJson = this.ConvertStepToJson(baseActivity, step, daysAccumulator);
+        var baseSummary = (Summary) baseItem;
+        var stepAsJson = this.ConvertStepToJson(baseSummary, step, daysCount);
 
-        baseActivity.AddActivity(stepAsJson);
+        baseSummary.AddActivity(stepAsJson);
 
-        daysAccumulator += step.EstimatedDuration.Value;
+        daysCount += step.EstimatedDuration.Value;
       }
 
-      baseActivity.SetEstimatedDates(startDate, startDate.AddDays(daysAccumulator));
+      baseItem.SetDates(startDate, startDate.AddDays(daysCount));
 
       return baseProject;
     }
 
 
-    private JsonObject ConvertStepToJson(Activity parent, ProcessActivity step,
+    private JsonObject ConvertStepToJson(Summary parent, ProcessActivity step,
                                          int daysAccumulator) {
       var json = new JsonObject();
 
       json.Add(new JsonItem("name", step.Name));
 
-      json.Add(new JsonItem("estimatedStart",
-                   parent.EstimatedStart.AddDays(daysAccumulator)));
+      json.Add(new JsonItem("startDate", parent.StartDate));
 
-      json.Add(new JsonItem("estimatedEnd",
-                   parent.EstimatedStart.AddDays(step.EstimatedDuration.Value + daysAccumulator)));
+      json.Add(new JsonItem("dueDate",
+                            parent.StartDate.AddDays(step.EstimatedDuration.Value)));
 
       json.Add(new JsonItem("estimatedDuration", step.EstimatedDuration.ToString()));
 
@@ -123,8 +123,8 @@ namespace Empiria.Steps.ProjectManagement {
       return json;
     }
 
-  #endregion Methods
+    #endregion Methods
 
-} // class ProjectModel
+  } // class ProjectModel
 
 } // namespace Empiria.Steps.ProjectManagement

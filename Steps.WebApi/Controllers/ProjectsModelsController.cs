@@ -76,7 +76,7 @@ namespace Empiria.Steps.WebApi {
 
         var fullActivitiesList = project.GetAllActivities();
 
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
+        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
                                      typeof(ProjectObject).FullName);
 
       } catch (Exception e) {

@@ -14,6 +14,7 @@ using Empiria.Contacts;
 using Empiria.Json;
 
 using Empiria.Steps.Legal;
+using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.ProjectManagement {
 
@@ -22,7 +23,7 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Fields
 
-    private Lazy<List<Activity>> activitiesList = null;
+    private Lazy<List<ProjectObject>> itemsList = null;
 
     #endregion Fields
 
@@ -61,7 +62,7 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
     protected override void OnInitialize() {
-      activitiesList = new Lazy<List<Activity>>(() => ProjectData.GetChildrenActivities(this));
+      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetAllProjectActivities(this));
     }
 
     #endregion Constructors and parsers
@@ -101,14 +102,15 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Project structure
 
-    public FixedList<Activity> Activities {
+    public FixedList<ProjectObject> Items {
       get {
-        return activitiesList.Value.ToFixedList();
+        return itemsList.Value.ToFixedList();
       }
     }
 
-    public FixedList<Activity> GetAllActivities() {
-      return ProjectData.GetAllProjectActivities(this);
+    public FixedList<ProjectObject> GetAllActivities() {
+      return ProjectData.GetAllProjectActivities(this)
+                        .ToFixedList();
     }
 
     #endregion Project structure
@@ -137,19 +139,22 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Public methods
 
-    public Activity AddActivity(JsonObject data) {
+    public ProjectObject AddItem(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
-      Activity activity = null;
+      ProjectObject activity = null;
 
       int parentId = data.Get<int>("parentId", -1);
+      var workflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
 
-      if (parentId == -1) {
-        activity = new Activity(this, data);
+      if (parentId == -1 || workflowObject.WorkflowObjectType == WorkflowObjectType.Process) {
+        activity = new Summary(this, data);
       } else {
-        var parent = this.Activities.Find((x) => x.Id == parentId);
+        var parent = this.Items.Find((x) => x.Id == parentId);
 
-        if (parent != null) {
+        if (parent != null && workflowObject.WorkflowObjectType == WorkflowObjectType.Process) {
+          activity = new Summary(parent, data);
+        } else if (parent != null && workflowObject.WorkflowObjectType == WorkflowObjectType.Activity) {
           activity = new Activity(parent, data);
         } else {
           throw new ValidationException("UnrecognizedActivityParent",
@@ -158,7 +163,7 @@ namespace Empiria.Steps.ProjectManagement {
       }
       activity.Save();
 
-      activitiesList.Value.Add(activity);
+      itemsList.Value.Add(activity);
 
       return activity;
     }
