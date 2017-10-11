@@ -25,15 +25,17 @@ namespace Empiria.Steps.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/activities")]
-    public SingleObjectModel GetProjectActivitiesList(string projectUID,
-                                                      [FromUri] string filter = "") {
+    public CollectionModel GetProjectActivitiesList(string projectUID,
+                                                    [FromUri] string filter = "",
+                                                    [FromUri] string order = "",
+                                                    [FromUri] string keywords = "") {
       try {
         var project = Project.Parse(projectUID);
 
-        var fullActivitiesList = project.GetAllActivities();
+        var fullActivitiesList = project.GetAllActivities(filter, order, keywords);
 
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
-                                     typeof(ProjectObject).FullName);
+        return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
+                                   typeof(ProjectObject).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -43,15 +45,17 @@ namespace Empiria.Steps.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/activities/as-gantt")]
-    public SingleObjectModel GetProjectActivitiesListAsGantt(string projectUID,
-                                                            [FromUri] string filter = "") {
+    public CollectionModel GetProjectActivitiesListAsGantt(string projectUID,
+                                                           [FromUri] string filter = "",
+                                                           [FromUri] string order = "",
+                                                           [FromUri] string keywords = "") {
       try {
         var project = Project.Parse(projectUID);
 
         var fullActivitiesList = project.GetAllActivities();
 
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToGanttResponse(),
-                                     typeof(ProjectObject).FullName);
+        return new CollectionModel(this.Request, fullActivitiesList.ToGanttResponse(),
+                                   typeof(ProjectObject).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -78,27 +82,6 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
-
-    [HttpGet]
-    [Route("v1/project-management/activities/{activityUID}/tasks")]
-    public CollectionModel GetActivityTasks(string activityUID) {
-      try {
-        Activity activity = null;
-        if (EmpiriaString.IsInteger(activityUID)) {
-          activity = Activity.Parse(int.Parse(activityUID));
-        } else {
-          activity = Activity.Parse(activityUID);
-        }
-
-
-        return new CollectionModel(this.Request, activity.Tasks.ToResponse(),
-                                   typeof(ProjectObject).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
     #endregion GET methods
 
     #region UPDATE methods
@@ -113,11 +96,9 @@ namespace Empiria.Steps.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        project.AddItem(bodyAsJson);
+        Activity activity = (Activity) project.AddItem(bodyAsJson);
 
-        var fullActivitiesList = project.GetAllActivities();
-
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(ProjectObject).FullName);
 
       } catch (Exception e) {
@@ -147,10 +128,8 @@ namespace Empiria.Steps.WebApi {
 
         activity.Close(bodyAsJson);
 
-        var fullActivitiesList = project.GetAllActivities();
-
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
-                                     typeof(ProjectObject).FullName);
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -181,10 +160,8 @@ namespace Empiria.Steps.WebApi {
 
         activity.Save();
 
-        var fullActivitiesList = project.GetAllActivities();
-
-        return new SingleObjectModel(this.Request, fullActivitiesList.ToResponse(),
-                                     typeof(ProjectObject).FullName);
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

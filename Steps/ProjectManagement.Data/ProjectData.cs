@@ -39,7 +39,10 @@ namespace Empiria.Steps.ProjectManagement {
       return DataReader.GetList(op, (x) => BaseObject.ParseList<ProjectObject>(x));
     }
 
-    static internal List<ProjectObject> GetAllProjectActivities(Project project) {
+    static internal List<ProjectObject> GetAllProjectActivities(Project project,
+                                                                string filter = "",
+                                                                string order = "",
+                                                                string keywords = "") {
       string sql = $"SELECT * FROM BPMProjectObjects " +
                    $"WHERE ProjectObjectTypeId <> {ProjectObjectType.TaskType.Id} AND " +
                    $"BaseProjectId = {project.Id} AND Status <> 'X'";
@@ -71,39 +74,6 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
 
-    static internal FixedList<Contact> GetProjectResponsibles(Project project) {
-      string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (61, 62)";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
-                       .ToFixedList();
-    }
-
-
-    static internal FixedList<Contact> GetProjectRequesters(Project project) {
-      string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (63, 64, 65)";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
-                       .ToFixedList();
-    }
-
-
-    static internal FixedList<Contact> GetProjectTaskManagers(Project project) {
-      string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (62, 66, 67, 68, 69)";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
-                       .ToFixedList();
-    }
-
-
     static internal void WriteActivity(Activity o) {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
@@ -116,6 +86,7 @@ namespace Empiria.Steps.ProjectManagement {
       DataWriter.Execute(op);
     }
 
+
     static internal void WriteSummary(Summary o) {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
@@ -127,6 +98,7 @@ namespace Empiria.Steps.ProjectManagement {
 
       DataWriter.Execute(op);
     }
+
 
     static internal void WriteProject(Project o) {
       var op = DataOperation.Parse("writeBPMProjectObject",

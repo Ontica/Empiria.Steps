@@ -41,11 +41,10 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/projects/{project_UID}/responsibles")]
-    public CollectionModel GetProjectResponsiblesList(string project_UID,
-                                                      [FromUri] string filter = "") {
+    [Route("v1/project-management/projects/{projectUID}/responsibles")]
+    public CollectionModel GetProjectResponsiblesList(string projectUID) {
       try {
-        var project = Project.Parse(project_UID);
+        var project = Project.Parse(projectUID);
 
         return new CollectionModel(this.Request, project.Responsibles.ToResponse(),
                                    typeof(Contact).FullName);
@@ -57,11 +56,10 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/projects/{project_UID}/requesters")]
-    public CollectionModel GetProjectRequestersList(string project_UID,
-                                                    [FromUri] string filter = "") {
+    [Route("v1/project-management/projects/{projectUID}/requesters")]
+    public CollectionModel GetProjectRequestersList(string projectUID) {
       try {
-        var project = Project.Parse(project_UID);
+        var project = Project.Parse(projectUID);
 
         return new CollectionModel(this.Request, project.Requesters.ToResponse(),
                                    typeof(Contact).FullName);
@@ -73,11 +71,11 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/projects/{project_UID}/task-managers")]
-    public CollectionModel GetProjectTaskManagersList(string project_UID,
+    [Route("v1/project-management/projects/{projectUID}/task-managers")]
+    public CollectionModel GetProjectTaskManagersList(string projectUID,
                                                       [FromUri] string filter = "") {
       try {
-        var project = Project.Parse(project_UID);
+        var project = Project.Parse(projectUID);
 
         return new CollectionModel(this.Request, project.TaskManagers.ToResponse(),
                                    typeof(Contact).FullName);

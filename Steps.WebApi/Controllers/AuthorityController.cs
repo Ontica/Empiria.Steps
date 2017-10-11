@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -29,12 +28,14 @@ namespace Empiria.Steps.WebApi {
       try {
         var list = Entity.GetList(filter ?? String.Empty);
 
-        return new CollectionModel(this.Request, BuildResponse(list), typeof(Entity).FullName);
+        return new CollectionModel(this.Request, list.ToResponse(),
+                                   typeof(Entity).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpGet]
     [Route("v1/modeling/entities/{entityUID}")]
@@ -44,12 +45,14 @@ namespace Empiria.Steps.WebApi {
 
         var entity = Entity.Parse(entityUID);
 
-        return new SingleObjectModel(this.Request, BuildResponse(entity), typeof(Entity).FullName);
+        return new SingleObjectModel(this.Request, entity.ToResponse(),
+                                     typeof(Entity).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpGet]
     [Route("v1/modeling/offices/{officeUID}")]
@@ -59,7 +62,8 @@ namespace Empiria.Steps.WebApi {
 
         var authority = Office.Parse(officeUID);
 
-        return new SingleObjectModel(this.Request, BuildResponse(authority), typeof(Office).FullName);
+        return new SingleObjectModel(this.Request, authority.ToResponse(),
+                                     typeof(Office).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -67,78 +71,6 @@ namespace Empiria.Steps.WebApi {
     }
 
     #endregion Public APIs
-
-    #region Private methods
-
-    private ICollection BuildResponse(FixedList<Entity> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var entity in list) {
-        var item = new {
-          uid = entity.UID,
-          name = entity.FullName,
-          shortName = entity.Nickname
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-    private object BuildResponse(Entity entity) {
-      return new {
-        uid = entity.UID,
-        name = entity.FullName,
-        shortName = entity.Nickname,
-        offices = BuildResponse(entity.Authorities),
-        positions = BuildResponse(entity.Positions)
-      };
-    }
-
-    private ICollection BuildResponse(FixedList<Office> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var authority in list) {
-        var item = new {
-          uid = authority.UID,
-          name = authority.FullName
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-    private object BuildResponse(Office authority) {
-      return new {
-        uid = authority.UID,
-        name = authority.FullName,
-        headPosition = BuildResponse(authority.HeadPosition)
-      };
-    }
-
-    private ICollection BuildResponse(FixedList<Position> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var position in list) {
-        var item = BuildResponse(position);
-        array.Add(item);
-      }
-      return array;
-    }
-
-    private object BuildResponse(Position position) {
-      return new {
-        uid = position.UID,
-        name = position.FullName,
-        phone = position.Phone,
-        officer = new {
-          uid = position.Officer.UID,
-          name = position.Officer.FullName,
-          email = position.Officer.EMail,
-        }
-      };
-    }
-
-    #endregion Private methods
 
   }  // class AuthorityController
 

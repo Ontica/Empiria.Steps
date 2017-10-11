@@ -39,12 +39,12 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/process-definitions/{processDef_ID}")]
-    public SingleObjectModel GetProcessDefinition(string processDef_ID) {
+    [Route("v1/process-definitions/{processDefinitionUID}")]
+    public SingleObjectModel GetProcessDefinition(string processDefinitionUID) {
       try {
-        base.RequireResource(processDef_ID, "processDef_ID");
+        base.RequireResource(processDefinitionUID, "processDefinitionUID");
 
-        var processDefinition = BpmnDiagram.Parse(processDef_ID);
+        var processDefinition = BpmnDiagram.Parse(processDefinitionUID);
 
         return new SingleObjectModel(this.Request, processDefinition.ToResponse(),
                                      typeof(BpmnDiagram).FullName);
@@ -80,15 +80,16 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpPut, HttpPatch]
-    [Route("v1/process-definitions/{processDef_ID}")]
-    public SingleObjectModel UpdateProcessDefinition(string processDef_ID, [FromBody] object body) {
+    [Route("v1/process-definitions/{processDefinitionUID}")]
+    public SingleObjectModel UpdateProcessDefinition(string processDefinitionUID,
+                                                    [FromBody] object body) {
       try {
-        base.RequireResource(processDef_ID, "processDef_ID");
+        base.RequireResource(processDefinitionUID, "processDefinitionUID");
         base.RequireBody(body);
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        var processDefinition = BpmnDiagram.Parse(processDef_ID);
+        var processDefinition = BpmnDiagram.Parse(processDefinitionUID);
 
         processDefinition.Update(bodyAsJson);
 

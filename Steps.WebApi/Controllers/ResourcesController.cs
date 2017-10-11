@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -25,12 +23,12 @@ namespace Empiria.Steps.WebApi {
     #region Public APIs
 
     [HttpGet]
-    [Route("v1/project-management/resources")]
-    public CollectionModel GetResourcesList([FromUri] string filter = "") {
+    [Route("v1/project-management/projects/{projectUID}/resources")]
+    public CollectionModel GetResourcesList(string projectUID) {
       try {
         var list = Resource.GetList();
 
-        return new CollectionModel(this.Request, BuildResponse(list),
+        return new CollectionModel(this.Request, list.ToResponse(),
                                    typeof(Project).FullName);
 
       } catch (Exception e) {
@@ -38,26 +36,21 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
+    //[HttpGet]
+    //[Route("v1/project-management/resources/as-tree")]
+    //public CollectionModel GetResourcesAsTreeList([FromUri] string filter = "") {
+    //  try {
+    //    var tree = ResourceTree.Parse();
+
+    //    return new CollectionModel(this.Request, tree.ToResponse(),
+    //                               typeof(Project).FullName);
+
+    //  } catch (Exception e) {
+    //    throw base.CreateHttpException(e);
+    //  }
+    //}
+
     #endregion Public APIs
-
-    #region Private methods
-
-    private ICollection BuildResponse(IList<Resource> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var resource in list) {
-        var item = new {
-          uid = resource.UID,
-          type = resource.ResourceType.Name,
-          name = resource.Name,
-          notes = resource.Notes,
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-    #endregion Private methods
 
   }  // class ResourcesController
 

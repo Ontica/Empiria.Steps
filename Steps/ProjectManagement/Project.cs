@@ -84,13 +84,6 @@ namespace Empiria.Steps.ProjectManagement {
     } = Contract.Empty;
 
 
-    // [DataField("Deadline")]
-    //public DateTime Deadline {
-    //  get;
-    //  private set;
-    //} = ExecutionServer.DateMinValue;
-
-
     [DataField("ResourceId")]
     public Resource Resource {
       get;
@@ -108,8 +101,10 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
-    public FixedList<ProjectObject> GetAllActivities() {
-      return ProjectData.GetAllProjectActivities(this)
+    public FixedList<ProjectObject> GetAllActivities(string filter = "",
+                                                     string order = "",
+                                                     string keywords = "") {
+      return ProjectData.GetAllProjectActivities(this, filter, order, keywords)
                         .ToFixedList();
     }
 
@@ -119,19 +114,19 @@ namespace Empiria.Steps.ProjectManagement {
 
     public FixedList<Contact> Responsibles {
       get {
-        return ProjectData.GetProjectResponsibles(this);
+        return ProjectContactsData.GetProjectResponsibles(this);
       }
     }
 
     public FixedList<Contact> Requesters {
       get {
-        return ProjectData.GetProjectRequesters(this);
+        return ProjectContactsData.GetProjectRequesters(this);
       }
     }
 
     public FixedList<Contact> TaskManagers {
       get {
-        return ProjectData.GetProjectTaskManagers(this);
+        return ProjectContactsData.GetProjectTaskManagers(this);
       }
     }
 

@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections;
 using System.Web.Http;
 
 using Empiria.Json;
@@ -16,7 +15,6 @@ using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
 using Empiria.Steps.Legal;
-using Empiria.Steps.Modeling;
 
 namespace Empiria.Steps.WebApi {
 
@@ -33,7 +31,7 @@ namespace Empiria.Steps.WebApi {
 
         var contracts = Contract.GetList(contractDocumentType);
 
-        return new CollectionModel(this.Request, BuildResponse(contracts),
+        return new CollectionModel(this.Request, contracts.ToResponse(),
                                    contractDocumentType.Name);
 
       } catch (Exception e) {
@@ -53,7 +51,7 @@ namespace Empiria.Steps.WebApi {
 
         FixedList<Clause> clausesList = contract.GetClauses(keywords);
 
-        return new SingleObjectModel(this.Request, BuildResponse(contract, clausesList),
+        return new SingleObjectModel(this.Request, contract.ToResponse(clausesList),
                                      typeof(Contract).FullName);
 
       } catch (Exception e) {
@@ -76,7 +74,7 @@ namespace Empiria.Steps.WebApi {
 
         FixedList<Clause> clausesList = contract.GetClauses(keywords);
 
-        return new CollectionModel(this.Request, BuildResponse(clausesList),
+        return new CollectionModel(this.Request, clausesList.ToResponse(),
                                    typeof(Clause).FullName);
 
       } catch (Exception e) {
@@ -94,7 +92,7 @@ namespace Empiria.Steps.WebApi {
 
         Clause clause = contract.GetClause(clauseUID);
 
-        return new SingleObjectModel(this.Request, BuildResponseFull(clause),
+        return new SingleObjectModel(this.Request, clause.ToResponse(),
                                      typeof(Clause).FullName);
 
       } catch (Exception e) {
@@ -116,7 +114,7 @@ namespace Empiria.Steps.WebApi {
 
         Clause clause = contract.AddClause(bodyAsJson);
 
-        return new SingleObjectModel(this.Request, BuildResponse(clause),
+        return new SingleObjectModel(this.Request, clause.ToShortResponse(),
                                      typeof(Clause).FullName);
 
       } catch (Exception e) {
@@ -153,7 +151,7 @@ namespace Empiria.Steps.WebApi {
 
         clause.Update(bodyAsJson);
 
-        return new SingleObjectModel(this.Request, BuildResponse(clause),
+        return new SingleObjectModel(this.Request, clause.ToResponse(),
                                      typeof(Contract).FullName);
 
       } catch (Exception e) {
@@ -181,7 +179,7 @@ namespace Empiria.Steps.WebApi {
 
         RelatedProcedure relatedProcedure = clause.AddRelatedProcedure(bodyAsJson);
 
-        return new SingleObjectModel(this.Request, BuildResponse(relatedProcedure),
+        return new SingleObjectModel(this.Request, relatedProcedure.ToResponse(),
                                      typeof(RelatedProcedure).FullName);
 
       } catch (Exception e) {
@@ -209,7 +207,7 @@ namespace Empiria.Steps.WebApi {
 
         relatedProcedure.Update(bodyAsJson);
 
-        return new SingleObjectModel(this.Request, BuildResponse(relatedProcedure),
+        return new SingleObjectModel(this.Request, relatedProcedure.ToResponse(),
                                      typeof(RelatedProcedure).FullName);
 
       } catch (Exception e) {
@@ -218,122 +216,6 @@ namespace Empiria.Steps.WebApi {
     }
 
     #endregion Contract clause related procedures Api
-
-    #region Private methods
-
-    private ICollection BuildResponse(FixedList<Contract> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var legalDocument in list) {
-        var item = new {
-          uid = legalDocument.UID,
-          name = legalDocument.Name,
-          url = legalDocument.Url
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-
-    private object BuildResponse(Contract legalDocument,
-                                 FixedList<Clause> clauses = null) {
-      return new {
-        uid = legalDocument.UID,
-        name = legalDocument.Name,
-        url = legalDocument.Url,
-        clauses = BuildResponse(clauses ?? legalDocument.Clauses),
-      };
-    }
-
-
-    private ICollection BuildResponse(FixedList<Clause> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var documentItem in list) {
-        var item = BuildResponse(documentItem);
-
-        array.Add(item);
-      }
-      return array;
-    }
-
-
-    private object BuildResponse(Clause documentItem) {
-      return new {
-        uid = documentItem.UID,
-        contractUID = documentItem.Contract.UID,
-        section = documentItem.Section,
-        clauseNo = documentItem.Number,
-        title = documentItem.Title,
-        text = documentItem.Text,
-        sourcePageNo = documentItem.DocumentPageNo
-      };
-    }
-
-
-    private object BuildResponseFull(Clause documentItem) {
-      return new {
-        uid = documentItem.UID,
-        contractUID = documentItem.Contract.UID,
-        section = documentItem.Section,
-        clauseNo = documentItem.Number,
-        title = documentItem.Title,
-        text = documentItem.Text,
-        sourcePageNo = documentItem.DocumentPageNo,
-        notes = documentItem.Notes,
-        status = documentItem.Status,
-        relatedProcedures = BuildResponse(documentItem.RelatedProcedures),
-        contract = new {
-          uid = documentItem.Contract.UID,
-          name = documentItem.Contract.Name,
-          url = documentItem.Contract.Url
-        }
-      };
-    }
-
-
-    private ICollection BuildResponse(FixedList<RelatedProcedure> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var relatedProcedure in list) {
-        var item = BuildResponse(relatedProcedure);
-
-        array.Add(item);
-      }
-      return array;
-    }
-
-
-    private object BuildResponse(RelatedProcedure relatedProcedure) {
-      return new {
-        uid = relatedProcedure.UID,
-        procedure = BuildResponse(relatedProcedure.Procedure),
-        //maxFilingTerm = relatedProcedure.MaxFilingTerm,
-        //maxFilingTermType = relatedProcedure.MaxFilingTermType,
-        //startsWhen = relatedProcedure.StartsWhen,
-        //startsWhenTrigger = relatedProcedure.StartsWhenTrigger,
-        notes = relatedProcedure.Notes
-      };
-    }
-
-
-    private object BuildResponse(Procedure procedure) {
-      return new {
-        uid = procedure.UID,
-        shortName = procedure.ShortName,
-        name = procedure.Name,
-        code = procedure.Code,
-        theme = procedure.Theme,
-        executionMode = procedure.ExecutionMode,
-        projectType = procedure.ProjectType,
-        officialUrl = procedure.OfficialURL,
-        regulationUrl = procedure.RegulationURL,
-        entity = procedure.Authority.Entity.Nickname
-      };
-    }
-
-    #endregion Private methods
 
   }  // class ContractsController
 

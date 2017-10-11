@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections;
 using System.Web.Http;
 
 using Empiria.Json;
@@ -34,7 +33,8 @@ namespace Empiria.Steps.WebApi {
 
         var list = Procedure.GetList(filter, keywords);
 
-        return new CollectionModel(this.Request, BuildResponse(list), typeof(Procedure).FullName);
+        return new CollectionModel(this.Request, list.ToResponse(),
+                                   typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -42,14 +42,15 @@ namespace Empiria.Steps.WebApi {
     }
 
     [HttpGet]
-    [Route("v1/procedures/{procedure_UID}")]
-    public SingleObjectModel GetProcedure([FromUri] string procedure_UID) {
+    [Route("v1/procedures/{procedureUID}")]
+    public SingleObjectModel GetProcedure([FromUri] string procedureUID) {
       try {
-        base.RequireResource(procedure_UID, "procedure_UID");
+        base.RequireResource(procedureUID, "procedureUID");
 
-        var procedure = Procedure.Parse(procedure_UID);
+        var procedure = Procedure.Parse(procedureUID);
 
-        return new SingleObjectModel(this.Request, BuildResponse(procedure), typeof(Procedure).FullName);
+        return new SingleObjectModel(this.Request, procedure.ToResponse(),
+                                     typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -58,14 +59,15 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/procedures/{procedure_UID}/bpmn-diagram")]
-    public SingleObjectModel GetProcedureBpmnDiagram([FromUri] string procedure_UID) {
+    [Route("v1/procedures/{procedureUID}/bpmn-diagram")]
+    public SingleObjectModel GetProcedureBpmnDiagram([FromUri] string procedureUID) {
       try {
-        base.RequireResource(procedure_UID, "procedure_UID");
+        base.RequireResource(procedureUID, "procedureUID");
 
-        var procedure = Procedure.Parse(procedure_UID);
+        var procedure = Procedure.Parse(procedureUID);
 
-        return new SingleObjectModel(this.Request, procedure.BpmnDiagram.ToResponse(), typeof(WorkflowDefinition.BpmnDiagram).FullName);
+        return new SingleObjectModel(this.Request, procedure.BpmnDiagram.ToResponse(),
+                                     typeof(WorkflowDefinition.BpmnDiagram).FullName);
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
@@ -84,7 +86,8 @@ namespace Empiria.Steps.WebApi {
 
         procedure.Save();
 
-        return new SingleObjectModel(this.Request, BuildResponse(procedure), typeof(Procedure).FullName);
+        return new SingleObjectModel(this.Request, procedure.ToResponse(),
+                                     typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -103,22 +106,22 @@ namespace Empiria.Steps.WebApi {
     }
 
     [HttpPut, HttpPatch]
-    [Route("v1/procedures/{procedure_UID}")]
-    public SingleObjectModel UpdateProcedure([FromUri] string procedure_UID,
+    [Route("v1/procedures/{procedureUID}")]
+    public SingleObjectModel UpdateProcedure([FromUri] string procedureUID,
                                              [FromBody] object body) {
       try {
-        base.RequireResource(procedure_UID, "procedure_UID");
+        base.RequireResource(procedureUID, "procedureUID");
         base.RequireBody(body);
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        var procedure = Procedure.Parse(procedure_UID);
+        var procedure = Procedure.Parse(procedureUID);
 
         procedure.Update(bodyAsJson);
 
         procedure.Save();
 
-        return new SingleObjectModel(this.Request, BuildResponse(procedure), typeof(Procedure).FullName);
+        return new SingleObjectModel(this.Request, procedure.ToResponse(), typeof(Procedure).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -126,83 +129,6 @@ namespace Empiria.Steps.WebApi {
     }
 
     #endregion Public APIs
-
-    #region Private methods
-
-    private ICollection BuildResponse(FixedList<Procedure> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var procedure in list) {
-        var item = new {
-          uid = procedure.UID,
-          name = procedure.Name,
-          shortName = procedure.ShortName,
-          code = procedure.Code,
-          theme = procedure.Theme,
-          executionMode = procedure.ExecutionMode,
-          projectType = procedure.ProjectType,
-          officialUrl = procedure.OfficialURL,
-          regulationUrl = procedure.RegulationURL,
-          entity = procedure.Authority.Entity.Alias,
-          office = procedure.Authority.Office.FullName
-          //status = Enum.GetName(typeof(GeneralObjectStatus), procedure.Status),
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-    private object BuildResponse(Procedure procedure) {
-      return new {
-        uid = procedure.UID,
-        name = procedure.Name,
-        shortName = procedure.ShortName,
-        code = procedure.Code,
-        theme = procedure.Theme,
-
-        executionMode = procedure.ExecutionMode,
-        projectType = procedure.ProjectType,
-        officialUrl = procedure.OfficialURL,
-        regulationUrl = procedure.RegulationURL,
-
-        entityName = procedure.EntityName,
-        authorityName = procedure.AuthorityName,
-        authorityTitle = procedure.AuthorityTitle,
-        authorityContact = procedure.AuthorityContact,
-
-        authority = BuildResponse(procedure.Authority),
-        legalInfo = procedure.LegalInfo,
-        filingCondition = procedure.FilingCondition,
-        filingDocuments = procedure.FilingDocuments,
-        filingFee = procedure.FilingFee,
-        notes = procedure.Notes
-      };
-    }
-
-    private object BuildResponse(Authority authority) {
-      return new {
-        entity = new {
-          uid = authority.Entity.UID,
-          name = authority.Entity.FullName,
-        },
-        office = new {
-          uid = authority.Office.UID,
-          name = authority.Office.FullName,
-        },
-        position = new {
-          uid = authority.Position.UID,
-          name = authority.Position.FullName,
-          phone = authority.Position.Phone
-        },
-        contact = new {
-          uid = authority.Position.Officer.UID,
-          name = authority.Position.Officer.FullName,
-          email = authority.Position.Officer.EMail
-        }
-      };
-    }
-
-    #endregion Private methods
 
   }  // class ProcedureController
 

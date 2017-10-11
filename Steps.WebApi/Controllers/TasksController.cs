@@ -30,7 +30,6 @@ namespace Empiria.Steps.WebApi {
 
     #region Private methods
 
-
     #endregion Private methods
 
   }  // class TasksController
