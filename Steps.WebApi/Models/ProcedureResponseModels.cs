@@ -63,8 +63,8 @@ namespace Empiria.Steps.WebApi {
         authority = procedure.Authority.ToResponse(),
         legalInfo = procedure.LegalInfo,
         filingCondition = procedure.FilingCondition,
-        filingDocuments = procedure.FilingDocuments,
         filingFee = procedure.FilingFee,
+        requirements = procedure.Requirements.ToResponse(),
         notes = procedure.Notes
       };
     }

@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.DataTypes;
@@ -18,6 +19,12 @@ using Empiria.Steps.WorkflowDefinition;
 namespace Empiria.Steps.Modeling {
 
   public class Procedure : BaseObject {
+
+    #region Fields
+
+    private Lazy<List<Requirement>> requirementsList = null;
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -71,6 +78,10 @@ namespace Empiria.Steps.Modeling {
 
         return list.GetItems();
       }
+    }
+
+    protected override void OnInitialize() {
+      requirementsList = new Lazy<List<Requirement>>(() => Requirement.GetList(this));
     }
 
     static public void UpdateAll() {
@@ -240,11 +251,11 @@ namespace Empiria.Steps.Modeling {
     } = FilingCondition.Empty;
 
 
-    [DataObject]
-    public FilingDocuments FilingDocuments {
-      get;
-      private set;
-    } = FilingDocuments.Empty;
+    public FixedList<Requirement> Requirements {
+      get {
+        return requirementsList.Value.ToFixedList();
+      }
+    }
 
 
     [DataObject]
@@ -295,7 +306,6 @@ namespace Empiria.Steps.Modeling {
       this.Authority = Authority.Parse(data.Slice("authority"));
       this.LegalInfo = LegalInfo.Parse(data.Slice("legalInfo"));
       this.FilingCondition = FilingCondition.Parse(data.Slice("filingCondition"));
-      this.FilingDocuments = FilingDocuments.Parse(data.Slice("filingDocuments"));
       this.FilingFee = FilingFee.Parse(data.Slice("filingFee"));
     }
 

@@ -132,6 +132,7 @@
     <Compile Include="Legal\ContractsData.cs" />
     <Compile Include="Legal\LegalDocumentType.cs" />
     <Compile Include="Legal\RelatedProcedure.cs" />
+    <Compile Include="Modeling\Requirement.cs" />
     <Compile Include="ProjectManagement.Data\ProjectContactsData.cs" />
     <Compile Include="ProjectManagement\Summary.cs" />
     <Compile Include="ProjectManagement\Activity.cs" />
@@ -147,7 +148,6 @@
     <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
     <Compile Include="Modeling\Authority.cs" />
     <Compile Include="Modeling\FilingCondition.cs" />
-    <Compile Include="Modeling\FilingDocuments.cs" />
     <Compile Include="Modeling\FilingFee.cs" />
     <Compile Include="Modeling\LegalInfo.cs" />
     <Compile Include="Modeling\Position.cs" />
