@@ -132,6 +132,7 @@
     <Compile Include="Legal\ContractsData.cs" />
     <Compile Include="Legal\LegalDocumentType.cs" />
     <Compile Include="Legal\RelatedProcedure.cs" />
+    <Compile Include="Legal\Document.cs" />
     <Compile Include="Modeling\Requirement.cs" />
     <Compile Include="ProjectManagement.Data\ProjectContactsData.cs" />
     <Compile Include="ProjectManagement\Summary.cs" />

@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ActivityTasksController.cs" />
+    <Compile Include="Controllers\DocumentsController.cs" />
     <Compile Include="Controllers\RequirementsController.cs" />
     <Compile Include="Controllers\ProjectActivitiesController.cs" />
     <Compile Include="Controllers\ProjectsModelsController.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Controllers\BpmnDiagramController.cs" />
     <Compile Include="Empiria.Steps.WebApi.AssemblyInfo.cs" />
     <Compile Include="Models\AuthorityResponseModel.cs" />
+    <Compile Include="Models\DocumentResponseModel.cs" />
     <Compile Include="Models\RequirementResponseModel.cs" />
     <Compile Include="Models\BpmnDiagramResponseModel.cs" />
     <Compile Include="Models\ContractResponseModels.cs" />
