@@ -41,11 +41,19 @@ namespace Empiria.Steps.Modeling {
       return BaseObject.GetList<Requirement>(filter, orderBy);
     }
 
+    static public void UpdateAll() {
+      var requirements = BaseObject.GetList<Requirement>();
+
+      foreach (var requirement in requirements) {
+        requirement.Save();
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
 
-    //[DataField("UID")]
+    [DataField("UID")]
     public string UID {
       get;
       private set;
@@ -146,14 +154,14 @@ namespace Empiria.Steps.Modeling {
     #region Public methods
 
     protected override void OnBeforeSave() {
-      //if (this.UID.Length == 0) {
-      //  this.UID = EmpiriaString.BuildRandomString(6, 24);
-      //}
+      if (this.UID.Length == 0) {
+        this.UID = EmpiriaString.BuildRandomString(6, 24);
+      }
     }
 
 
     protected override void OnSave() {
-      // ContractsData.WriteClause(this);
+      RequirementsData.WriteRequirement(this);
     }
 
 

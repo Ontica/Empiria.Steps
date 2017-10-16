@@ -39,6 +39,21 @@ namespace Empiria.Steps.WebApi {
 
     #endregion GET methods
 
+    #region UPDATE methods
+
+    [HttpPost]
+    [Route("v1/procedure-requirements/update-all")]
+    public void UpdateAllDocuments() {
+      try {
+        Requirement.UpdateAll();
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    #endregion UPDATE methods
+
   }  // class RequirementsController
 
 }  // namespace Empiria.Steps.WebApi

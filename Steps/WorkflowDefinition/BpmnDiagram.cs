@@ -54,11 +54,17 @@ namespace Empiria.Steps.WorkflowDefinition {
       foreach (var file in files) {
         var diagramName = file.Name.Replace(".bpmn", String.Empty);
         var procedureId = -1;
+
         if (EmpiriaString.IsInteger(diagramName)) {
           procedureId = EmpiriaString.ToInteger(diagramName);
           var procedure = Modeling.Procedure.Parse(procedureId);
-          diagramName =  procedure.Name;
-          diagramName = procedure.Code.Contains("-") ? procedure.Code : procedure.Name;
+          if (procedure.Code == "No disponible") {
+            diagramName = $"[{procedure.Id.ToString("000")}] {procedure.Name}";
+          } else {
+            diagramName = $"[{procedure.Id.ToString("000")}] {procedure.Code} {procedure.Name}";
+          }
+
+          diagramName = EmpiriaString.TrimAll(diagramName);
         }
 
         var xml = System.IO.File.ReadAllText(file.FullName);

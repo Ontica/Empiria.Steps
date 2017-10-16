@@ -53,6 +53,14 @@ namespace Empiria.Steps.Legal {
                        .ToFixedList();
     }
 
+    static public void UpdateAll() {
+      var documents = BaseObject.GetList<Document>();
+
+      foreach (var document in documents) {
+        document.Save();
+     }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -138,16 +146,15 @@ namespace Empiria.Steps.Legal {
     #region Public methods
 
     protected override void OnBeforeSave() {
-      //if (this.UID.Length == 0) {
-      //  this.UID = EmpiriaString.BuildRandomString(6, 24);
-      //}
+      if (this.UID.Length == 0) {
+        this.UID = EmpiriaString.BuildRandomString(6, 24);
+      }
     }
 
 
     protected override void OnSave() {
-      // ContractsData.WriteClause(this);
+      DocumentsData.WriteDocument(this);
     }
-
 
     public void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");

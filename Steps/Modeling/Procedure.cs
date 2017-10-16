@@ -169,8 +169,9 @@ namespace Empiria.Steps.Modeling {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.EntityName,
-                                           this.LegalInfo.LegalBasis, this.LegalInfo.Obligation, this.ProjectType);
+        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.EntityName, this.AuthorityContact, this.ProjectType,
+                                           this.FilingCondition.StartsWhenTrigger, this.FilingCondition.HowToFileAddress,
+                                           this.Theme, this.LegalInfo.LegalBasis, this.LegalInfo.Obligation);
       }
     }
 
