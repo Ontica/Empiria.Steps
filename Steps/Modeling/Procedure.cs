@@ -167,6 +167,23 @@ namespace Empiria.Steps.Modeling {
       private set;
     }
 
+
+    private ProcedureHypertext _hypertextFields = null;
+    public ProcedureHypertext HypertextFields {
+      get {
+        if (_hypertextFields == null) {
+          _hypertextFields = new ProcedureHypertext(this);
+        }
+        return _hypertextFields;
+      }
+    }
+
+    public string NotesHypertext {
+      get {
+        return Presentation.Hypertext.ToAcronymHypertext(this.Notes);
+      }
+    }
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.Code, this.Name, this.EntityName, this.AuthorityContact, this.ProjectType,

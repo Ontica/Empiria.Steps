@@ -47,7 +47,7 @@ namespace Empiria.Steps.WebApi {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var documentItem in list) {
-        var item = documentItem.ToResponse();
+        var item = documentItem.ToShortResponse();
 
         array.Add(item);
       }
@@ -55,27 +55,27 @@ namespace Empiria.Steps.WebApi {
     }
 
 
-    static internal object ToShortResponse(this Clause documentItem) {
+    static internal object ToShortResponse(this Clause clause) {
       return new {
-        uid = documentItem.UID,
-        contractUID = documentItem.Contract.UID,
-        section = documentItem.Section,
-        clauseNo = documentItem.Number,
-        title = documentItem.Title,
-        text = documentItem.Text,
-        sourcePageNo = documentItem.DocumentPageNo
+        uid = clause.UID,
+        section = clause.Section,
+        clauseNo = clause.Number,
+        title = clause.Title,
+        contractUID = clause.Contract.UID,
       };
     }
 
     static internal object ToResponse(this Clause clause) {
       return new {
         uid = clause.UID,
-        contractUID = clause.Contract.UID,
         section = clause.Section,
         clauseNo = clause.Number,
         title = clause.Title,
+        contractUID = clause.Contract.UID,
+
         text = clause.Text,
         sourcePageNo = clause.DocumentPageNo,
+        hypertext = clause.AsHypertext,
         notes = clause.Notes,
         status = clause.Status,
         relatedProcedures = clause.RelatedProcedures.ToResponse(),

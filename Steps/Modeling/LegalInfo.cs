@@ -27,7 +27,6 @@ namespace Empiria.Steps.Modeling {
       o.RegulationMode = data.Get<string>("regulationMode", o.RegulationMode);
       o.Obligation = data.Get<string>("obligation", o.Obligation);
       o.LegalBasis = data.Get<string>("legalBasis", o.LegalBasis);
-
       o.Ronda13Consorcio = data.Get<string>("ronda13Consorcio", o.Ronda13Consorcio);
       o.Ronda13Individual = data.Get<string>("ronda13Individual", o.Ronda13Individual);
       o.Ronda14Consorcio = data.Get<string>("ronda14Consorcio", o.Ronda14Consorcio);
@@ -67,6 +66,12 @@ namespace Empiria.Steps.Modeling {
       private set;
     } = String.Empty;
 
+
+    public string LegalBasisHypertext {
+      get {
+        return Presentation.Hypertext.ToAcronymHypertext(this.LegalBasis);
+      }
+    }
 
     [DataField("Ronda13Consorcio")]
     public string Ronda13Consorcio {

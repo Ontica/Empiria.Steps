@@ -129,11 +129,15 @@
   <ItemGroup>
     <Compile Include="Legal\Clause.cs" />
     <Compile Include="Legal\Contract.cs" />
+    <Compile Include="Legal\DocumentsData.cs" />
     <Compile Include="Legal\ContractsData.cs" />
     <Compile Include="Legal\LegalDocumentType.cs" />
     <Compile Include="Legal\RelatedProcedure.cs" />
     <Compile Include="Legal\Document.cs" />
+    <Compile Include="Modeling\ProcedureHypertext.cs" />
+    <Compile Include="Modeling\RequirementsData.cs" />
     <Compile Include="Modeling\Requirement.cs" />
+    <Compile Include="Presentation\TextTemplate.cs" />
     <Compile Include="ProjectManagement.Data\ProjectContactsData.cs" />
     <Compile Include="ProjectManagement\Summary.cs" />
     <Compile Include="ProjectManagement\Activity.cs" />
@@ -154,6 +158,7 @@
     <Compile Include="Modeling\Position.cs" />
     <Compile Include="Modeling\Entity.cs" />
     <Compile Include="Modeling\Office.cs" />
+    <Compile Include="Presentation\Hypertext.cs" />
     <Compile Include="WorkflowDefinition\BpmnDiagram.cs" />
     <Compile Include="Modeling\Procedure.cs" />
     <Compile Include="Data\ProcedureData.cs" />

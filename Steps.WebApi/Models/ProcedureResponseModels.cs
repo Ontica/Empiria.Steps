@@ -65,7 +65,8 @@ namespace Empiria.Steps.WebApi {
         filingCondition = procedure.FilingCondition,
         filingFee = procedure.FilingFee,
         requirements = procedure.Requirements.ToResponse(),
-        notes = procedure.Notes
+        notes = procedure.Notes,
+        hypertext = procedure.HypertextFields
       };
     }
 

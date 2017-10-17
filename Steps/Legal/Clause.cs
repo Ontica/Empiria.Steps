@@ -137,6 +137,15 @@ namespace Empiria.Steps.Legal {
       private set;
     }
 
+    private string _asHypertext = null;
+    public string AsHypertext {
+      get {
+        if (_asHypertext == null) {
+          _asHypertext = Presentation.Hypertext.ToTermDefinitionHypertext(this.Text, this.Contract);
+        }
+        return _asHypertext;
+      }
+    }
 
     public string Ordering {
       get {
