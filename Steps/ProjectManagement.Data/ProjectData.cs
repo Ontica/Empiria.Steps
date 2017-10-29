@@ -92,7 +92,7 @@ namespace Empiria.Steps.ProjectManagement {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, o.Progress,
+                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
                 o.Tags, o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 o.Resource.Id, o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
                 o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
@@ -105,7 +105,7 @@ namespace Empiria.Steps.ProjectManagement {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, o.Progress,
+                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
                 o.Tags, o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 o.Resource.Id, o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
                 o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
@@ -118,7 +118,7 @@ namespace Empiria.Steps.ProjectManagement {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, o.Progress,
+                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
                 o.Tags, o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 o.Resource.Id, o.Owner.Id, o.Manager.Id, ExecutionServer.DateMinValue, Contact.Empty.Id,
                 Project.Empty.Id, Project.Empty.Id, (char) o.Stage, (char) o.Status);
@@ -131,7 +131,7 @@ namespace Empiria.Steps.ProjectManagement {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, o.Progress,
+                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
                 o.Tags, o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 Resource.Empty.Id, o.Owner.Id, o.AssignedTo.Id, o.AssignationTime, o.AssignedTo.Id,
                 o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status);

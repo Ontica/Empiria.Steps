@@ -128,15 +128,15 @@ namespace Empiria.Steps.ProjectManagement {
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("Progress")]
-    public int Progress {
+    [DataField("Tags")]
+    public string Tags {
       get;
       private set;
     }
 
 
-    [DataField("Tags")]
-    public string Tags {
+    [DataField("RagStatus", Default = RagStatus.Green)]
+    public RagStatus RagStatus {
       get;
       private set;
     }
@@ -220,7 +220,6 @@ namespace Empiria.Steps.ProjectManagement {
       this.StartDate = this.StartDate == ExecutionServer.DateMaxValue
                             ? this.EndDate : this.StartDate;
 
-      this.Progress = 100;
       this.Stage = ItemStage.Done;
       this.Status = ProjectObjectStatus.Completed;
 
@@ -257,11 +256,16 @@ namespace Empiria.Steps.ProjectManagement {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
+      //this.Tags = data.Get<string[]>("tags", this.Tags);
+      this.RagStatus = data.Get<RagStatus>("ragStatus", this.RagStatus);
+
       this.StartDate = data.Get<DateTime>("startDate", this.StartDate);
       this.TargetDate = data.Get<DateTime>("targetDate", this.TargetDate);
+      this.DueDate = data.Get<DateTime>("dueDate", this.DueDate);
+
       this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
                                                             this.EstimatedDuration.ToString()));
-      this.Progress = data.Get<int>("progress", this.Progress);
+
       this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
       if (this.Name.Length == 0) {
         this.Name = this.WorkflowObject.Name;

@@ -140,6 +140,7 @@
     <Compile Include="Presentation\TextTemplate.cs" />
     <Compile Include="ProjectManagement.Data\ProjectContactsData.cs" />
     <Compile Include="ProjectManagement\ActivityFilter.cs" />
+    <Compile Include="ProjectManagement\RagStatus.cs" />
     <Compile Include="ProjectManagement\ActivityOrder.cs" />
     <Compile Include="ProjectManagement\ProjectFinder.cs" />
     <Compile Include="ProjectManagement\Summary.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="ProjectManagement\ItemStage.cs" />
     <Compile Include="ProjectManagement\Task.cs" />
     <Compile Include="ProjectManagement.Data\ProjectModelData.cs" />
+    <Compile Include="RootTypes\Tags.cs" />
     <Compile Include="RootTypes\DurationType.cs" />
     <Compile Include="RootTypes\Duration.cs" />
     <Compile Include="RootTypes\ResourceTree.cs" />

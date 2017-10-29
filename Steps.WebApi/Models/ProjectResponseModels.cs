@@ -135,7 +135,7 @@ namespace Empiria.Steps.WebApi {
                             activity.StartDate : activity.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
         duration = activity.EndDate <  ExecutionServer.DateMaxValue ?
                             (int) activity.EndDate.Subtract(activity.StartDate).TotalDays : activity.EstimatedDuration.Value,
-        progress = activity.Progress,
+        ragStatus = activity.RagStatus,
         parent = activity.Parent is Summary ? activity.Parent.Id : 0
       };
     }
@@ -151,7 +151,7 @@ namespace Empiria.Steps.WebApi {
                                   summary.StartDate : summary.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
         duration = summary.EndDate < ExecutionServer.DateMaxValue ?
                            (int) summary.EndDate.Subtract(summary.StartDate).TotalDays : summary.EstimatedDuration.Value,
-        progress = summary.Progress,
+        ragStatus = summary.RagStatus,
         parent = summary.Parent is Summary ? summary.Parent.Id : 0
       };
     }
@@ -208,7 +208,7 @@ namespace Empiria.Steps.WebApi {
         targetDate = activity.TargetDate.ToResponse(),
         endDate = activity.EndDate.ToResponse(),
         dueDate = activity.DueDate.ToResponse(),
-        progress = activity.Progress,
+        ragStatus = activity.RagStatus,
         stage = activity.Stage
       };
     }
@@ -241,7 +241,7 @@ namespace Empiria.Steps.WebApi {
         targetDate = summary.TargetDate.ToResponse(),
         endDate = summary.EndDate.ToResponse(),
         dueDate = summary.DueDate.ToResponse(),
-        progress = summary.Progress,
+        ragStatus = summary.RagStatus,
         stage = summary.Stage
       };
     }
@@ -266,7 +266,7 @@ namespace Empiria.Steps.WebApi {
         endDate = task.EndDate,
         dueDate = task.DueDate,
         estimatedDuration = task.EstimatedDuration.ToString(),
-        progress = task.Progress,
+        ragStatus = task.RagStatus,
         assignedToUID = task.AssignedTo.UID,
         assignationTime = task.AssignationTime,
         state = task.Status,
