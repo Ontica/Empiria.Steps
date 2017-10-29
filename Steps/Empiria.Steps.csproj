@@ -139,6 +139,9 @@
     <Compile Include="Modeling\Requirement.cs" />
     <Compile Include="Presentation\TextTemplate.cs" />
     <Compile Include="ProjectManagement.Data\ProjectContactsData.cs" />
+    <Compile Include="ProjectManagement\ActivityFilter.cs" />
+    <Compile Include="ProjectManagement\ActivityOrder.cs" />
+    <Compile Include="ProjectManagement\ProjectFinder.cs" />
     <Compile Include="ProjectManagement\Summary.cs" />
     <Compile Include="ProjectManagement\Activity.cs" />
     <Compile Include="ProjectManagement\ProjectModel.cs" />

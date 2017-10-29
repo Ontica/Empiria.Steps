@@ -25,14 +25,20 @@ namespace Empiria.Steps.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/activities")]
-    public CollectionModel GetProjectActivitiesList(string projectUID,
-                                                    [FromUri] string filter = "",
-                                                    [FromUri] string order = "",
-                                                    [FromUri] string keywords = "") {
+    [Route("v1/project-management/projects/{projectUID}/activities/as-tree")]
+    public CollectionModel GetProjectActivitiesAsTree([FromUri] ActivityFilter filter = null,
+                                                      [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
       try {
+
+        if (filter == null) {
+          filter = new ActivityFilter();
+        }
+
+        var projectUID = "sdlkjfh34";
+
         var project = Project.Parse(projectUID);
 
-        var fullActivitiesList = project.GetAllActivities(filter, order, keywords);
+        var fullActivitiesList = project.GetActivities(filter, orderBy);
 
         return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
                                    typeof(ProjectObject).FullName);
@@ -44,15 +50,43 @@ namespace Empiria.Steps.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/projects/{projectUID}/activities/as-gantt")]
-    public CollectionModel GetProjectActivitiesListAsGantt(string projectUID,
-                                                           [FromUri] string filter = "",
-                                                           [FromUri] string order = "",
-                                                           [FromUri] string keywords = "") {
+    [Route("v1/project-management/projects/activities/as-work-list")]
+    public CollectionModel GetProjectActivitiesAsWorklist([FromUri] ActivityFilter filter = null,
+                                                          [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
       try {
+
+        if (filter == null) {
+          filter = new ActivityFilter();
+        }
+
+        var finder = new ProjectFinder(filter);
+
+        FixedList<ProjectObject> activities = finder.GetActivitiesList(orderBy);
+
+        return new CollectionModel(this.Request, activities.ToResponse(),
+                                   typeof(ProjectObject).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/project-management/projects/{projectUID}/activities/as-gantt")]
+    public CollectionModel GetProjectActivitiesAsGantt([FromUri] ActivityFilter filter = null,
+                                                       [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
+      try {
+
+        if (filter == null) {
+          filter = new ActivityFilter();
+        }
+
+        var projectUID = "sdlkjfh34";
+
         var project = Project.Parse(projectUID);
 
-        var fullActivitiesList = project.GetAllActivities();
+        var fullActivitiesList = project.GetActivities();
 
         return new CollectionModel(this.Request, fullActivitiesList.ToGanttResponse(),
                                    typeof(ProjectObject).FullName);

@@ -62,7 +62,7 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
     protected override void OnInitialize() {
-      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetAllProjectActivities(this));
+      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetProjectActivities(this));
     }
 
     #endregion Constructors and parsers
@@ -101,10 +101,13 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
-    public FixedList<ProjectObject> GetAllActivities(string filter = "",
-                                                     string order = "",
-                                                     string keywords = "") {
-      return ProjectData.GetAllProjectActivities(this, filter, order, keywords)
+    public FixedList<ProjectObject> GetActivities(ActivityFilter filter = null,
+                                                  ActivityOrder orderBy = ActivityOrder.Default) {
+      if (filter == null) {
+        filter = new ActivityFilter();
+      }
+
+      return ProjectData.GetProjectActivities(this, filter, orderBy)
                         .ToFixedList();
     }
 

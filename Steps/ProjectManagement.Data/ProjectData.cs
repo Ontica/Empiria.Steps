@@ -39,10 +39,13 @@ namespace Empiria.Steps.ProjectManagement {
       return DataReader.GetList(op, (x) => BaseObject.ParseList<ProjectObject>(x));
     }
 
-    static internal List<ProjectObject> GetAllProjectActivities(Project project,
-                                                                string filter = "",
-                                                                string order = "",
-                                                                string keywords = "") {
+    static internal List<ProjectObject> GetProjectActivities(Project project,
+                                                             ActivityFilter filter = null,
+                                                             ActivityOrder orderBy = ActivityOrder.Default) {
+
+      if (filter == null) {
+        filter = new ActivityFilter();
+      }
       string sql = $"SELECT * FROM BPMProjectObjects " +
                    $"WHERE ProjectObjectTypeId <> {ProjectObjectType.TaskType.Id} AND " +
                    $"BaseProjectId = {project.Id} AND Status <> 'X'";
@@ -62,6 +65,17 @@ namespace Empiria.Steps.ProjectManagement {
       return DataReader.GetList(op, (x) => BaseObject.ParseList<Activity>(x));
     }
 
+    static internal List<ProjectObject> GetNoSummaryActivities(string filter = "", string orderBy = "") {
+
+      filter = GeneralDataOperations.BuildSqlAndFilter($"ProjectObjectTypeId <> {ProjectObjectType.SummaryType.Id}",
+                                                       "Status <> 'X'", filter);
+      string sql = $"SELECT * FROM BPMProjectObjects " +
+                   GeneralDataOperations.GetFilterSortSqlString(filter, orderBy);
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<ProjectObject>(x));
+    }
 
     static internal List<Task> GetProjectActivityTasks(Activity activity) {
       string sql = $"SELECT * FROM BPMProjectObjects " +
