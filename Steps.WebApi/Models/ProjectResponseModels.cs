@@ -209,6 +209,7 @@ namespace Empiria.Steps.WebApi {
         endDate = activity.EndDate.ToResponse(),
         dueDate = activity.DueDate.ToResponse(),
         ragStatus = activity.RagStatus,
+        tags = activity.Tags.Items,
         stage = activity.Stage
       };
     }
@@ -267,6 +268,7 @@ namespace Empiria.Steps.WebApi {
         dueDate = task.DueDate,
         estimatedDuration = task.EstimatedDuration.ToString(),
         ragStatus = task.RagStatus,
+        tags = task.Tags.Items,
         assignedToUID = task.AssignedTo.UID,
         assignationTime = task.AssignationTime,
         state = task.Status,

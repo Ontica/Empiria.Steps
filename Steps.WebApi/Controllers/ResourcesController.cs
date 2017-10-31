@@ -36,6 +36,28 @@ namespace Empiria.Steps.WebApi {
       }
     }
 
+    [HttpGet]
+    [Route("v1/project-management/tags")]
+    public CollectionModel GetTagsList() {
+      try {
+
+        var projects = Project.GetList();
+
+        Tags tags = new Tags();
+        foreach (var project in projects) {
+          tags.AddRange(project.Tags);
+        }
+        tags.Sort();
+
+        return new CollectionModel(this.Request, tags.ToResponse(),
+                                   typeof(Project).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     //[HttpGet]
     //[Route("v1/project-management/resources/as-tree")]
     //public CollectionModel GetResourcesAsTreeList([FromUri] string filter = "") {

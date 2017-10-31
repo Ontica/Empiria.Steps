@@ -129,10 +129,10 @@ namespace Empiria.Steps.ProjectManagement {
 
 
     [DataField("Tags")]
-    public string Tags {
+    public Tags Tags {
       get;
       private set;
-    }
+    } = Tags.Empty;
 
 
     [DataField("RagStatus", Default = RagStatus.Green)]
@@ -144,7 +144,7 @@ namespace Empiria.Steps.ProjectManagement {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Name, this.Tags);
+        return EmpiriaString.BuildKeywords(this.Name, this.Tags.ToString());
       }
     }
 
@@ -256,9 +256,14 @@ namespace Empiria.Steps.ProjectManagement {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
-      //this.Tags = data.Get<string[]>("tags", this.Tags);
       this.RagStatus = data.Get<RagStatus>("ragStatus", this.RagStatus);
 
+      var tags = data.GetList<string>("tags", false);
+      if (tags == null || tags.Count == 0) {
+        // no-op
+      } else {
+        this.Tags = Tags.Parse(tags);
+      }
       this.StartDate = data.Get<DateTime>("startDate", this.StartDate);
       this.TargetDate = data.Get<DateTime>("targetDate", this.TargetDate);
       this.DueDate = data.Get<DateTime>("dueDate", this.DueDate);

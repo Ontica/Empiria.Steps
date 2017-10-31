@@ -31,6 +31,19 @@ namespace Empiria.Steps.WebApi {
       return array;
     }
 
+    static internal ICollection ToResponse(this Tags tags) {
+      ArrayList array = new ArrayList(tags.Count);
+
+      foreach (var tag in tags.Items) {
+        var item = new {
+          name = tag,
+          color = "default",
+        };
+        array.Add(item);
+      }
+      return array;
+    }
+
     //static internal ICollection ToResponse(this FixedList<TreeItem> treeItems) {
     //  ArrayList array = new ArrayList(treeItems.Count);
 
