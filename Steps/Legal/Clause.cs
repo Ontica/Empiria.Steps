@@ -19,6 +19,7 @@ namespace Empiria.Steps.Legal {
 
     #region Fields
 
+    private Lazy<List<DocumentRule>> rules = null;
     private Lazy<List<RelatedProcedure>> procedures = null;
 
     #endregion Fields
@@ -82,6 +83,7 @@ namespace Empiria.Steps.Legal {
 
 
     protected override void OnInitialize() {
+      rules = new Lazy<List<DocumentRule>>(() => DocumentRule.GetList(this));
       procedures = new Lazy<List<RelatedProcedure>>(() => RelatedProcedure.GetList(this));
     }
 
@@ -210,6 +212,12 @@ namespace Empiria.Steps.Legal {
     public FixedList<RelatedProcedure> RelatedProcedures {
       get {
         return procedures.Value.ToFixedList();
+      }
+    }
+
+    public FixedList<DocumentRule> Rules {
+      get {
+        return rules.Value.ToFixedList();
       }
     }
 

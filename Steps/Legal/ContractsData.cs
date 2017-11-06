@@ -36,6 +36,17 @@ namespace Empiria.Steps.Legal {
       DataWriter.Execute(op);
     }
 
+    static internal void WriteDocumentRule(DocumentRule o) {
+      var op = DataOperation.Parse("writeLISDocumentRule",
+                        o.Id, o.UID, o.DocumentId, o.DocumentItemId, o.Position,
+                        o.Name, (char) o.RuleType, o.ReferenceRuleId, o.Description,
+                        o.Notes, o.AppliesTo, o.Verb, o.Action, o.WhenPredicate,
+                        o.ActionTimeCondition, o.ExtensionData.ToString(),
+                        o.Tags, o.Keywords, o.WorkflowObjectId, o.DocumentItems);
+
+      DataWriter.Execute(op);
+    }
+
   }  // class ContractsData
 
 }  // namespace Empiria.Steps.Legal

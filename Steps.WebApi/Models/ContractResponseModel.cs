@@ -16,7 +16,7 @@ using Empiria.Steps.Legal;
 namespace Empiria.Steps.WebApi {
 
   /// <summary>Response static methods for contract entities.</summary>
-  static internal class ContractResponseModels {
+  static internal class ContractResponseModel {
 
     static internal ICollection ToResponse(this IList<Contract> list) {
       ArrayList array = new ArrayList(list.Count);

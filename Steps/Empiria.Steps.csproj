@@ -127,10 +127,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Legal\DocumentRule.cs" />
     <Compile Include="Legal\Clause.cs" />
     <Compile Include="Legal\Contract.cs" />
     <Compile Include="Legal\DocumentsData.cs" />
     <Compile Include="Legal\ContractsData.cs" />
+    <Compile Include="Legal\RuleType.cs" />
     <Compile Include="Legal\LegalDocumentType.cs" />
     <Compile Include="Legal\RelatedProcedure.cs" />
     <Compile Include="Legal\Document.cs" />
@@ -219,9 +221,7 @@
   <ItemGroup>
     <None Include="LICENSE.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Government\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

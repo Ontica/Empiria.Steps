@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.Json;
 using Empiria.Ontology;
@@ -131,6 +132,32 @@ namespace Empiria.Steps.Legal {
       return Clause.GetList(this, keywords)
                    .ToFixedList();
     }
+
+
+    internal FixedList<Clause> GetClausesFromText(string clausesAsText) {
+      if (clausesAsText.Contains("Anexo")) {
+        return new FixedList<Clause>();
+      }
+
+      clausesAsText = clausesAsText.Replace(',', ' ')
+                                   .Replace(';', ' ');
+
+      var clauseTextParts = clausesAsText.Split(' ')
+                                         .Where((x) => EmpiriaString.IsQuantity(x));
+
+      if (clauseTextParts == null) {
+        return new FixedList<Clause>();
+      }
+
+      var clauses = this.Clauses.FindAll((x) => clauseTextParts.Contains(x.Number) && x.Section == "Cláusulas");
+
+      if (clauses != null) {
+        return clauses;
+      } else {
+        return new FixedList<Clause>();
+      }
+    }
+
 
     public Clause TryGetClause(Predicate<Clause> predicate) {
       return clausesList.Value.Find(predicate);
