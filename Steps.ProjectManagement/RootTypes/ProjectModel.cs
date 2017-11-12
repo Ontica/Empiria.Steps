@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
 *  Type     : ProjectModel                                     License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Slice of a workflow process that serves as an activity model to build a project instance.      *
@@ -43,14 +43,22 @@ namespace Empiria.Steps.ProjectManagement {
     static public FixedList<ProjectModel> GetActivitiesModelsList() {
       var ownerOrManager = Contact.Parse(51);
 
-      return ProjectModelData.GetActivitiesModels(ownerOrManager);
+      var list = ProjectModelData.GetActivitiesModels(ownerOrManager);
+
+      list.Sort((x, y) => x.BaseProcess.Name.CompareTo(y.BaseProcess.Name));
+
+      return list;
     }
 
 
     static public FixedList<ProjectModel> GetEventsModelsList() {
       var ownerOrManager = Contact.Parse(51);
 
-      return ProjectModelData.GetEventsModels(ownerOrManager);
+      var list = ProjectModelData.GetEventsModels(ownerOrManager);
+
+      list.Sort((x,y) => x.BaseProcess.Name.CompareTo(y.BaseProcess.Name));
+
+      return list;
     }
 
     #endregion Constructors and parsers
@@ -79,8 +87,9 @@ namespace Empiria.Steps.ProjectManagement {
 
       ProjectObject baseItem = baseProject.AddItem(data);
 
-      DateTime startDate = DateTime.Now < baseProject.StartDate ?
-                                    DateTime.Now : baseProject.StartDate;
+      baseItem.SetDates(DateTime.Now, DateTime.Now);
+
+      DateTime startDate = DateTime.Now;
 
       int daysCount = 0;
       foreach (var step in this.Steps) {
@@ -104,10 +113,10 @@ namespace Empiria.Steps.ProjectManagement {
 
       json.Add(new JsonItem("name", step.Name));
 
-      json.Add(new JsonItem("startDate", parent.StartDate));
+      json.Add(new JsonItem("startDate", parent.StartDate.AddDays(daysAccumulator)));
 
       json.Add(new JsonItem("dueDate",
-                            parent.StartDate.AddDays(step.EstimatedDuration.Value)));
+                            parent.StartDate.AddDays(step.EstimatedDuration.Value + daysAccumulator)));
 
       json.Add(new JsonItem("estimatedDuration", step.EstimatedDuration.ToString()));
 

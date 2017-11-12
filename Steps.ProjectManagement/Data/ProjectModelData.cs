@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Data Service                        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Data Service                        *
 *  Type     : ProjectModelData                                 License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Data read and write methods for workflow objects.                                              *

@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Finder                              *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Finder                              *
 *  Type     : ProjectFinder                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Performs search operations over projects, activities, and other project items.                 *
@@ -61,7 +61,6 @@ namespace Empiria.Steps.ProjectManagement {
 
     #endregion Public methods
 
-
     #region Private methods
 
     private List<ProjectObject> ApplySort(List<ProjectObject> list, ActivityOrder orderBy) {
@@ -72,6 +71,7 @@ namespace Empiria.Steps.ProjectManagement {
                   orderby item.DueDate, item.Name
                   select item)
                   .ToList();
+
 
         case ActivityOrder.Responsible:
 
@@ -87,18 +87,22 @@ namespace Empiria.Steps.ProjectManagement {
 
           return list1.Concat(list2).ToList();
 
+
         case ActivityOrder.TargetDate:
 
           return (from item in list
                   orderby item.TargetDate, item.Name
                   select item)
                   .ToList();
+
+
         case ActivityOrder.ActivityName:
 
           return (from item in list
                   orderby item.Name
                   select item)
                   .ToList();
+
 
         case ActivityOrder.Default:
         default:

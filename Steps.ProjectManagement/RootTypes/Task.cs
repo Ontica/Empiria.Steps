@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
 *  Type     : Task                                             License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a task.                                                                              *

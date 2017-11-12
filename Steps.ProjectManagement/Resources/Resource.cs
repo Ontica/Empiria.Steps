@@ -1,8 +1,8 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
-*  Type     : Project                                          License : Please read LICENSE.txt file        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
+*  Type     : Resource                                         License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project or workflow involved resource.                                             *
 *                                                                                                            *
@@ -12,7 +12,7 @@ using System;
 using Empiria.Contacts;
 using Empiria.Ontology;
 
-namespace Empiria.Steps {
+namespace Empiria.Steps.Resources {
 
   /// <summary>Describes a project or workflow involved resource.</summary>
   [PartitionedType(typeof(ResourceType))]
@@ -42,8 +42,6 @@ namespace Empiria.Steps {
       var owner = Contact.Parse(51);
 
       var list = ResourcesData.GetResourcesList(owner);
-
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();
     }
@@ -82,4 +80,4 @@ namespace Empiria.Steps {
 
   } // class Resource
 
-} // namespace Empiria.Steps
+} // namespace Empiria.Steps.Resources

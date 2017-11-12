@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
 *  Type     : ProjectObject                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project as a set of well defined activities.                                       *
@@ -10,7 +10,10 @@ w  Summary  : Describes a project as a set of well defined activities.          
 using System;
 
 using Empiria.Contacts;
+using Empiria.Collections;
+using Empiria.DataTypes;
 using Empiria.Json;
+
 using Empiria.Ontology;
 
 using Empiria.Steps.WorkflowDefinition;
@@ -129,10 +132,10 @@ namespace Empiria.Steps.ProjectManagement {
 
 
     [DataField("Tags")]
-    public Tags Tags {
+    public TagsCollection Tags {
       get;
       private set;
-    } = Tags.Empty;
+    } = TagsCollection.Empty;
 
 
     [DataField("RagStatus", Default = RagStatus.Green)]
@@ -262,7 +265,7 @@ namespace Empiria.Steps.ProjectManagement {
       if (tags == null || tags.Count == 0) {
         // no-op
       } else {
-        this.Tags = Tags.Parse(tags);
+        this.Tags = TagsCollection.Parse(tags);
       }
       this.StartDate = data.Get<DateTime>("startDate", this.StartDate);
       this.TargetDate = data.Get<DateTime>("targetDate", this.TargetDate);

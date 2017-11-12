@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Power type                          *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Power type                          *
 *  Type     : ProjectObjectType                                License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Power type that defines a project object type.                                                 *

@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Data Service                        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Data Service                        *
 *  Type     : ProjectContactsData                              License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Project contacts data read and write methods.                                                  *

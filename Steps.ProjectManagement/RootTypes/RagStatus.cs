@@ -1,31 +1,27 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Enumeration                         *
-*  Type     : ProjectItemStatus                                License : Please read LICENSE.txt file        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Enumeration                         *
+*  Type     : RagStatus                                        License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Represents the status of a project item.                                                       *
+*  Summary  : Enumerates activity RAG status.                                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Steps.ProjectManagement {
 
-  /// <summary>Represents the status of a project item.</summary>
-  public enum ProjectObjectStatus {
+  /// <summary>Enumerates activity RAG status.</summary>
+  public enum RagStatus {
 
-    Undefined = 'U',
+    Green = 'G',
 
-    Inactive = 'I',
+    Ambar = 'A',
 
-    Active = 'A',
+    Orange = 'O',
 
-    Suspended = 'S',
+    Red = 'R',
 
-    Completed = 'C',
-
-    Deleted = 'X',
-
-  }  // enum ProjectItemStatus
+  }  // enum RagStatus
 
 }  // namespace Empiria.Steps.ProjectManagement

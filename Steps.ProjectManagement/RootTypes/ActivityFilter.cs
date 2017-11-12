@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : DTO                                 *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : DTO                                 *
 *  Type     : ActivityFilter                                   License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Holds fields used to filter project activities.                                                *
@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 
 using Empiria.Contacts;
-using Empiria.Data;
 
 namespace Empiria.Steps.ProjectManagement {
 
@@ -139,7 +138,7 @@ namespace Empiria.Steps.ProjectManagement {
 
     #region Private methods
 
-    private List<Project> GetProjectsList() {
+    private List<Project> GetProjectsList(Predicate<Project> match = null) {
       var list = new List<Project>(4);
 
       if (this.Project.Length != 0) {
@@ -150,12 +149,11 @@ namespace Empiria.Steps.ProjectManagement {
           list.Add(project);
         }
 
-      } else if (this.Contract.Length != 0) {
+      } else if (match != null) {
 
         var allProjects = ProjectManagement.Project.GetList();
 
-        allProjects = allProjects.FindAll((x) => EmpiriaString.IsInList(x.Contract.UID,
-                                                                        this.Contract[0], this.Contract));
+        allProjects = allProjects.FindAll(match);
 
         list.AddRange(allProjects);
 

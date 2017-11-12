@@ -1,8 +1,8 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
-*  Type     : Summary                                          License : Please read LICENSE.txt file        *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
+*  Type     : Activity                                         License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project activity.                                                                  *
 *                                                                                                            *
@@ -13,36 +13,43 @@ using System.Collections.Generic;
 using Empiria.Contacts;
 using Empiria.Json;
 
+using Empiria.Steps.Resources;
+
 namespace Empiria.Steps.ProjectManagement {
 
   /// <summary>Describes a project activity.</summary>
-  public class Summary : ProjectObject {
+  public class Activity : ProjectObject {
 
     #region Fields
 
-    private Lazy<List<ProjectObject>> itemsList = null;
+    private Lazy<List<Activity>> subactivitiesList = null;
+    private Lazy<List<Task>> tasksList = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected Summary() : this(ProjectObjectType.SummaryType) {
+    protected Activity() : this(ProjectObjectType.ActivityType) {
 
     }
 
 
-    protected Summary(ProjectObjectType powertype) : base(powertype) {
+    protected Activity(ProjectObjectType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal Summary(ProjectObject parent, JsonObject data) :
-                               base(ProjectObjectType.SummaryType, parent, data) {
+
+    protected internal Activity(ProjectObject parent, JsonObject data) :
+                                base(ProjectObjectType.ActivityType, parent, data) {
       if (parent is Activity) {
         this.Project = ((Activity) parent).Project;
+
       } else if (parent is Summary) {
         this.Project = ((Summary) parent).Project;
+
       } else {
         this.Project = (Project) parent;
+
       }
       this.AssertIsValid(data);
       this.Load(data);
@@ -52,7 +59,7 @@ namespace Empiria.Steps.ProjectManagement {
       return BaseObject.ParseKey<Activity>(uid);
     }
 
-    static internal new Activity Parse(int id) {
+    static public new Activity Parse(int id) {
       return BaseObject.ParseId<Activity>(id);
     }
 
@@ -63,7 +70,8 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
     protected override void OnInitialize() {
-      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetAllActivities(this));
+      subactivitiesList = new Lazy<List<Activity>>(() => ProjectData.GetChildrenActivities(this));
+      tasksList = new Lazy<List<Task>>(() => ProjectData.GetProjectActivityTasks(this));
     }
 
     #endregion Constructors and parsers
@@ -110,9 +118,9 @@ namespace Empiria.Steps.ProjectManagement {
     }
 
 
-    public FixedList<ProjectObject> Subactivities {
+    public FixedList<Activity> Subactivities {
       get {
-        return itemsList.Value.ToFixedList();
+        return subactivitiesList.Value.ToFixedList();
       }
     }
 
@@ -123,13 +131,10 @@ namespace Empiria.Steps.ProjectManagement {
       }
     }
 
-    public int Level {
+
+    public FixedList<Task> Tasks {
       get {
-        if (this.Parent.ProjectObjectType == ProjectObjectType.SummaryType) {
-          return ((Summary) this.Parent).Level + 1;
-        } else {
-          return 1;
-        }
+        return tasksList.Value.ToFixedList();
       }
     }
 
@@ -157,18 +162,18 @@ namespace Empiria.Steps.ProjectManagement {
 
       activity.Save();
 
-      itemsList.Value.Add(activity);
+      subactivitiesList.Value.Add(activity);
 
       return activity;
     }
 
 
     protected override void OnSave() {
-      ProjectData.WriteSummary(this);
+      ProjectData.WriteActivity(this);
     }
 
     #endregion Public methods
 
-  } // class Summary
+  } // class Activity
 
 } // namespace Empiria.Steps.ProjectManagement

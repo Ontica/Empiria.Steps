@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Data Service                        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Data Service                        *
 *  Type     : ResourcesData                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Resource read and write data methods.                                                          *
@@ -13,14 +13,17 @@ using System.Collections.Generic;
 using Empiria.Data;
 using Empiria.Contacts;
 
-namespace Empiria.Steps {
+namespace Empiria.Steps.Resources {
 
   /// <summary>Resource read and write data methods.</summary>
   static internal class ResourcesData {
 
     static internal List<Resource> GetResourcesList(Contact contact) {
-      string sql = $"SELECT * FROM BPMResources " +
-                   $"WHERE OwnerId = {contact.Id} AND Status <> 'X'";
+      string sql = $"SELECT * FROM Aggregations " +
+                   $"WHERE AggregationName = 'ResourceTree' AND " +
+                   $"AggregationItemKind = 'Object' AND " +
+                   $"OwnerId IN ({contact.Id}, -1) AND Status <> 'X' " +
+                   $"ORDER BY Position";
 
       var op = DataOperation.Parse(sql);
 
@@ -29,4 +32,4 @@ namespace Empiria.Steps {
 
   }  // class ResourcesData
 
-}  // namespace Empiria.Steps
+}  // namespace Empiria.Steps.Resources

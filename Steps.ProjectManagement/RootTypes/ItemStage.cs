@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Enumeration                         *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Enumeration                         *
 *  Type     : ItemStage                                        License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Represents the stage of a project item.                                                        *

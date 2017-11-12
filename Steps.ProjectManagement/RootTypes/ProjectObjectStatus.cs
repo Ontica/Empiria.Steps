@@ -1,29 +1,31 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Enumeration                         *
-*  Type     : ActivityOrder                                    License : Please read LICENSE.txt file        *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Enumeration                         *
+*  Type     : ProjectObjectStatus                              License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Enumerates activity ordering options.                                                          *
+*  Summary  : Represents the status of a project item.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Steps.ProjectManagement {
 
-  /// <summary>Enumerates activity ordering options.</summary>
-  public enum ActivityOrder {
+  /// <summary>Represents the status of a project item.</summary>
+  public enum ProjectObjectStatus {
 
-    Default = 'U',
+    Undefined = 'U',
 
-    DueDate = 'D',
+    Inactive = 'I',
 
-    TargetDate = 'T',
+    Active = 'A',
 
-    Responsible = 'R',
+    Suspended = 'S',
 
-    ActivityName = 'N',
+    Completed = 'C',
 
-  }  // enum ActivityOrder
+    Deleted = 'X',
+
+  }  // enum ProjectItemStatus
 
 }  // namespace Empiria.Steps.ProjectManagement

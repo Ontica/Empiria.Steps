@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
+*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
 *  Type     : Project                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project as a set of well defined activities.                                       *
@@ -13,7 +13,8 @@ using System.Collections.Generic;
 using Empiria.Contacts;
 using Empiria.Json;
 
-using Empiria.Steps.Legal;
+using Empiria.Steps.Resources;
+
 using Empiria.Steps.WorkflowDefinition;
 
 namespace Empiria.Steps.ProjectManagement {
@@ -75,13 +76,6 @@ namespace Empiria.Steps.ProjectManagement {
       get;
       private set;
     }
-
-
-    [DataField("ExtData.ContractId")]
-    public Contract Contract {
-      get;
-      private set;
-    } = Contract.Empty;
 
 
     [DataField("ResourceId")]
