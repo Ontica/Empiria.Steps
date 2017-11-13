@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Enumeration                         *
+*  Solution : Empiria Steps                                    System  : Project Management System           *
+*  Assembly : Empiria.Steps.dll                                Pattern : Enumeration Type                    *
 *  Type     : StartsWhen                                       License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Describes an activity or event start condition.                                                *
