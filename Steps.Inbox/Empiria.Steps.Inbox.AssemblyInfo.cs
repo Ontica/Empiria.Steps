@@ -1,10 +1,10 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Assembly Attributes File            *
+*  Solution : Empiria Steps                                    System  : Inbox Services                      *
+*  Assembly : Empiria.Steps.Inbox.dll                          Pattern : Assembly Attributes File            *
 *                                                              License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Empiria Steps backend domain models.                                                           *
+*  Summary  : Empiria Steps Inbox Services.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,9 +15,9 @@ using System.Runtime.InteropServices;
 * Assembly configuration attributes.                                                                         *
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria.Steps")]
-[assembly: AssemblyDescription("Empiria Steps backend domain models.")]
-[assembly: AssemblyVersion("1.0.0625.0")]
-[assembly: AssemblyFileVersion("1.0.0625")]
+[assembly: AssemblyDescription("Empiria Steps Inbox Services.")]
+[assembly: AssemblyVersion("1.1.0328.0")]
+[assembly: AssemblyFileVersion("1.1.0328")]
 [assembly: AssemblyCompany("Ontica")]
 [assembly: AssemblyProduct("Empiria Steps")]
 [assembly: AssemblyCopyright("(c) 2017. La Vía Óntica SC, Ontica LLC and contributors.")]

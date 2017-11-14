@@ -4,14 +4,14 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7D98C757-6ED4-48D0-B351-A99CE5ED8987}</ProjectGuid>
+    <ProjectGuid>{546359D6-56A3-4F71-9DDA-1496A67FD8DE}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>Empiria.Steps</AssemblyName>
+    <AssemblyName>Empiria.Steps.WorkflowEngine</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -19,7 +19,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>true</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>Empiria.Steps</RootNamespace>
+    <RootNamespace>Empiria.Steps.WorkflowEngine</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -127,63 +127,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Legal\DocumentRule.cs" />
-    <Compile Include="Legal\Clause.cs" />
-    <Compile Include="Legal\Contract.cs" />
-    <Compile Include="Legal\DocumentsData.cs" />
-    <Compile Include="Legal\ContractsData.cs" />
-    <Compile Include="Legal\RuleType.cs" />
-    <Compile Include="Legal\LegalDocumentType.cs" />
-    <Compile Include="Legal\RelatedProcedure.cs" />
-    <Compile Include="Legal\Document.cs" />
-    <Compile Include="Modeling\ProcedureHypertext.cs" />
-    <Compile Include="Modeling\RequirementsData.cs" />
-    <Compile Include="Modeling\Requirement.cs" />
-    <Compile Include="Presentation\TextTemplate.cs" />
-    <Compile Include="ProjectManagement.Data\ProjectContactsData.cs" />
-    <Compile Include="ProjectManagement\ActivityFilter.cs" />
-    <Compile Include="ProjectManagement\RagStatus.cs" />
-    <Compile Include="ProjectManagement\ActivityOrder.cs" />
-    <Compile Include="ProjectManagement\ProjectFinder.cs" />
-    <Compile Include="ProjectManagement\Summary.cs" />
-    <Compile Include="ProjectManagement\Activity.cs" />
-    <Compile Include="ProjectManagement\ProjectModel.cs" />
-    <Compile Include="ProjectManagement\ItemStage.cs" />
-    <Compile Include="ProjectManagement\Task.cs" />
-    <Compile Include="ProjectManagement.Data\ProjectModelData.cs" />
-    <Compile Include="RootTypes\Tags.cs" />
-    <Compile Include="RootTypes\DurationType.cs" />
-    <Compile Include="RootTypes\Duration.cs" />
-    <Compile Include="RootTypes\ResourceTree.cs" />
-    <Compile Include="RootTypes\ResourcesData.cs" />
-    <Compile Include="ProjectManagement.Data\ProjectData.cs" />
-    <Compile Include="Empiria.Steps.AssemblyInfo.cs" />
-    <Compile Include="Modeling\Authority.cs" />
-    <Compile Include="Modeling\FilingCondition.cs" />
-    <Compile Include="Modeling\FilingFee.cs" />
-    <Compile Include="Modeling\LegalInfo.cs" />
-    <Compile Include="Modeling\Position.cs" />
-    <Compile Include="Modeling\Entity.cs" />
-    <Compile Include="Modeling\Office.cs" />
-    <Compile Include="Presentation\Hypertext.cs" />
-    <Compile Include="WorkflowDefinition\BpmnDiagram.cs" />
-    <Compile Include="Modeling\Procedure.cs" />
-    <Compile Include="Data\ProcedureData.cs" />
-    <Compile Include="ProjectManagement\ProjectObject.cs" />
-    <Compile Include="ProjectManagement\ProjectObjectType.cs" />
-    <Compile Include="RootTypes\ResourceType.cs" />
-    <Compile Include="RootTypes\Resource.cs" />
-    <Compile Include="ProjectManagement\Project.cs" />
-    <Compile Include="ProjectManagement\ProjectObjectStatus.cs" />
-    <Compile Include="RootTypes\TermTimeUnit.cs" />
-    <Compile Include="RootTypes\StartsWhen.cs" />
-    <Compile Include="WorkflowDefinition\ProcessActivity.cs" />
-    <Compile Include="WorkflowDefinition\Process.cs" />
-    <Compile Include="WorkflowDefinition\WorkflowDefinitionData.cs" />
-    <Compile Include="WorkflowDefinition\WorkflowObject.cs" />
-    <Compile Include="WorkflowDefinition\WorkflowObjectType.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -221,7 +164,12 @@
   <ItemGroup>
     <None Include="LICENSE.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="RootTypes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Empiria.Steps.WorkflowEngine.AssemblyInfo.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
