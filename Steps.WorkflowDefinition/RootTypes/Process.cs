@@ -1,14 +1,13 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Solution : Empiria Steps                                    System  : Workflow Definition                 *
+*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Domain class                        *
 *  Type     : Process                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a workflow model as an a activity network.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 namespace Empiria.Steps.WorkflowDefinition {
 
@@ -67,13 +66,6 @@ namespace Empiria.Steps.WorkflowDefinition {
         return BpmnDiagram.Parse(base.FlowObjectID);
       }
     }
-
-
-    //[DataField("ExtData.ResourceTypeId", IsOptional = true)]
-    public ResourceType ResourceType {
-      get;
-      private set;
-    } = ResourceType.Empty;
 
 
     #endregion Public properties

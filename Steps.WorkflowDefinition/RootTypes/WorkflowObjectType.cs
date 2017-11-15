@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Power type                          *
+*  Solution : Empiria Steps                                    System  : Workflow Definition                 *
+*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Power type                          *
 *  Type     : WorkflowObjectType                               License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Powertype that defines a workflow object type.                                                 *

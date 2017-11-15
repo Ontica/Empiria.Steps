@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Solution : Empiria Steps                                    System  : Workflow Definition                 *
+*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Domain class                        *
 *  Type     : ProcessActivity                                  License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a workflow activity.                                                                 *
@@ -44,24 +44,11 @@ namespace Empiria.Steps.WorkflowDefinition {
 
     #region Public properties
 
-    public Contact InvolvedParty {
-      get {
-        return base.Procedure.Authority.Entity;
-      }
-    }
-
     [DataField("TaskType")]
     public string TaskType {
       get;
       private set;
     }
-
-    //[DataField("ExtData.ResourceTypeId", IsOptional = true)]
-    public ResourceType ResourceType {
-      get;
-      private set;
-    } = ResourceType.Empty;
-
 
     #endregion Public properties
 

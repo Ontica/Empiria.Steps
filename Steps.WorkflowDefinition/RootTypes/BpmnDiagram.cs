@@ -1,13 +1,14 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Solution : Empiria Steps                                    System  : Workflow Definition                 *
+*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Domain class                        *
 *  Type     : BpmnDiagram                                      License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Provides services that gets process definition models.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Json;
 
 namespace Empiria.Steps.WorkflowDefinition {
@@ -18,6 +19,14 @@ namespace Empiria.Steps.WorkflowDefinition {
 
     private BpmnDiagram() {
       // Required by Empiria Framework.
+    }
+
+    public BpmnDiagram(string name, string xml) {
+      Assertion.AssertObject(name, "name");
+      Assertion.AssertObject(xml, "xml");
+
+      this.Name = name;
+      this.Xml = xml;
     }
 
     public BpmnDiagram(JsonObject data) {
@@ -44,43 +53,6 @@ namespace Empiria.Steps.WorkflowDefinition {
     static public FixedList<BpmnDiagram> GetList() {
       return BaseObject.GetList<BpmnDiagram>(sort: "ObjectName")
                        .ToFixedList();
-    }
-
-    static public void LoadFromFiles() {
-      var directory = new System.IO.DirectoryInfo(@"E:\empiria.files\covar.steps\bpmn.diagrams\");
-
-      var files = directory.GetFiles("*.bpmn");
-
-      foreach (var file in files) {
-        var diagramName = file.Name.Replace(".bpmn", String.Empty);
-        var procedureId = -1;
-
-        if (EmpiriaString.IsInteger(diagramName)) {
-          procedureId = EmpiriaString.ToInteger(diagramName);
-          var procedure = Modeling.Procedure.Parse(procedureId);
-          if (procedure.Code == "No disponible") {
-            diagramName = $"[{procedure.Id.ToString("000")}] {procedure.Name}";
-          } else {
-            diagramName = $"[{procedure.Id.ToString("000")}] {procedure.Code} {procedure.Name}";
-          }
-
-          diagramName = EmpiriaString.TrimAll(diagramName);
-        }
-
-        var xml = System.IO.File.ReadAllText(file.FullName);
-
-        var diagram = new BpmnDiagram();
-
-        diagram.Name = diagramName;
-        diagram.Xml = xml;
-
-        diagram.Save();
-
-        if (procedureId != -1) {
-          var procedure = Modeling.Procedure.Parse(procedureId);
-          procedure.SetBpmnDiagram(diagram);
-        }
-      }
     }
 
     #endregion Constructors and parsers

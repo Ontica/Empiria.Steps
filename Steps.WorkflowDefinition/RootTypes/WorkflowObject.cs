@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.dll                                Pattern : Domain class                        *
+*  Solution : Empiria Steps                                    System  : Workflow Definition                 *
+*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Domain class                        *
 *  Type     : WorkflowObject                                   License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project as a set of well defined activities.                                       *
@@ -10,10 +10,9 @@ w  Summary  : Describes a project as a set of well defined activities.          
 using System;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
-
-using Empiria.Steps.Modeling;
 
 namespace Empiria.Steps.WorkflowDefinition {
 
@@ -108,13 +107,11 @@ namespace Empiria.Steps.WorkflowDefinition {
       private set;
     }
 
-
-    [DataField("ProcedureId")]
-    public Procedure Procedure {
-      get;
-      private set;
-    } = Procedure.Empty;
-
+    //[DataField("TaskListObjectId")]
+    //internal int TaskListObjectId {
+    //  get;
+    //  private set;
+    //}
 
     [DataField("FlowObjectID")]
     public string FlowObjectID {
@@ -149,12 +146,20 @@ namespace Empiria.Steps.WorkflowDefinition {
       private set;
     }
 
+
     public FixedList<object> Links {
       get {
         return this.ExtensionData.GetList<object>("links", false)
                                  .ToFixedList();
       }
     }
+
+
+    [DataField("ProcedureId")]
+    public int ProcedureId {
+      get;
+      private set;
+    } = -1;
 
     #endregion Public properties
 
@@ -165,10 +170,12 @@ namespace Empiria.Steps.WorkflowDefinition {
 
     }
 
+
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
     }
+
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
@@ -176,9 +183,11 @@ namespace Empiria.Steps.WorkflowDefinition {
       }
     }
 
+
     protected override void OnSave() {
       throw Assertion.AssertNoReachThisCode();
     }
+
 
     public void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");
