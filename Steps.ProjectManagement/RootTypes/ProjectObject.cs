@@ -267,9 +267,9 @@ namespace Empiria.Steps.ProjectManagement {
       } else {
         this.Tags = TagsCollection.Parse(tags);
       }
-      this.StartDate = data.Get<DateTime>("startDate", this.StartDate);
-      this.TargetDate = data.Get<DateTime>("targetDate", this.TargetDate);
-      this.DueDate = data.Get<DateTime>("dueDate", this.DueDate);
+      this.StartDate = data.Get<DateTime>("startDate", this.StartDate.Date);
+      this.TargetDate = data.Get<DateTime>("targetDate", this.TargetDate.Date);
+      this.DueDate = data.Get<DateTime>("dueDate", this.DueDate.Date);
 
       this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
                                                             this.EstimatedDuration.ToString()));

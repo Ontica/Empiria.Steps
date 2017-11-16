@@ -87,9 +87,9 @@ namespace Empiria.Steps.ProjectManagement {
 
       ProjectObject baseItem = baseProject.AddItem(data);
 
-      baseItem.SetDates(DateTime.Now, DateTime.Now);
+      baseItem.SetDates(DateTime.Today, DateTime.Today);
 
-      DateTime startDate = DateTime.Now;
+      DateTime startDate = DateTime.Today;
 
       int daysCount = 0;
       foreach (var step in this.Steps) {
