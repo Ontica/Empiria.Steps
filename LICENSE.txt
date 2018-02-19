@@ -1,8 +1,8 @@
 ﻿Empiria Steps License
 =====================
 
-Copyright (c) 2017. La Vía Óntica SC, Ontica LLC and contributors.
-------------------------------------------------------------------
+Copyright (c) 2017-2018. La Vía Óntica SC, Ontica LLC and contributors.
+-----------------------------------------------------------------------
 
 These software components are free software: you can redistribute them
 and/or modify them under the terms of the GNU Affero General Public License
