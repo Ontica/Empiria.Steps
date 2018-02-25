@@ -52,9 +52,9 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.Foundation" Version="7.0.0" />
+    <PackageReference Include="Empiria.Core" Version="7.0.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\core\Foundation\Empiria.Foundation.csproj" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
   </ItemGroup>
 </Project>
