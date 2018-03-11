@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net471</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
