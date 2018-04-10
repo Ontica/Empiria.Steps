@@ -21,12 +21,13 @@ namespace Empiria.Steps.WorkflowDefinition {
       // Required by Empiria Framework.
     }
 
-    public BpmnDiagram(string name, string xml) {
+    public BpmnDiagram(string name, string xml, string tags) {
       Assertion.AssertObject(name, "name");
       Assertion.AssertObject(xml, "xml");
 
       this.Name = name;
       this.Xml = xml;
+      this.Tags = tags;
     }
 
     public BpmnDiagram(JsonObject data) {
@@ -50,9 +51,8 @@ namespace Empiria.Steps.WorkflowDefinition {
       }
     }
 
-    static public FixedList<BpmnDiagram> GetList() {
-      return BaseObject.GetList<BpmnDiagram>(sort: "ObjectName")
-                       .ToFixedList();
+    static public FixedList<BpmnDiagram> Search(string keywords) {
+      return WorkflowDefinitionData.SearchBpmnDiagrams(keywords);
     }
 
     #endregion Constructors and parsers
@@ -80,6 +80,12 @@ namespace Empiria.Steps.WorkflowDefinition {
     }
 
 
+    public string Tags {
+      get;
+      private set;
+    } = String.Empty;
+
+
     [DataField("ObjectStatus", Default = ObjectStatus.Active)]
     public ObjectStatus Status {
       get;
@@ -89,7 +95,7 @@ namespace Empiria.Steps.WorkflowDefinition {
 
     internal string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Name);
+        return EmpiriaString.BuildKeywords(this.Name, this.Tags);
       }
     }
 

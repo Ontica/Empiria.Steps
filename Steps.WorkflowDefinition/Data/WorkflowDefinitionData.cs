@@ -27,6 +27,17 @@ namespace Empiria.Steps.WorkflowDefinition {
       return DataReader.GetList(op, (x) => BaseObject.ParseList<Process>(x));
     }
 
+
+    static internal FixedList<BpmnDiagram> SearchBpmnDiagrams(string keywords,
+                                                              string sort = "") {
+      string filter = SearchExpression.ParseAndLikeKeywords("ObjectKeywords", keywords);
+
+      sort = sort ?? "ObjectName";
+
+      return BaseObject.GetList<BpmnDiagram>(filter, sort)
+                       .ToFixedList();
+    }
+
     #region Write data methods
 
     static internal void WriteBpmnDiagram(BpmnDiagram o) {
