@@ -83,7 +83,7 @@ namespace Empiria.Steps.ProjectManagement {
       Assertion.AssertObject(baseProject, "baseProject");
       Assertion.AssertObject(data, "data");
 
-      data.Add(new JsonItem("workflowObjectId", BaseProcess.Id));
+      data.Add("workflowObjectId", BaseProcess.Id);
 
       ProjectObject baseItem = baseProject.AddItem(data);
 
@@ -111,23 +111,22 @@ namespace Empiria.Steps.ProjectManagement {
                                          int daysAccumulator) {
       var json = new JsonObject();
 
-      json.Add(new JsonItem("name", step.Name));
+      json.Add("name", step.Name);
 
-      json.Add(new JsonItem("startDate", parent.StartDate.AddDays(daysAccumulator)));
+      json.Add("startDate", parent.StartDate.AddDays(daysAccumulator));
 
-      json.Add(new JsonItem("dueDate",
-                            parent.StartDate.AddDays(step.EstimatedDuration.Value + daysAccumulator)));
+      json.Add("dueDate", parent.StartDate.AddDays(step.EstimatedDuration.Value + daysAccumulator));
 
-      json.Add(new JsonItem("estimatedDuration", step.EstimatedDuration.ToString()));
+      json.Add("estimatedDuration", step.EstimatedDuration.ToString());
 
-      json.Add(new JsonItem("resourceUID", parent.Resource.UID));
+      json.Add("resourceUID", parent.Resource.UID);
 
-      json.Add(new JsonItem("requestedByUID", parent.RequestedBy.UID));
-      json.Add(new JsonItem("requestedTime", parent.RequestedTime));
-      json.Add(new JsonItem("responsibleUID", parent.Responsible.UID));
+      json.Add("requestedByUID", parent.RequestedBy.UID);
+      json.Add("requestedTime", parent.RequestedTime);
+      json.Add("responsibleUID", parent.Responsible.UID);
 
-      json.Add(new JsonItem("workflowObjectId", step.Id));
-      json.Add(new JsonItem("parentId", parent.Id));
+      json.Add("workflowObjectId", step.Id);
+      json.Add("parentId", parent.Id);
 
       return json;
     }
