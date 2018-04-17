@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : DTO                                 *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : DTO                                 *
 *  Type     : ActivityFilter                                   License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Holds fields used to filter project activities.                                                *
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Holds fields used to filter project activities.</summary>
   public class ActivityFilter {
@@ -172,4 +172,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   }  // ActivityFilter
 
-}  // namespace Empiria.Steps.ProjectManagement
+}  // namespace Empiria.ProjectManagement

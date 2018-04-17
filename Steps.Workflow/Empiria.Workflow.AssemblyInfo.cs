@@ -1,10 +1,10 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                System  : Steps Inbox                             *
-*  Assembly : Empiria.Steps.Inbox.dll                      Pattern : Assembly Attributes File                *
+*  Solution : Empiria Steps                                System  : Workflow Engine                         *
+*  Assembly : Empiria.Workflow.dll                         Pattern : Assembly Attributes File                *
 *                                                          License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Seamless centralized task management solution.                                                 *
+*  Summary  : Empiria Steps workflow engine.                                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

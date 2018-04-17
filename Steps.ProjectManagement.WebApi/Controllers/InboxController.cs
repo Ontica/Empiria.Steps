@@ -1,10 +1,10 @@
-﻿/* Empiria Governance ****************************************************************************************
+﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Governance                               System  : Governance Web API                  *
-*  Assembly : Empiria.Governance.WebApi.dll                    Pattern : Web Api Controller                  *
-*  Type     : TasksController                                  License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
+*  Type     : InboxController                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Public API to retrieve and set projects data.                                                  *
+*  Summary  : Web services to interact with task inboxes.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -12,11 +12,9 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Steps.ProjectManagement;
+namespace Empiria.ProjectManagement.WebApi {
 
-namespace Empiria.Governance.WebApi {
-
-  /// <summary>Public API to retrieve and set projects data.</summary>
+  /// <summary>Web services to interact with task inboxes.</summary>
   public class InboxController : WebApiController {
 
     #region Public APIs
@@ -45,6 +43,6 @@ namespace Empiria.Governance.WebApi {
 
     #endregion Public APIs
 
-  }  // class TasksController
+  }  // class InboxController
 
-}  // namespace Empiria.Governance.WebApi
+}  // namespace Empiria.ProjectManagement.WebApi

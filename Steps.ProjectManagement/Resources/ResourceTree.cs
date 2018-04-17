@@ -1,7 +1,7 @@
 ﻿///* Empiria Steps *********************************************************************************************
 //*                                                                                                            *
 //*  Solution : Empiria Steps                                    System  : Steps Domain Models                 *
-//*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Composite Component                 *
+//*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Composite Component                 *
 //*  Type     : ProjectModel                                     License : Please read LICENSE.txt file        *
 //*                                                                                                            *
 //w  Summary  : Represents a tree composition of resources applied to projects.                                *
@@ -12,7 +12,7 @@
 
 //using Empiria.Contacts;
 
-//namespace Empiria.Steps.Resources {
+//namespace Empiria.ProjectManagement.Resources {
 
 //  //public abstract class Component {
 
@@ -172,4 +172,4 @@
 
 //  } // class ResourceTree
 
-//} // namespace Empiria.Steps.Resources
+//} // namespace Empiria.ProjectManagement.Resources

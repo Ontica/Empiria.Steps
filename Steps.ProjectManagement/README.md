@@ -1,6 +1,6 @@
 ﻿# Empiria Steps Project Management System
 
-  Empiria Steps project management system.
+  Empiria Steps Project Management System domain services.
 
 # License
 

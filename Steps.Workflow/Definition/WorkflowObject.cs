@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Workflow Definition                 *
-*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Domain class                        *
+*  Assembly : Empiria.Workflow.dll                             Pattern : Domain class                        *
 *  Type     : WorkflowObject                                   License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project as a set of well defined activities.                                       *
@@ -14,7 +14,7 @@ using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
 
-namespace Empiria.Steps.WorkflowDefinition {
+namespace Empiria.Workflow.Definition {
 
   /// <summary>Describes a project as a set of well defined activities.</summary>
   [PartitionedType(typeof(WorkflowObjectType))]
@@ -199,4 +199,4 @@ namespace Empiria.Steps.WorkflowDefinition {
 
   } // class WorkflowObject
 
-} // namespace Empiria.Steps.WorkflowDefinition
+} // namespace Empiria.Workflow.Definition

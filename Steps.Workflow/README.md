@@ -1,6 +1,6 @@
-﻿# Empiria Steps Workflow Definition
+﻿# Empiria Workflow
 
-  Empiria Steps workflow definition related types.
+  Empiria Steps workflow execution and management services.
 
 # License
 

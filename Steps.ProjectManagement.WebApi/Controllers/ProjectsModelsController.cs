@@ -1,10 +1,10 @@
-﻿/* Empiria Governance ****************************************************************************************
+﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Governance                               System  : Governance Web API                  *
-*  Assembly : Empiria.Governance.WebApi.dll                    Pattern : Web Api Controller                  *
-*  Type     : ProjectsModelsController                         License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
+*  Type     : ProjectsModelsController                     License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Public API to get and set workflow definition objects.                                         *
+*  Summary  : Web services used to interact with project models.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,12 +13,11 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
-using Empiria.Steps.ProjectManagement;
-using Empiria.Steps.WorkflowDefinition;
+using Empiria.Workflow.Definition;
 
-namespace Empiria.Governance.WebApi {
+namespace Empiria.ProjectManagement.WebApi {
 
-  /// <summary>Public API to retrieve and set projects data.</summary>
+  /// <summary>Web services used to interact with project models.</summary>
   public class ProjectsModelsController : WebApiController {
 
     #region GET methods
@@ -87,4 +86,4 @@ namespace Empiria.Governance.WebApi {
 
   }  // class ProjectsModelsController
 
-}  // namespace Empiria.Governance.WebApi
+}  // namespace Empiria.ProjectManagement.WebApi

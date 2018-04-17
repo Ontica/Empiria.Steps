@@ -1,8 +1,8 @@
-﻿/* Empiria Governance ****************************************************************************************
+﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Governance                               System  : Governance Web API                  *
-*  Assembly : Empiria.Governance.WebApi.dll                    Pattern : Response methods                    *
-*  Type     : ContactResponseModels                            License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Response methods                      *
+*  Type     : ContactResponseModels                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Response static methods for contact entities.                                                  *
 *                                                                                                            *
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 
-namespace Empiria.Governance.WebApi {
+namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Response static methods for contact entities.</summary>
   static internal class ContactResponseModels {
@@ -34,4 +34,4 @@ namespace Empiria.Governance.WebApi {
 
   }  // class ContactResponseModels
 
-}  // namespace Empiria.Governance.WebApi
+}  // namespace Empiria.ProjectManagement.WebApi

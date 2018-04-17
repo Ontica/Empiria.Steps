@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Module   : Project Meetings                             Component : Domain services                       *
-*  Assembly : Empiria.Steps.ProjectManagement.dll          Pattern   : Data Services                         *
+*  Assembly : Empiria.ProjectManagement.dll                Pattern   : Data Services                         *
 *  Type     : MeetingData                                  License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Data read and write methods for project meetings.                                              *
@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Data;
 
-namespace Empiria.Steps.ProjectManagement.Meetings {
+namespace Empiria.ProjectManagement.Meetings {
 
   /// <summary>Data read and write methods for project meetings.</summary>
   static internal class MeetingData {
@@ -77,4 +77,4 @@ namespace Empiria.Steps.ProjectManagement.Meetings {
 
   }  // class MeetingData
 
-}  // namespace Empiria.Steps.ProjectManagement.Meetings
+}  // namespace Empiria.ProjectManagement.Meetings

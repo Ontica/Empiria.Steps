@@ -1,8 +1,8 @@
-﻿/* Empiria Governance ****************************************************************************************
+﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Governance                               System  : Governance Web API                  *
-*  Assembly : Empiria.Governance.WebApi.dll                    Pattern : Web Api Controller                  *
-*  Type     : ResourcesController                              License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
+*  Type     : ResourcesController                          License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and set project resources.                                              *
 *                                                                                                            *
@@ -13,10 +13,7 @@ using System.Web.Http;
 using Empiria.Collections;
 using Empiria.WebApi;
 
-using Empiria.Steps.Resources;
-using Empiria.Steps.ProjectManagement;
-
-namespace Empiria.Governance.WebApi {
+namespace Empiria.ProjectManagement.Resources.WebApi {
 
   /// <summary>Public API to retrieve and set project resources.</summary>
   public class ResourcesController : WebApiController {
@@ -77,4 +74,4 @@ namespace Empiria.Governance.WebApi {
 
   }  // class ResourcesController
 
-}  // namespace Empiria.Governance.WebApi
+}  // namespace Empiria.ProjectManagement.Resources.WebApi

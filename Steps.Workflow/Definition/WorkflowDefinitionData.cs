@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Workflow Definition                 *
-*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Data Service                        *
+*  Assembly : Empiria.WorkflowDefinition.dll                   Pattern : Data Service                        *
 *  Type     : WorkflowDefinitionData                           License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Data read and write methods for workflow objects.                                              *
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 using Empiria.Data;
 
-namespace Empiria.Steps.WorkflowDefinition {
+namespace Empiria.Workflow.Definition {
 
   /// <summary>Data read and write methods for workflow objects.</summary>
   static internal class WorkflowDefinitionData {
@@ -57,4 +57,4 @@ namespace Empiria.Steps.WorkflowDefinition {
 
   }  // class WorkflowDefinitionData
 
-}  // namespace Empiria.Steps.WorkflowDefinition
+}  // namespace Empiria.Workflow.Definition

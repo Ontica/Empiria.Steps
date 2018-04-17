@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Finder                              *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Finder                              *
 *  Type     : ProjectFinder                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Performs search operations over projects, activities, and other project items.                 *
@@ -13,7 +13,7 @@ using System.Linq;
 
 using Empiria.Data;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Performs search operations over projects, activities, and other project items.</summary>
   public class ProjectFinder {
@@ -129,4 +129,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   } // class ProjectFinder
 
-} // namespace Empiria.Steps.ProjectManagement
+} // namespace Empiria.ProjectManagement

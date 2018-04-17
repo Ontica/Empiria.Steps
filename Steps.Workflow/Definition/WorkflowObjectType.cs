@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Workflow Definition                 *
-*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Power type                          *
+*  Assembly : Empiria.Workflow.dll                             Pattern : Domain class                        *
 *  Type     : WorkflowObjectType                               License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Powertype that defines a workflow object type.                                                 *
@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Ontology;
 
-namespace Empiria.Steps.WorkflowDefinition {
+namespace Empiria.Workflow.Definition {
 
   /// <summary>Powertype that defines a workflow object type.</summary>
   [Powertype(typeof(WorkflowObject))]
@@ -63,4 +63,4 @@ namespace Empiria.Steps.WorkflowDefinition {
 
   } // class WorkflowObjectType
 
-} // namespace Empiria.Steps.WorkflowDefinition
+} // namespace Empiria.Workflow.Definition

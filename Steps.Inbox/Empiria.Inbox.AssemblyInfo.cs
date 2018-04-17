@@ -1,10 +1,10 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                System  : Project Management System               *
-*  Assembly : Empiria.Steps.ProjectManagement.dll          Pattern : Assembly Attributes File                *
+*  Solution : Empiria Steps                                System  : Steps Inbox                             *
+*  Assembly : Empiria.Inbox.dll                            Pattern : Assembly Attributes File                *
 *                                                          License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Empiria Steps project management system.                                                       *
+*  Summary  : Seamless centralized task management solution.                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

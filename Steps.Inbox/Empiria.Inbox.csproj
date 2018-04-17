@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Company>Ontica</Company>
-    <Product>Empiria Steps Workflow Engine</Product>
-    <Description>Empiria Steps workflow engine.</Description>
+    <Product>Empiria Steps Inbox</Product>
+    <Description>Seamless centralized task management solution.</Description>
     <Copyright>(c) 2017-2018. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.WorkflowEngine/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.WorkflowEngine</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.Inbox/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.Inbox</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/steps/empiria-steps.logo.png</PackageIconUrl>
     <PackageTags>workflow management system, project management, business process, task management, bpmn, wfmc</PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
@@ -20,6 +20,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
+    <AssemblyName>Empiria.Inbox</AssemblyName>
+    <RootNamespace>Empiria.Inbox</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -51,7 +53,4 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Steps.WorkflowDefinition\Empiria.Steps.WorkflowDefinition.csproj" />
-  </ItemGroup>
 </Project>

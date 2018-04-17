@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : Task                                             License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a task.                                                                              *
@@ -12,7 +12,7 @@ using System;
 using Empiria.Contacts;
 using Empiria.Json;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a task.</summary>
   public class Task : ProjectObject {
@@ -100,4 +100,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   } // class Task
 
-} // namespace Empiria.Steps.ProjectManagement
+} // namespace Empiria.ProjectManagement

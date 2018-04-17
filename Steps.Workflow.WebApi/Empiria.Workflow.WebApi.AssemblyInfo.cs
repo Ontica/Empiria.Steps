@@ -1,10 +1,10 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                System  : Workflow Engine                         *
-*  Assembly : Empiria.Steps.WorkflowEngine.dll             Pattern : Assembly Attributes File                *
-*                                                          License : Please read LICENSE.txt file            *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Assembly Attributes File              *
+*                                                          License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Empiria Steps workflow engine.                                                                 *
+*  Summary  : Web service interface used to interact with Empiria Steps Project Management domain services.  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

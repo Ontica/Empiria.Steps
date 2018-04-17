@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Power type                          *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Power type                          *
 *  Type     : ResourceType                                     License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Powertype that defines a resource such as a product, service or result.                        *
@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Ontology;
 
-namespace Empiria.Steps.Resources {
+namespace Empiria.ProjectManagement.Resources {
 
   /// <summary>Powertype that defines a resource such as a product, service
   /// or result achieved by a project or used or defined by a workflow.</summary>
@@ -46,4 +46,4 @@ namespace Empiria.Steps.Resources {
 
   } // class ResourceType
 
-} // namespace Empiria.Steps.Resources
+} // namespace Empiria.ProjectManagement.Resources

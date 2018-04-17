@@ -1,10 +1,10 @@
-﻿/* Empiria Governance ****************************************************************************************
+﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Governance                           System  : Governance Web Api interface            *
-*  Assembly : Empiria.Governance.WebApi.dll                Pattern : Assembly Attributes File                *
-*                                                          License : Please read LICENSE.txt file            *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Assembly Attributes File              *
+*                                                          License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Empiria Governance Http/Json web services interface.                                           *
+*  Summary  : Web service interface used to interact with Empiria Steps Project Management domain services.  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

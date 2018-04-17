@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Data Service                        *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Data Service                        *
 *  Type     : ProjectData                                      License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Project's data read and write methods.                                                         *
@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using Empiria.Contacts;
 using Empiria.Data;
 
-using Empiria.Steps.Resources;
+using Empiria.ProjectManagement.Resources;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Project's data read and write methods.</summary>
   static internal class ProjectData {
@@ -143,4 +143,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   }  // class ProjectData
 
-}  // namespace Empiria.Steps.ProjectManagement
+}  // namespace Empiria.ProjectManagement

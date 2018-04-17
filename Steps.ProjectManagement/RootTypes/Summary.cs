@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : Summary                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project activity.                                                                  *
@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using Empiria.Contacts;
 using Empiria.Json;
 
-using Empiria.Steps.Resources;
+using Empiria.ProjectManagement.Resources;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project activity.</summary>
   public class Summary : ProjectObject {
@@ -173,4 +173,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   } // class Summary
 
-} // namespace Empiria.Steps.ProjectManagement
+} // namespace Empiria.ProjectManagement

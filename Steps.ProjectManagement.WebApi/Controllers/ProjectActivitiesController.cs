@@ -1,8 +1,8 @@
-﻿/* Empiria Governance ****************************************************************************************
+﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Governance                               System  : Governance Web API                  *
-*  Assembly : Empiria.Governance.WebApi.dll                    Pattern : Web Api Controller                  *
-*  Type     : ProjectsController                               License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
+*  Type     : ProjectActivitiesController                  License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and set project activities.                                             *
 *                                                                                                            *
@@ -13,9 +13,7 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
-using Empiria.Steps.ProjectManagement;
-
-namespace Empiria.Governance.WebApi {
+namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Public API to retrieve and set project activities.</summary>
   public class ProjectActivitiesController : WebApiController {
@@ -204,4 +202,4 @@ namespace Empiria.Governance.WebApi {
 
   }  // class ProjectActivitiesController
 
-}  // namespace Empiria.Governance.WebApi
+}  // namespace Empiria.ProjectManagement.WebApi

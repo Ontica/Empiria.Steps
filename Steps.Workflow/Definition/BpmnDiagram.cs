@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Workflow Definition                 *
-*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Domain class                        *
+*  Assembly : Empiria.Workflow.dll                             Pattern : Domain class                        *
 *  Type     : BpmnDiagram                                      License : Please read LICENSE.txt file        *
 *                                                                                                            *
 *  Summary  : Provides services that gets process definition models.                                         *
@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Json;
 
-namespace Empiria.Steps.WorkflowDefinition {
+namespace Empiria.Workflow.Definition {
 
   public class BpmnDiagram : BaseObject {
 
@@ -139,4 +139,4 @@ namespace Empiria.Steps.WorkflowDefinition {
 
   }  // class BpmnDiagram
 
-}  // namespace Empiria.Steps.WorkflowDefinition
+}  // namespace Empiria.Workflow.Definition

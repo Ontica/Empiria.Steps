@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Module   : Project Meetings                             Component : Domain services                       *
-*  Assembly : Empiria.Steps.ProjectManagement.dll          Pattern   : Aggregate root                        *
+*  Assembly : Empiria.ProjectManagement.dll                Pattern   : Aggregate root                        *
 *  Type     : Meeting                                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Handles information about a project meeting.                                                   *
@@ -13,7 +13,7 @@ using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
 
-namespace Empiria.Steps.ProjectManagement.Meetings {
+namespace Empiria.ProjectManagement.Meetings {
 
     /// <summary>Handles information about a project meeting.</summary>
     public class Meeting : BaseObject {
@@ -274,4 +274,4 @@ namespace Empiria.Steps.ProjectManagement.Meetings {
 
   }  // class Meeting
 
-}  // namespace Empiria.Steps.ProjectManagement.Meetings
+}  // namespace Empiria.ProjectManagement.Meetings

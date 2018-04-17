@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : Resource                                         License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project or workflow involved resource.                                             *
@@ -12,7 +12,7 @@ using System;
 using Empiria.Contacts;
 using Empiria.Ontology;
 
-namespace Empiria.Steps.Resources {
+namespace Empiria.ProjectManagement.Resources {
 
   /// <summary>Describes a project or workflow involved resource.</summary>
   [PartitionedType(typeof(ResourceType))]
@@ -80,4 +80,4 @@ namespace Empiria.Steps.Resources {
 
   } // class Resource
 
-} // namespace Empiria.Steps.Resources
+} // namespace Empiria.ProjectManagement.Resources

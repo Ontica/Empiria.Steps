@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 
-namespace Empiria.Steps.ProjectManagement.Meetings.WebApi {
+namespace Empiria.ProjectManagement.Meetings.WebApi {
 
   /// <summary>Response static methods for help desk tickets and their related entities.</summary>
   static internal class MeetingsResponseModel {
@@ -73,4 +73,4 @@ namespace Empiria.Steps.ProjectManagement.Meetings.WebApi {
 
   }  // class MeetingsResponseModel
 
-}  // namespace Empiria.Steps.ProjectManagement.Meetings.WebApi
+}  // namespace Empiria.ProjectManagement.Meetings.WebApi

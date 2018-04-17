@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : ProjectObject                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a project as a set of well defined activities.                                       *
@@ -16,9 +16,9 @@ using Empiria.Json;
 
 using Empiria.Ontology;
 
-using Empiria.Steps.WorkflowDefinition;
+using Empiria.Workflow.Definition;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project as a set of well defined activities.</summary>
   [PartitionedType(typeof(ProjectObjectType))]
@@ -315,4 +315,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   } // class ProjectObject
 
-} // namespace Empiria.Steps.ProjectManagement
+} // namespace Empiria.ProjectManagement

@@ -1,0 +1,82 @@
+﻿{
+  "appName": "Empiria Steps Workflow Management Web Api",
+  "version": "1.0",
+  "date": "2018-04-17",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "{{APPLICATION-KEY}}"
+    },
+    {
+      "type": "",
+      "key": "License.Name",
+      "value": "{{LICENSE-NAME}}"
+    },
+    {
+      "type": "",
+      "key": "License.Number",
+      "value": "{{LICENSE-NUMBER}}"
+    },
+    {
+      "type": "",
+      "key": "License.SerialNumber",
+      "value": "{{SERIAL-NUMBER}}"
+    },
+    {
+      "type": "",
+      "key": "Organization.Id",
+      "value": 1
+    },
+    {
+      "type": "",
+      "key": "Server.Id",
+      "value": 40
+    },
+    {
+      "type": "",
+      "key": "IsDevelopmentServer",
+      "value": true
+    },
+    {
+      "type": "",
+      "key": "System.Description",
+      "value": "Empiria Workflow Management System Web Api interface"
+    },
+    {
+      "type": "",
+      "key": "System.Name",
+      "value": "Empiria Workflow"
+    },
+    {
+      "type": "Data",
+      "key": "IsObjectIdGeneratorServer",
+      "value": true
+    },
+    {
+      "type": "Data",
+      "key": "DataSource.Default",
+      "value": "{{DEFAULT-DATABASE-CONNECTION}}"
+    },
+    {
+      "type": "Data",
+      "key": "DataTechnology.Default",
+      "value": 1
+    },
+    {
+      "type": "Security",
+      "key": "IV",
+      "value": "{{SECURITY-IV}}"
+    },
+    {
+      "type": "Security",
+      "key": "Key",
+      "value": "{{SECURITY-KEY}}"
+    },
+    {
+      "type": "Security",
+      "key": "LKey",
+      "value": "{{SECURITY-LKEY}}"
+    }
+  ]
+}

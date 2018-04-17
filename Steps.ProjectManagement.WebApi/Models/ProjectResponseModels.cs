@@ -1,8 +1,8 @@
-﻿/* Empiria Governance ****************************************************************************************
+﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Governance                               System  : Governance Web API                  *
-*  Assembly : Empiria.Governance.WebApi.dll                    Pattern : Response methods                    *
-*  Type     : ProjectResponseModels                            License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Web Api                               *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Response methods                      *
+*  Type     : ProjectResponseModels                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Response static methods for project entities.                                                  *
 *                                                                                                            *
@@ -11,9 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using Empiria.Steps.ProjectManagement;
-
-namespace Empiria.Governance.WebApi {
+namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Response static methods for project entities.</summary>
   static internal class ProjectResponseModels {
@@ -307,4 +305,4 @@ namespace Empiria.Governance.WebApi {
 
   }  // class ProjectResponseModels
 
-}  // namespace Empiria.Governance.WebApi
+}  // namespace Empiria.ProjectManagement.WebApi

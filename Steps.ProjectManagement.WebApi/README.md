@@ -1,6 +1,6 @@
-﻿# Empiria Project Management Web Api License
+﻿# Empiria Project Management Web Api
 
-  Steps Project ManagementSystem web services interface.
+  Empiria Steps Project Management System web services interface.
 
 # License
 

@@ -1,10 +1,10 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                System  : Workflow Definition                     *
-*  Assembly : Empiria.Steps.WorkflowDefinition.dll         Pattern : Assembly Attributes File                *
-*                                                          License : Please read LICENSE.txt file            *
+*  Module   : Project Management                           Component : Domain services                       *
+*  Assembly : Empiria.ProjectManagement.dll                Pattern   : Assembly Attributes File              *
+*                                                          License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Empiria Steps workflow definition related types.                                               *
+*  Summary  : Domain types and services used to build Empiria Steps Project Management based solutions.      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Workflow Definition                 *
-*  Assembly : Empiria.Steps.WorkflowDefinition.dll             Pattern : Domain class                        *
+*  Assembly : Empiria.Workflow.dll                             Pattern : Domain class                        *
 *  Type     : Process                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Describes a workflow model as an a activity network.                                           *
@@ -9,7 +9,7 @@ w  Summary  : Describes a workflow model as an a activity network.              
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Steps.WorkflowDefinition {
+namespace Empiria.Workflow.Definition {
 
   /// <summary>Describes a workflow model as an a activity network.</summary>
   public class Process : WorkflowObject {
@@ -80,4 +80,4 @@ namespace Empiria.Steps.WorkflowDefinition {
 
   } // class Process
 
-} // namespace Empiria.Steps.WorkflowDefinition
+} // namespace Empiria.Workflow.Definition

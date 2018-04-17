@@ -1,7 +1,7 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.Steps.ProjectManagement.dll              Pattern : Domain class                        *
+*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : ProjectModel                                     License : Please read LICENSE.txt file        *
 *                                                                                                            *
 w  Summary  : Slice of a workflow process that serves as an activity model to build a project instance.      *
@@ -12,9 +12,9 @@ using System;
 using Empiria.Contacts;
 using Empiria.Json;
 
-using Empiria.Steps.WorkflowDefinition;
+using Empiria.Workflow.Definition;
 
-namespace Empiria.Steps.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Slice of a workflow process that serves as an activity
   /// model to build a project instance.</summary>
@@ -135,4 +135,4 @@ namespace Empiria.Steps.ProjectManagement {
 
   } // class ProjectModel
 
-} // namespace Empiria.Steps.ProjectManagement
+} // namespace Empiria.ProjectManagement

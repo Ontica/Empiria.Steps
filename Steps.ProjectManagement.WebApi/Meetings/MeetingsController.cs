@@ -13,7 +13,7 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
-namespace Empiria.Steps.ProjectManagement.Meetings.WebApi {
+namespace Empiria.ProjectManagement.Meetings.WebApi {
 
   /// <summary>Web API controller for project meetings and their related entities.</summary>
   public class MeetingsController : WebApiController {
@@ -156,4 +156,4 @@ namespace Empiria.Steps.ProjectManagement.Meetings.WebApi {
 
   }  // class MeetingsController
 
-}  // namespace Empiria.Steps.ProjectManagement.Meetings.WebApi
+}  // namespace Empiria.ProjectManagement.Meetings.WebApi
