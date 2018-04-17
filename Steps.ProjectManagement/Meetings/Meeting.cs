@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Json;
 
 namespace Empiria.Steps.ProjectManagement.Meetings {
@@ -18,6 +19,11 @@ namespace Empiria.Steps.ProjectManagement.Meetings {
     public class Meeting : BaseObject {
 
     #region Constructors and parsers
+
+    protected Meeting() {
+      // Required by Empiria Framework.
+    }
+
 
     public Meeting(JsonObject data) {
       this.Load(data);
@@ -112,16 +118,57 @@ namespace Empiria.Steps.ProjectManagement.Meetings {
 
 
     [DataField("StartTime", Default = "ExecutionServer.DateMaxValue")]
-    public DateTime StartTime {
+    internal DateTime StartDateTime {
       get;
       private set;
     }
 
 
     [DataField("EndTime", Default = "ExecutionServer.DateMaxValue")]
-    public DateTime EndTime {
+    internal DateTime EndDateTime {
       get;
       private set;
+    }
+
+
+    public DateTime Date {
+      get {
+        return this.StartDateTime.Date;
+      }
+      private set {
+        this.StartDateTime = value.Date.Add(this.StartDateTime.TimeOfDay);
+      }
+    }
+
+
+    public string StartTime {
+      get {
+        return Time.ToString(this.StartDateTime, TimeType.HoursMinutes);
+      }
+      private set {
+        try {
+          this.StartDateTime = Time.SetTimeToDate(this.Date, value);
+        } catch {
+          throw new ValidationException("Meeting.StartTime",
+                                        $"Meeting start time has a wrong value: '{value}'.");
+        }
+      }
+    }
+
+
+    public string EndTime {
+      get {
+        return Time.ToString(this.EndDateTime, TimeType.HoursMinutes);
+      }
+      private set {
+        try {
+          // End date is always equals to the start date, just the time varies.
+          this.EndDateTime = Time.SetTimeToDate(this.Date, value);
+        } catch {
+          throw new ValidationException("Meeting.EndTime",
+                                        $"Meeting end time has a wrong value: '{value}'.");
+        }
+      }
     }
 
 
@@ -170,9 +217,6 @@ namespace Empiria.Steps.ProjectManagement.Meetings {
     public void Close() {
       this.Status = ObjectStatus.Closed;
 
-      if (this.EndTime == DateTime.MaxValue) {
-        this.EndTime = DateTime.Now;
-      }
     }
 
 
@@ -219,6 +263,7 @@ namespace Empiria.Steps.ProjectManagement.Meetings {
       this.Description = data.GetClean("description", this.Description);
       this.Tags = data.GetClean("tags", this.Tags);
 
+      this.Date = data.Get("date", this.Date);
       this.StartTime = data.Get("startTime", this.StartTime);
       this.EndTime = data.Get("endTime", this.EndTime);
 

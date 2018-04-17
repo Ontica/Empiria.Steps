@@ -48,7 +48,7 @@ namespace Empiria.Steps.ProjectManagement.Meetings {
                                     o.Id, o.UID, o.Project.Id, o.ControlNo,
                                     o.Title, o.Description, o.Tags,
                                     o.ExtensionData.ToString(), o.Keywords,
-                                    o.StartTime, o.EndTime, (char) o.Status);
+                                    o.StartDateTime, o.EndDateTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

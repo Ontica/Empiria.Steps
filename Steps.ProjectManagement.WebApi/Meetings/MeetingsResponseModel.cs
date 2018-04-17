@@ -40,9 +40,9 @@ namespace Empiria.Steps.ProjectManagement.Meetings.WebApi {
           uid = meeting.Project.UID,
           name = meeting.Project.Name
         },
-        date = meeting.StartTime.Date.ToString("yyyy-MM-dd"),
-        startTime = meeting.StartTime.ToString("HH:mm"),
-        endTime = meeting.EndTime.ToString("HH:mm"),
+        date = meeting.Date.ToString("yyyy-MM-dd"),
+        startTime = meeting.StartTime,
+        endTime = meeting.EndTime,
         location = meeting.Location,
         status = meeting.Status,
 
