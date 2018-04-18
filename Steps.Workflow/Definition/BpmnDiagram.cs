@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Json;
+using Empiria.StateEnums;
 
 namespace Empiria.Workflow.Definition {
 
@@ -86,8 +87,8 @@ namespace Empiria.Workflow.Definition {
     } = String.Empty;
 
 
-    [DataField("ObjectStatus", Default = ObjectStatus.Active)]
-    public ObjectStatus Status {
+    [DataField("ObjectStatus", Default = EntityStatus.Active)]
+    public EntityStatus Status {
       get;
       private set;
     }

@@ -28,7 +28,7 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     static internal FixedList<Meeting> GetOpenedMeetings(string keywords) {
-      string filter = GetMeetingsFilter(keywords, "Status = 'P'");
+      string filter = GetMeetingsFilter(keywords, "Status = 'O'");
 
       return BaseObject.GetList<Meeting>(filter, "StartTime")
                        .ToFixedList();

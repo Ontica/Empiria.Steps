@@ -13,6 +13,7 @@ using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
+using Empiria.StateEnums;
 
 namespace Empiria.Workflow.Definition {
 
@@ -140,8 +141,8 @@ namespace Empiria.Workflow.Definition {
     }
 
 
-    [DataField("Status", Default = ObjectStatus.Active)]
-    public ObjectStatus Status {
+    [DataField("Status", Default = EntityStatus.Active)]
+    public EntityStatus Status {
       get;
       private set;
     }

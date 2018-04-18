@@ -13,6 +13,7 @@ using Empiria.Contacts;
 using Empiria.Collections;
 using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.StateEnums;
 
 using Empiria.Ontology;
 
@@ -68,12 +69,12 @@ namespace Empiria.ProjectManagement {
 
     #region Public properties
 
-
     public ProjectObjectType ProjectObjectType {
       get {
         return (ProjectObjectType) base.GetEmpiriaType();
       }
     }
+
 
     [DataField("UID")]
     public string UID {
@@ -138,8 +139,8 @@ namespace Empiria.ProjectManagement {
     } = TagsCollection.Empty;
 
 
-    [DataField("RagStatus", Default = RagStatus.Green)]
-    public RagStatus RagStatus {
+    [DataField("RagStatus", Default = RAGStatus.NoColor)]
+    public RAGStatus RagStatus {
       get;
       private set;
     }
@@ -184,8 +185,8 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    [DataField("Status", Default = ProjectObjectStatus.Inactive)]
-    public ProjectObjectStatus Status {
+    [DataField("Status", Default = ActivityStatus.Pending)]
+    public ActivityStatus Status {
       get;
       private set;
     }
@@ -224,7 +225,7 @@ namespace Empiria.ProjectManagement {
                             ? this.EndDate : this.StartDate;
 
       this.Stage = ItemStage.Done;
-      this.Status = ProjectObjectStatus.Completed;
+      this.Status = ActivityStatus.Completed;
 
       this.Save();
 
@@ -259,7 +260,7 @@ namespace Empiria.ProjectManagement {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
-      this.RagStatus = data.Get<RagStatus>("ragStatus", this.RagStatus);
+      this.RagStatus = data.Get<RAGStatus>("ragStatus", this.RagStatus);
 
       var tags = data.GetList<string>("tags", false);
       if (tags == null || tags.Count == 0) {

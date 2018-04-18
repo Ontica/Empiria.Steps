@@ -12,6 +12,7 @@ using System;
 using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.StateEnums;
 
 namespace Empiria.ProjectManagement.Meetings {
 
@@ -172,8 +173,8 @@ namespace Empiria.ProjectManagement.Meetings {
     }
 
 
-    [DataField("Status", Default = ObjectStatus.Pending)]
-    public ObjectStatus Status {
+    [DataField("Status", Default = OpenCloseStatus.Opened)]
+    public OpenCloseStatus Status {
       get;
       private set;
     }
@@ -215,15 +216,27 @@ namespace Empiria.ProjectManagement.Meetings {
     #region Public methods
 
     public void Close() {
-      this.Status = ObjectStatus.Closed;
+      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+                       $"Meeting can't be closed because is not opened. Current status: {this.Status}");
+
+      this.Status = OpenCloseStatus.Closed;
 
     }
-
 
     public void Delete() {
-      this.Status = ObjectStatus.Deleted;
+      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+                       $"Meeting can't be deleted because is not opened. Current status: {this.Status}");
+
+      this.Status = OpenCloseStatus.Deleted;
     }
 
+
+    public void Open() {
+      Assertion.Assert(this.Status == OpenCloseStatus.Closed,
+                       $"Meeting can't be opened because is not closed. Current status: {this.Status}");
+
+      this.Status = OpenCloseStatus.Opened;
+    }
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
@@ -240,6 +253,9 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     public void Update(JsonObject data) {
+      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+                $"I can't update the meeting because is not opened. Current status: {this.Status}");
+
       this.AssertIsValid(data);
 
       this.Load(data);
@@ -252,11 +268,11 @@ namespace Empiria.ProjectManagement.Meetings {
 
     protected void AssertIsValid(JsonObject data) {
       Assertion.AssertObject(data, "data");
+
     }
 
 
     protected void Load(JsonObject data) {
-
       this.Project = data.Get<Project>("projectUID", this.Project);
 
       this.Title = data.GetClean("title", this.Title);
