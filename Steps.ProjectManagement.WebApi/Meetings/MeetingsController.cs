@@ -37,7 +37,7 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/meetings/opened")]
-    public CollectionModel GetUpcomingMeetings([FromUri] string keywords = "") {
+    public CollectionModel GetOpenedMeetings([FromUri] string keywords = "") {
       try {
 
         FixedList<Meeting> meetingList = Meeting.GetOpened(keywords);
@@ -72,13 +72,36 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
     [HttpPost]
     [Route("v1/project-management/meetings")]
-    public SingleObjectModel CreateTicket([FromBody] object body) {
+    public SingleObjectModel CreateMeeting([FromBody] object body) {
       try {
         base.RequireBody(body);
 
         var bodyAsJson = JsonObject.Parse(body);
 
         var meeting = new Meeting(bodyAsJson);
+
+        meeting.Save();
+
+        return new SingleObjectModel(this.Request, meeting.ToResponse(),
+                                     typeof(Meeting).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPut, HttpPatch]
+    [Route("v1/project-management/meetings/{meetingUID}")]
+    public SingleObjectModel UpdateMeeting(string meetingUID, [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var meeting = Meeting.Parse(meetingUID);
+
+        meeting.Update(bodyAsJson);
 
         meeting.Save();
 
@@ -111,17 +134,14 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
     }
 
 
-    [HttpPut, HttpPatch]
-    [Route("v1/project-management/meetings/{meetingUID}")]
-    public SingleObjectModel UpdateTicket(string meetingUID, [FromBody] object body) {
+    [HttpPost]
+    [Route("v1/project-management/meetings/{meetingUID}/open")]
+    public SingleObjectModel OpenMeeting(string meetingUID) {
       try {
-        base.RequireBody(body);
-
-        var bodyAsJson = JsonObject.Parse(body);
 
         var meeting = Meeting.Parse(meetingUID);
 
-        meeting.Update(bodyAsJson);
+        meeting.Open();
 
         meeting.Save();
 
@@ -136,7 +156,7 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
     [HttpDelete]
     [Route("v1/project-management/meetings/{meetingUID}")]
-    public NoDataModel DeleteTicket(string meetingUID) {
+    public NoDataModel DeleteMeeting(string meetingUID) {
       try {
 
         var meeting = Meeting.Parse(meetingUID);
@@ -157,3 +177,4 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
   }  // class MeetingsController
 
 }  // namespace Empiria.ProjectManagement.Meetings.WebApi
+

@@ -8,7 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using System.Collections.Generic;
+using Empiria.Contacts;
 using Empiria.Data;
 
 namespace Empiria.ProjectManagement.Meetings {
@@ -70,6 +71,10 @@ namespace Empiria.ProjectManagement.Meetings {
       }
 
       return filter;
+    }
+
+    internal static List<Contact> GetParticipants(Meeting meeting) {
+      return new List<Contact>();
     }
 
 

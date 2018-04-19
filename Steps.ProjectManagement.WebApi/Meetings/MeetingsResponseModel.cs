@@ -40,7 +40,7 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
           uid = meeting.Project.UID,
           name = meeting.Project.Name
         },
-        date = meeting.Date.ToString("yyyy-MM-dd"),
+        date = meeting.Date.ToResponse(),
         startTime = meeting.StartTime,
         endTime = meeting.EndTime,
         location = meeting.Location,
@@ -63,12 +63,22 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
       foreach (var contact in list) {
         var item = new {
           uid = contact.UID,
-          shortName = contact.Nickname,
+          shortName = contact.Alias,
+          email = contact.EMail
         };
         array.Add(item);
       }
 
       return array;
+    }
+
+    static internal string ToResponse(this DateTime dateTime) {
+      if (ExecutionServer.DateMinValue == dateTime ||
+          ExecutionServer.DateMaxValue == dateTime) {
+        return String.Empty;
+      } else {
+        return dateTime.ToString("yyyy-MM-dd");
+      }
     }
 
   }  // class MeetingsResponseModel

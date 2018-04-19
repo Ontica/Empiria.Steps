@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
@@ -180,17 +181,6 @@ namespace Empiria.ProjectManagement.Meetings {
     }
 
 
-    public FixedList<Contact> Participants {
-      get {
-        var list = new Contact[2];
-
-        list[0] = Contact.Parse(8);
-        list[1] = Contact.Parse(10);
-
-        return new FixedList<Contact>(list);
-      }
-    }
-
     //public FixedList<Topic> Topics {
     //  get {
     //    return new FixedList<Topic>();
@@ -238,12 +228,20 @@ namespace Empiria.ProjectManagement.Meetings {
       this.Status = OpenCloseStatus.Opened;
     }
 
+
     protected override void OnBeforeSave() {
       if (this.IsNew) {
         this.UID = EmpiriaString.BuildRandomString(6, 36);
 
         this.ControlNo = MeetingData.GetNextMeetingControlNo(this.Project);
       }
+    }
+
+
+    protected override void OnInitialize() {
+      base.OnInitialize();
+
+      _participants = new Lazy<List<Contact>>(() => MeetingData.GetParticipants(this));
     }
 
 
@@ -264,7 +262,6 @@ namespace Empiria.ProjectManagement.Meetings {
     #endregion Public methods
 
     #region Private methods
-
 
     protected void AssertIsValid(JsonObject data) {
       Assertion.AssertObject(data, "data");
@@ -287,6 +284,51 @@ namespace Empiria.ProjectManagement.Meetings {
     }
 
     #endregion Private methods
+
+    #region Participants aggregate
+
+    private Lazy<List<Contact>> _participants = null;
+
+    public FixedList<Contact> Participants {
+      get {
+        return _participants.Value.ToFixedList();
+      }
+    }
+
+
+    public void AddParticipant(Contact participant) {
+      Assertion.AssertObject(participant, "participant");
+
+      Assertion.Assert(!_participants.Value.Contains(participant),
+                       $"{participant.Alias} was already added to the meeting.");
+
+      Assertion.AssertObject(this.Status == OpenCloseStatus.Opened,
+                             "This meeting is closed. Add a participant is not allowed.");
+
+      _participants.Value.Add(participant);
+    }
+
+
+    public FixedList<Contact> GetAvailableParticipants() {
+      var projectContacts = this.Project.GetInvolvedContacts();
+
+      return projectContacts.Remove(_participants.Value);
+    }
+
+
+    public void RemoveParticipant(Contact participant) {
+      Assertion.AssertObject(participant, "participant");
+
+      Assertion.AssertObject(this.Status == OpenCloseStatus.Opened,
+                             "This meeting is closed. Remove a participant is not allowed.");
+
+      Assertion.Assert(_participants.Value.Contains(participant),
+      $"{participant.Alias} is not in the meeting list of participants. I can't perform the remove operation.");
+
+      _participants.Value.Remove(participant);
+    }
+
+    #endregion Participants aggregate
 
   }  // class Meeting
 

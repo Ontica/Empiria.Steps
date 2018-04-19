@@ -164,6 +164,19 @@ namespace Empiria.ProjectManagement {
       ProjectData.WriteProject(this);
     }
 
+    internal FixedList<Contact> GetInvolvedContacts() {
+      var list = new Contact[6];
+
+      list[0] = Contact.Parse(2);
+      list[1] = Contact.Parse(4);
+      list[2] = Contact.Parse(8);
+      list[3] = Contact.Parse(9);
+      list[4] = Contact.Parse(10);
+      list[5] = Contact.Parse(11);
+
+      return new FixedList<Contact>(list);
+    }
+
     #endregion Public methods
 
   } // class Project
