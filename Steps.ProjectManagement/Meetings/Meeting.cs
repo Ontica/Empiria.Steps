@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
@@ -18,7 +17,15 @@ using Empiria.StateEnums;
 namespace Empiria.ProjectManagement.Meetings {
 
     /// <summary>Handles information about a project meeting.</summary>
-    public class Meeting : BaseObject {
+    public class Meeting : BaseObject, IAggregateRoot {
+
+    #region Fields
+
+    public event EventHandler SaveAllCalled;
+
+    private MeetingAggregator Aggregator = null;
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -30,7 +37,6 @@ namespace Empiria.ProjectManagement.Meetings {
     public Meeting(JsonObject data) {
       this.Load(data);
     }
-
 
     static public Meeting Parse(string uid) {
       return BaseObject.ParseKey<Meeting>(uid);
@@ -209,15 +215,15 @@ namespace Empiria.ProjectManagement.Meetings {
       Assertion.Assert(this.Status == OpenCloseStatus.Opened,
                        $"Meeting can't be closed because is not opened. Current status: {this.Status}");
 
-      this.Status = OpenCloseStatus.Closed;
-
+      this.ChangeStatus(OpenCloseStatus.Closed);
     }
+
 
     public void Delete() {
       Assertion.Assert(this.Status == OpenCloseStatus.Opened,
                        $"Meeting can't be deleted because is not opened. Current status: {this.Status}");
 
-      this.Status = OpenCloseStatus.Deleted;
+      this.ChangeStatus(OpenCloseStatus.Deleted);
     }
 
 
@@ -225,28 +231,7 @@ namespace Empiria.ProjectManagement.Meetings {
       Assertion.Assert(this.Status == OpenCloseStatus.Closed,
                        $"Meeting can't be opened because is not closed. Current status: {this.Status}");
 
-      this.Status = OpenCloseStatus.Opened;
-    }
-
-
-    protected override void OnBeforeSave() {
-      if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 36);
-
-        this.ControlNo = MeetingData.GetNextMeetingControlNo(this.Project);
-      }
-    }
-
-
-    protected override void OnInitialize() {
-      base.OnInitialize();
-
-      _participants = new Lazy<List<Contact>>(() => MeetingData.GetParticipants(this));
-    }
-
-
-    protected override void OnSave() {
-      MeetingData.WriteMeeting(this);
+      this.ChangeStatus(OpenCloseStatus.Opened);
     }
 
 
@@ -261,11 +246,18 @@ namespace Empiria.ProjectManagement.Meetings {
 
     #endregion Public methods
 
-    #region Private methods
+    #region Protected and private methods
 
     protected void AssertIsValid(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
+    }
+
+
+    private void ChangeStatus(OpenCloseStatus newStatus) {
+      this.Status = newStatus;
+
+      base.MarkAsDirty();
     }
 
 
@@ -281,17 +273,57 @@ namespace Empiria.ProjectManagement.Meetings {
       this.EndTime = data.Get("endTime", this.EndTime);
 
       this.Location = data.GetClean("location", this.Location);
+
+      base.MarkAsDirty();
     }
 
-    #endregion Private methods
+
+    protected override void OnBeforeSave() {
+      if (this.IsNew) {
+        this.UID = EmpiriaString.BuildRandomString(6, 36);
+
+        this.ControlNo = MeetingData.GetNextMeetingControlNo(this.Project);
+      }
+    }
+
+
+    protected override void OnInitialize() {
+      base.OnInitialize();
+
+      this.Aggregator = new MeetingAggregator(this);
+    }
+
+
+    protected override void OnSave() {
+      if (this.IsDirty) {
+        MeetingData.WriteMeeting(this);
+      }
+    }
+
+
+    public virtual void SaveAll() {
+      this.Save();
+
+      this.InvokeSaveRootEvent();
+    }
+
+
+    private void InvokeSaveRootEvent() {
+      EventHandler saveAll = this.SaveAllCalled;
+
+      if (saveAll != null) {
+        saveAll.Invoke(this, EventArgs.Empty);
+      }
+    }
+
+
+    #endregion Protected and private methods
 
     #region Participants aggregate
 
-    private Lazy<List<Contact>> _participants = null;
-
     public FixedList<Contact> Participants {
       get {
-        return _participants.Value.ToFixedList();
+        return this.Aggregator.GetParticipants();
       }
     }
 
@@ -299,33 +331,33 @@ namespace Empiria.ProjectManagement.Meetings {
     public void AddParticipant(Contact participant) {
       Assertion.AssertObject(participant, "participant");
 
-      Assertion.Assert(!_participants.Value.Contains(participant),
+      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+                       "This meeting is closed. Add a participant is not allowed.");
+
+      Assertion.Assert(!this.Participants.Contains(participant),
                        $"{participant.Alias} was already added to the meeting.");
 
-      Assertion.AssertObject(this.Status == OpenCloseStatus.Opened,
-                             "This meeting is closed. Add a participant is not allowed.");
-
-      _participants.Value.Add(participant);
+      this.Aggregator.AddParticipant(participant);
     }
 
 
     public FixedList<Contact> GetAvailableParticipants() {
       var projectContacts = this.Project.GetInvolvedContacts();
 
-      return projectContacts.Remove(_participants.Value);
+      return projectContacts.Remove(this.Participants);
     }
 
 
     public void RemoveParticipant(Contact participant) {
       Assertion.AssertObject(participant, "participant");
 
-      Assertion.AssertObject(this.Status == OpenCloseStatus.Opened,
-                             "This meeting is closed. Remove a participant is not allowed.");
+      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+                       "This meeting is closed. Remove a participant is not allowed.");
 
-      Assertion.Assert(_participants.Value.Contains(participant),
+      Assertion.Assert(this.Participants.Contains(participant),
       $"{participant.Alias} is not in the meeting list of participants. I can't perform the remove operation.");
 
-      _participants.Value.Remove(participant);
+      Aggregator.RemoveParticipant(participant);
     }
 
     #endregion Participants aggregate

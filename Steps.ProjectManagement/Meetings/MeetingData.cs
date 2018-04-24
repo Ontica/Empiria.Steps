@@ -35,7 +35,6 @@ namespace Empiria.ProjectManagement.Meetings {
                        .ToFixedList();
     }
 
-
     static internal FixedList<Meeting> SearchMeetings(string keywords) {
       string filter = GetMeetingsFilter(keywords);
 
@@ -46,15 +45,55 @@ namespace Empiria.ProjectManagement.Meetings {
 
     static internal void WriteMeeting(Meeting o) {
       var op = DataOperation.Parse("writePMMeeting",
-                                    o.Id, o.UID, o.Project.Id, o.ControlNo,
-                                    o.Title, o.Description, o.Tags,
-                                    o.ExtensionData.ToString(), o.Keywords,
-                                    o.StartDateTime, o.EndDateTime, (char) o.Status);
+                                   o.Id, o.UID, o.Project.Id, o.ControlNo,
+                                   o.Title, o.Description, o.Tags,
+                                   o.ExtensionData.ToString(), o.Keywords,
+                                   o.StartDateTime, o.EndDateTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
+
     #endregion Public methods
+
+    #region Participants methods
+
+    static internal List<Contact> GetMeetingParticipants(Meeting meeting) {
+      var objectTypeInfo = meeting.GetEmpiriaType();
+      var linkName = "Meeting->Participants";
+
+      var association = objectTypeInfo.Associations[linkName];
+
+      return new List<Contact>(association.GetLinks<Contact>(meeting));
+    }
+
+
+    internal static void AddParticipant(Meeting meeting, Contact participant) {
+      var objectTypeInfo = meeting.GetEmpiriaType();
+      //var linkName = "Meeting->Participants";
+
+      //var association = objectTypeInfo.Associations[linkName];
+
+      // association.AddLink(meeting, participant);
+      var op = DataOperation.Parse("do", meeting.UID);
+
+      DataWriter.ExecuteWhenRootSaved(op, meeting);
+    }
+
+    internal static void RemoveParticipant(Meeting meeting, Contact participant) {
+      var objectTypeInfo = meeting.GetEmpiriaType();
+      //var linkName = "Meeting->Participants";
+
+      //var association = objectTypeInfo.Associations[linkName];
+
+      // association.RemoveLink(participant);
+      var op = DataOperation.Parse("do", meeting.UID);
+
+      DataWriter.ExecuteWhenRootSaved(op, meeting);
+    }
+
+
+    #endregion Participants methods
 
     #region Private methods
 
@@ -72,11 +111,6 @@ namespace Empiria.ProjectManagement.Meetings {
 
       return filter;
     }
-
-    internal static List<Contact> GetParticipants(Meeting meeting) {
-      return new List<Contact>();
-    }
-
 
     #endregion Private methods
 

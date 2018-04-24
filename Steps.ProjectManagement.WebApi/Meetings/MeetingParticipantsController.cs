@@ -50,12 +50,20 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         var meeting = Meeting.Parse(meetingUID);
 
-        meeting.AddParticipant(participant);
+        // meeting.AddParticipant(participant);
 
-        meeting.Save();
+        using (var context = StorageContext.Open()) {
 
-        return new SingleObjectModel(this.Request, meeting.ToResponse(),
-                                     typeof(Meeting).FullName);
+          meeting.AddParticipant(participant);
+
+          meeting.SaveAll();
+
+          context.Commit();
+
+          return new SingleObjectModel(this.Request, meeting.ToResponse(),
+                                       typeof(Meeting).FullName);
+        }
+
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
@@ -70,12 +78,18 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         var meeting = Meeting.Parse(meetingUID);
 
-        meeting.RemoveParticipant(participant);
+        using (var context = StorageContext.Open()) {
 
-        meeting.Save();
+          meeting.RemoveParticipant(participant);
 
-        return new SingleObjectModel(this.Request, meeting.ToResponse(),
-                                     typeof(Meeting).FullName);
+          meeting.SaveAll();
+
+          context.Commit();
+
+          return new SingleObjectModel(this.Request, meeting.ToResponse(),
+                                       typeof(Meeting).FullName);
+        }
+
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }

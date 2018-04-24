@@ -56,9 +56,9 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
     public CollectionModel SearchMeetings([FromUri] string keywords = "") {
       try {
 
-        FixedList<Meeting> list= Meeting.Search(keywords);
+        FixedList<Meeting> meetingList = Meeting.Search(keywords);
 
-        return new CollectionModel(this.Request, list.ToResponse(),
+        return new CollectionModel(this.Request, meetingList.ToResponse(),
                                    typeof(Meeting).FullName);
 
       } catch (Exception e) {
@@ -78,12 +78,17 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        var meeting = new Meeting(bodyAsJson);
+        using (var context = StorageContext.Open()) {
 
-        meeting.Save();
+          var meeting = new Meeting(bodyAsJson);
 
-        return new SingleObjectModel(this.Request, meeting.ToResponse(),
-                                     typeof(Meeting).FullName);
+          meeting.Save();
+
+          context.Commit();
+
+          return new SingleObjectModel(this.Request, meeting.ToResponse(),
+                                       typeof(Meeting).FullName);
+        }
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
