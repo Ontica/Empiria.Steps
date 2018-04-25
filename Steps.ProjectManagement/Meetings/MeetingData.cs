@@ -77,7 +77,7 @@ namespace Empiria.ProjectManagement.Meetings {
       // association.AddLink(meeting, participant);
       var op = DataOperation.Parse("do", meeting.UID);
 
-      DataWriter.ExecuteWhenRootSaved(op, meeting);
+      DataWriter.Execute(op);
     }
 
     internal static void RemoveParticipant(Meeting meeting, Contact participant) {
@@ -89,7 +89,7 @@ namespace Empiria.ProjectManagement.Meetings {
       // association.RemoveLink(participant);
       var op = DataOperation.Parse("do", meeting.UID);
 
-      DataWriter.ExecuteWhenRootSaved(op, meeting);
+      DataWriter.Execute(op);
     }
 
 

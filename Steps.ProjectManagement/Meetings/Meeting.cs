@@ -17,11 +17,9 @@ using Empiria.StateEnums;
 namespace Empiria.ProjectManagement.Meetings {
 
     /// <summary>Handles information about a project meeting.</summary>
-    public class Meeting : BaseObject, IAggregateRoot {
+    public class Meeting : BaseObject {
 
     #region Fields
-
-    public event EventHandler SaveAllCalled;
 
     private MeetingAggregator Aggregator = null;
 
@@ -242,6 +240,8 @@ namespace Empiria.ProjectManagement.Meetings {
       this.AssertIsValid(data);
 
       this.Load(data);
+
+      this.Save();
     }
 
     #endregion Public methods
@@ -258,6 +258,8 @@ namespace Empiria.ProjectManagement.Meetings {
       this.Status = newStatus;
 
       base.MarkAsDirty();
+
+      this.Save();
     }
 
 
@@ -295,25 +297,7 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     protected override void OnSave() {
-      if (this.IsDirty) {
-        MeetingData.WriteMeeting(this);
-      }
-    }
-
-
-    public virtual void SaveAll() {
-      this.Save();
-
-      this.InvokeSaveRootEvent();
-    }
-
-
-    private void InvokeSaveRootEvent() {
-      EventHandler saveAll = this.SaveAllCalled;
-
-      if (saveAll != null) {
-        saveAll.Invoke(this, EventArgs.Empty);
-      }
+      MeetingData.WriteMeeting(this);
     }
 
 

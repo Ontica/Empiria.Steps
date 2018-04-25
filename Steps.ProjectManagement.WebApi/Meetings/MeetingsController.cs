@@ -78,17 +78,12 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        using (var context = StorageContext.Open()) {
+        var meeting = new Meeting(bodyAsJson);
 
-          var meeting = new Meeting(bodyAsJson);
+        meeting.Save();
 
-          meeting.Save();
-
-          context.Commit();
-
-          return new SingleObjectModel(this.Request, meeting.ToResponse(),
-                                       typeof(Meeting).FullName);
-        }
+        return new SingleObjectModel(this.Request, meeting.ToResponse(),
+                                     typeof(Meeting).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -108,8 +103,6 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         meeting.Update(bodyAsJson);
 
-        meeting.Save();
-
         return new SingleObjectModel(this.Request, meeting.ToResponse(),
                                      typeof(Meeting).FullName);
 
@@ -127,8 +120,6 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
         var meeting = Meeting.Parse(meetingUID);
 
         meeting.Close();
-
-        meeting.Save();
 
         return new SingleObjectModel(this.Request, meeting.ToResponse(),
                                      typeof(Meeting).FullName);
@@ -148,8 +139,6 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         meeting.Open();
 
-        meeting.Save();
-
         return new SingleObjectModel(this.Request, meeting.ToResponse(),
                                      typeof(Meeting).FullName);
 
@@ -168,8 +157,6 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         meeting.Delete();
 
-        meeting.Save();
-
         return new NoDataModel(this.Request);
 
       } catch (Exception e) {
@@ -182,4 +169,3 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
   }  // class MeetingsController
 
 }  // namespace Empiria.ProjectManagement.Meetings.WebApi
-

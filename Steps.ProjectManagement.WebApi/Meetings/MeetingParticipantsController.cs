@@ -44,25 +44,26 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
     public SingleObjectModel AddParticipant(string meetingUID,
                                             [FromBody] object body) {
       try {
+
         string participantUID = base.GetFromBody<string>(body, "participantUID");
 
         var participant = Contact.Parse(participantUID);
 
         var meeting = Meeting.Parse(meetingUID);
 
-        // meeting.AddParticipant(participant);
+        var json = new Empiria.Json.JsonObject();
+        json.Add("title", $"Título modificado a las {DateTime.Now.Ticks}");
 
         using (var context = StorageContext.Open()) {
+          meeting.Update(json);
 
           meeting.AddParticipant(participant);
 
-          meeting.SaveAll();
-
-          context.Commit();
-
-          return new SingleObjectModel(this.Request, meeting.ToResponse(),
-                                       typeof(Meeting).FullName);
+          context.Update();
         }
+
+        return new SingleObjectModel(this.Request, meeting.ToResponse(),
+                                     typeof(Meeting).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -78,17 +79,10 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         var meeting = Meeting.Parse(meetingUID);
 
-        using (var context = StorageContext.Open()) {
+        meeting.RemoveParticipant(participant);
 
-          meeting.RemoveParticipant(participant);
-
-          meeting.SaveAll();
-
-          context.Commit();
-
-          return new SingleObjectModel(this.Request, meeting.ToResponse(),
-                                       typeof(Meeting).FullName);
-        }
+        return new SingleObjectModel(this.Request, meeting.ToResponse(),
+                                     typeof(Meeting).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

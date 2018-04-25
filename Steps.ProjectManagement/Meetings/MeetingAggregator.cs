@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 
 using Empiria.Contacts;
-using Empiria.Data;
 
 namespace Empiria.ProjectManagement.Meetings {
 
@@ -19,7 +18,7 @@ namespace Empiria.ProjectManagement.Meetings {
 
     #region Fields
 
-    private Meeting meeting;
+    private readonly Meeting meeting;
 
     private Lazy<List<Contact>> _participants;
 
