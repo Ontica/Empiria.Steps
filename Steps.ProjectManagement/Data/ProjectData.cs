@@ -24,7 +24,8 @@ namespace Empiria.ProjectManagement {
       string sql = $"SELECT * FROM BPMProjectObjects " +
                    $"WHERE ProjectObjectTypeId = {ProjectObjectType.ProjectType.Id} AND " +
                    $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
-                   $"AND Status <> 'X'";
+                   $"AND Status <> 'X' " +
+                   $"ORDER BY ItemOrdering";
 
       var op = DataOperation.Parse(sql);
 
@@ -34,7 +35,8 @@ namespace Empiria.ProjectManagement {
 
     static internal List<ProjectObject> GetAllActivities(ProjectObject parent) {
       string sql = $"SELECT * FROM BPMProjectObjects " +
-                   $"WHERE ParentId = {parent.Id} AND Status <> 'X'";
+                   $"WHERE ParentId = {parent.Id} AND Status <> 'X' " +
+                   $"ORDER BY ItemOrdering";
 
       var op = DataOperation.Parse(sql);
 
@@ -50,7 +52,8 @@ namespace Empiria.ProjectManagement {
       }
       string sql = $"SELECT * FROM BPMProjectObjects " +
                    $"WHERE ProjectObjectTypeId <> {ProjectObjectType.TaskType.Id} AND " +
-                   $"BaseProjectId = {project.Id} AND Status <> 'X'";
+                   $"BaseProjectId = {project.Id} AND Status <> 'X' " +
+                   $"ORDER BY ItemOrdering";
 
       var op = DataOperation.Parse(sql);
 
@@ -60,7 +63,8 @@ namespace Empiria.ProjectManagement {
     static internal List<Activity> GetChildrenActivities(ProjectObject parent) {
       string sql = $"SELECT * FROM BPMProjectObjects " +
                    $"WHERE ProjectObjectTypeId = {ProjectObjectType.ActivityType.Id} AND " +
-                   $"ParentId = {parent.Id} AND Status <> 'X'";
+                   $"ParentId = {parent.Id} AND Status <> 'X' " +
+                   $"ORDER BY ItemOrdering";
 
       var op = DataOperation.Parse(sql);
 
@@ -95,20 +99,28 @@ namespace Empiria.ProjectManagement {
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 o.Resource.Id, o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
                 o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
+    internal static void UpdatePositionsStartingFrom(Activity from) {
+      var op = DataOperation.Parse("doBPMUpdateProjectObjectsPositionFrom",
+                                    from.Project.Id, from.Id,
+                                    from.Position,
+                                    (char) from.Status);
+
+      DataWriter.Execute(op);
+    }
 
     static internal void WriteSummary(Summary o) {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 o.Resource.Id, o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
                 o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
 
@@ -121,7 +133,7 @@ namespace Empiria.ProjectManagement {
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 o.Resource.Id, o.Owner.Id, o.Manager.Id, ExecutionServer.DateMinValue, Contact.Empty.Id,
                 Project.Empty.Id, Project.Empty.Id, (char) o.Stage, (char) o.Status);
 
@@ -134,7 +146,7 @@ namespace Empiria.ProjectManagement {
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Ordering, o.WorkflowObject.Id, o.CreatedFrom.Id,
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
                 Resource.Empty.Id, o.Owner.Id, o.AssignedTo.Id, o.AssignationTime, o.AssignedTo.Id,
                 o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status);
 

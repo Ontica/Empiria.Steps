@@ -156,7 +156,6 @@ namespace Empiria.ProjectManagement {
       this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Undefined"));
     }
 
-
     public Activity AddActivity(JsonObject data) {
       var activity = new Activity(this, data);
 
@@ -167,10 +166,10 @@ namespace Empiria.ProjectManagement {
       return activity;
     }
 
-
     protected override void OnSave() {
       ProjectData.WriteActivity(this);
     }
+
 
     #endregion Public methods
 

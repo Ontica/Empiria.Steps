@@ -108,7 +108,7 @@ namespace Empiria.ProjectManagement {
         default:
 
           return (from item in list
-                  orderby item.Ordering, item.Id
+                  orderby item.Position, item.Id
                   select item)
                  .ToList();
       }

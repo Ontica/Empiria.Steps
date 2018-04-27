@@ -1,4 +1,4 @@
-﻿# Empiria Steps Project Management System
+﻿# Empiria Project Management System
 
   Empiria Steps Project Management System domain services.
 

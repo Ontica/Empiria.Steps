@@ -152,8 +152,8 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-    [DataField("ItemOrdering")]
-    public int Ordering {
+    [DataField("ItemPosition")]
+    public int Position {
       get;
       private set;
     }
@@ -257,6 +257,15 @@ namespace Empiria.ProjectManagement {
       //baseActivity.SetDates(startDate, startDate.AddDays(daysCount));
     }
 
+    internal void Delete() {
+      Assertion.Assert(this.Status == ActivityStatus.Pending,
+                       "Deletion is only possible to activities in active or pending status.");
+
+      this.Status = ActivityStatus.Deleted;
+
+      this.Save();
+    }
+
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
@@ -268,9 +277,9 @@ namespace Empiria.ProjectManagement {
       } else {
         this.Tags = TagsCollection.Parse(tags);
       }
-      this.StartDate = data.Get<DateTime>("startDate", this.StartDate.Date);
-      this.TargetDate = data.Get<DateTime>("targetDate", this.TargetDate.Date);
-      this.DueDate = data.Get<DateTime>("dueDate", this.DueDate.Date);
+      this.StartDate = data.Get("startDate", this.StartDate.Date);
+      this.TargetDate = data.Get("targetDate", this.TargetDate.Date);
+      this.DueDate = data.Get("dueDate", this.DueDate.Date);
 
       this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
                                                             this.EstimatedDuration.ToString()));
@@ -283,8 +292,7 @@ namespace Empiria.ProjectManagement {
         int parentId = data.Get<int>("parentId", -1);
         this.Parent = parentId != -1 ? ProjectObject.Parse(parentId) : this.Parent;
 
-        int createdFromId = data.Get<int>("createdFromId", -1);
-        this.CreatedFrom = createdFromId != -1 ? ProjectObject.Parse(createdFromId) : this.Parent;
+        this.CreatedFrom = ProjectObject.Empty;
       }
     }
 
@@ -298,12 +306,19 @@ namespace Empiria.ProjectManagement {
       throw Assertion.AssertNoReachThisCode();
     }
 
+
+    internal void SetPosition(int position) {
+      this.Position = position;
+    }
+
+
     internal void SetDates(DateTime startDate, DateTime dueDate) {
       this.StartDate = startDate;
       this.DueDate = dueDate;
 
       this.Save();
     }
+
 
     public virtual void Update(JsonObject data) {
       Assertion.AssertObject(data, "data");

@@ -15,8 +15,6 @@ using Empiria.Json;
 
 using Empiria.ProjectManagement.Resources;
 
-using Empiria.Workflow.Definition;
-
 namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project as a set of well defined activities.</summary>
@@ -56,8 +54,6 @@ namespace Empiria.ProjectManagement {
       var ownerOrManager = Contact.Parse(51);
 
       var list = ProjectData.GetProjects(ownerOrManager);
-
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();
     }
@@ -127,43 +123,6 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-    #endregion Project participants
-
-    #region Public methods
-
-    public ProjectObject AddItem(JsonObject data) {
-      Assertion.AssertObject(data, "data");
-
-      ProjectObject activity = null;
-
-      int parentId = data.Get<int>("parentId", -1);
-      var workflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
-
-      if (parentId == -1 || workflowObject.WorkflowObjectType == WorkflowObjectType.Process) {
-        activity = new Summary(this, data);
-      } else {
-        var parent = this.Items.Find((x) => x.Id == parentId);
-
-        if (parent != null && workflowObject.WorkflowObjectType == WorkflowObjectType.Process) {
-          activity = new Summary(parent, data);
-        } else if (parent != null && workflowObject.WorkflowObjectType == WorkflowObjectType.Activity) {
-          activity = new Activity(parent, data);
-        } else {
-          throw new ValidationException("UnrecognizedActivityParent",
-                                        $"Invalid activity parent ({parentId}) for project ({this.Id}).");
-        }
-      }
-      activity.Save();
-
-      itemsList.Value.Add(activity);
-
-      return activity;
-    }
-
-    protected override void OnSave() {
-      ProjectData.WriteProject(this);
-    }
-
     internal FixedList<Contact> GetInvolvedContacts() {
       var list = new Contact[6];
 
@@ -177,7 +136,111 @@ namespace Empiria.ProjectManagement {
       return new FixedList<Contact>(list);
     }
 
+    #endregion Project participants
+
+    #region Public methods
+
+    public Activity AddActivity(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+      ProjectObject parent = GetParentFromJson(data);
+      int position = GetPositionFromJson(data);
+
+      var activity = new Activity(parent, data);
+
+      activity.SetPosition(position);
+
+      activity.Save();
+
+      if (activity.Position <= itemsList.Value.Count) {
+        ProjectData.UpdatePositionsStartingFrom(activity);
+
+        itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetProjectActivities(this));
+
+      } else {
+        itemsList.Value.Add(activity);
+      }
+
+      return activity;
+    }
+
+
+    public Activity GetActivity(string activityUID) {
+      Assertion.AssertObject(activityUID, "activityUID");
+
+      Activity activity = this.Items.Find((x) => x.UID == activityUID && x is Activity) as Activity;
+
+      Assertion.AssertObject(activity,
+                             $"Activity with uid ({activityUID}) is not part of project {this.Name}.");
+
+      return activity;
+    }
+
+    public void RemoveActivity(Activity activity) {
+      Assertion.AssertObject(activity, "activity");
+      Assertion.Assert(this.Items.Contains(activity),
+                      $"Activity {activity.Name} doesn't belong to this project.");
+
+      activity.Delete();
+
+      ProjectData.UpdatePositionsStartingFrom(activity);
+
+      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetProjectActivities(this));
+    }
+
+
+    public Summary AddSummary(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+
+      ProjectObject parent = GetParentFromJson(data);
+
+      Summary summary = new Summary(this, data);
+
+      summary.Save();
+
+      itemsList.Value.Add(summary);
+
+      return summary;
+    }
+
+
+    protected override void OnSave() {
+      ProjectData.WriteProject(this);
+    }
+
     #endregion Public methods
+
+    #region Private methods
+
+    private ProjectObject GetParentFromJson(JsonObject data) {
+      ProjectObject parent = data.Get<ProjectObject>("parentUID", ProjectObject.Empty);
+
+      if (parent.IsEmptyInstance) {
+        return this;
+      }
+
+      Assertion.Assert(this.Items.Contains(parent),
+                       new ValidationException("UnrecognizedActivityParent",
+                                               $"Invalid activity parent ({parent.Name}) for project ({this.UID})."));
+      return parent;
+    }
+
+
+    private int GetPositionFromJson(JsonObject data) {
+      int position = data.Get("position", -1);
+
+      if (position == -1) {
+        return this.Items.Count + 1;
+      }
+
+
+      Assertion.Assert(1 <= position && position <= this.Items.Count + 1,
+                       new ValidationException("PositionOutOfIndex",
+                                               $"Invalid activity position ({position}) for project ({this.UID})."));
+
+      return position;
+    }
+
+    #endregion Private methods
 
   } // class Project
 

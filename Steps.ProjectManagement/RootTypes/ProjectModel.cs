@@ -85,7 +85,7 @@ namespace Empiria.ProjectManagement {
 
       data.Add("workflowObjectId", BaseProcess.Id);
 
-      ProjectObject baseItem = baseProject.AddItem(data);
+      ProjectObject baseItem = baseProject.AddActivity(data);
 
       baseItem.SetDates(DateTime.Today, DateTime.Today);
 
