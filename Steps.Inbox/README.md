@@ -1,4 +1,4 @@
-﻿# Empiria Steps Inbox
+﻿# Empiria Inbox
 
   Centralized task management solution.
 

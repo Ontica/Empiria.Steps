@@ -70,15 +70,14 @@ namespace Empiria.ProjectManagement.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/activities/as-gantt")]
-    public CollectionModel GetProjectActivitiesAsGantt([FromUri] ActivityFilter filter = null,
+    public CollectionModel GetProjectActivitiesAsGantt(string projectUID,
+                                                       [FromUri] ActivityFilter filter = null,
                                                        [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
       try {
 
         if (filter == null) {
           filter = new ActivityFilter();
         }
-
-        var projectUID = "sdlkjfh34";
 
         var project = Project.Parse(projectUID);
 
@@ -94,14 +93,17 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/activities/{activityUID}")]
-    public SingleObjectModel GetProjectActivity(string activityUID) {
+    [Route("v1/project-management/activities/{activityUIDOrId}")]
+    public SingleObjectModel GetProjectActivity(string activityUIDOrId) {
       try {
         Activity activity = null;
-        if (EmpiriaString.IsInteger(activityUID)) {
-          activity = Activity.Parse(int.Parse(activityUID));
+
+        if (EmpiriaString.IsInteger(activityUIDOrId)) {
+          activity = Activity.Parse(int.Parse(activityUIDOrId));
+
         } else {
-          activity = Activity.Parse(activityUID);
+          activity = Activity.Parse(activityUIDOrId);
+
         }
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
@@ -126,7 +128,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        Activity activity = (Activity) project.AddItem(bodyAsJson);
+        Activity activity = (Activity) project.AddActivity(bodyAsJson);
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(ProjectObject).FullName);
@@ -146,15 +148,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        Activity activity = null;
-        if (EmpiriaString.IsInteger(activityUID)) {
-          activity = Activity.Parse(int.Parse(activityUID));
-        } else {
-          activity = Activity.Parse(activityUID);
-        }
-
-        Assertion.Assert(activity.Project.Equals(project),
-                         $"Activity with uid ({activityUID}) is not part of project with uid ({projectUID}).");
+        Activity activity = project.GetActivity(activityUID);
 
         activity.Close(bodyAsJson);
 
@@ -176,15 +170,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        Activity activity = null;
-        if (EmpiriaString.IsInteger(activityUID)) {
-          activity = Activity.Parse(int.Parse(activityUID));
-        } else {
-          activity = Activity.Parse(activityUID);
-        }
-
-        Assertion.Assert(activity.Project.Equals(project),
-                         $"Activity with uid ({activityUID}) is not part of project with uid ({projectUID}).");
+        Activity activity = project.GetActivity(activityUID);
 
         activity.Update(bodyAsJson);
 
@@ -192,6 +178,23 @@ namespace Empiria.ProjectManagement.WebApi {
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpDelete]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}")]
+    public NoDataModel DeleteActivity(string projectUID, string activityUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+
+        project.RemoveActivity(activity);
+
+        return new NoDataModel(this.Request);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

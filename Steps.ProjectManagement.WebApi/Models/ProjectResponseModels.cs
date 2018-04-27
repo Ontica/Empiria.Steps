@@ -40,6 +40,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
       foreach (var model in list) {
         var process = model.BaseProcess;
+
         var item = new {
           uid = process.UID,
           type = process.WorkflowObjectType.Name,
@@ -61,8 +62,10 @@ namespace Empiria.ProjectManagement.WebApi {
       foreach (var item in list) {
         if (item is Activity) {
           array.Add(((Activity) item).ToResponse());
+
         } else if (item is Summary) {
           array.Add(((Summary) item).ToResponse());
+
         }
       }
       return array;
@@ -75,8 +78,10 @@ namespace Empiria.ProjectManagement.WebApi {
       foreach (var item in list) {
         if (item is Activity && ((Activity) item).Responsible.Id != -1) {
           array.Add(((Activity) item).ToInboxResponse());
+
         } else if (item is Summary) {
           array.Add(((Summary) item).ToResponse());
+
         }
       }
       return array;
@@ -98,11 +103,11 @@ namespace Empiria.ProjectManagement.WebApi {
           name = activity.Responsible.Nickname
         },
         description = activity.Notes,
-        received = DateTime.Parse("2017-10-" + EmpiriaMath.GetRandom(01, 31)).ToResponse(),
+        received = DateTime.Parse("2017-10-" + EmpiriaMath.GetRandom(01, 31)),
         status = "Active",
         extensionData = new {
-          targetDate = activity.TargetDate.ToResponse(),
-          dueDate = activity.DueDate.ToResponse(),
+          targetDate = activity.TargetDate,
+          dueDate = activity.DueDate,
           ragStatus = activity.RagStatus,
           tags = activity.Tags.Items,
           stage = activity.Stage
@@ -129,10 +134,13 @@ namespace Empiria.ProjectManagement.WebApi {
       foreach (var item in list) {
         if (item is Activity) {
           array.Add(((Activity) item).ToGanttResponse());
+
         } else if (item is Summary) {
           array.Add(((Summary) item).ToGanttResponse());
+
         }
       }
+
       return array;
     }
 
@@ -147,8 +155,9 @@ namespace Empiria.ProjectManagement.WebApi {
         text = activity.Name,
         start_date = (activity.EndDate < ExecutionServer.DateMaxValue ?
                             activity.StartDate : activity.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
-        duration = activity.EndDate <  ExecutionServer.DateMaxValue ?
+        duration = activity.EndDate < ExecutionServer.DateMaxValue ?
                             (int) activity.EndDate.Subtract(activity.StartDate).TotalDays : activity.EstimatedDuration.Value,
+        position = activity.Position,
         ragStatus = activity.RagStatus,
         parent = activity.Parent is Summary ? activity.Parent.Id : 0
       };
@@ -165,10 +174,12 @@ namespace Empiria.ProjectManagement.WebApi {
                                   summary.StartDate : summary.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
         duration = summary.EndDate < ExecutionServer.DateMaxValue ?
                            (int) summary.EndDate.Subtract(summary.StartDate).TotalDays : summary.EstimatedDuration.Value,
+        position = summary.Position,
         ragStatus = summary.RagStatus,
         parent = summary.Parent is Summary ? summary.Parent.Id : 0
       };
     }
+
 
     static internal object ToResponse(this Project project) {
       return new {
@@ -183,16 +194,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     static internal object ToResponse(this Activity activity) {
-      //Procedure procedure = null;
-
-      //if (activity.WorkflowObject.ProcedureId != -1) {
-      //  procedure = Procedure.Parse(activity.WorkflowObject.ProcedureId);
-      //} else {
-      //  procedure = Procedure.Empty;
-      //}
-
       return new {
-        id = activity.Id,
         uid = activity.UID,
         type = activity.ProjectObjectType.Name,
         name = activity.Name,
@@ -214,27 +216,18 @@ namespace Empiria.ProjectManagement.WebApi {
           name = activity.RequestedBy.Nickname,
         },
         parent = new {
-          id = activity.Parent.Id,
           uid = activity.Parent.UID,
           type = activity.Parent.ProjectObjectType.Name,
           name = activity.Parent.Name,
         },
-        procedure = new {
-          uid = "Undefined"
-        },
-        //procedure = new {
-        //  uid = procedure.UID,
-        //  name = procedure.Name,
-        //  code = procedure.Code,
-        //  entity = procedure.EntityName
-        //},
         estimatedDuration = activity.EstimatedDuration.ToString(),
-        startDate = activity.StartDate.ToResponse(),
-        targetDate = activity.TargetDate.ToResponse(),
-        endDate = activity.EndDate.ToResponse(),
-        dueDate = activity.DueDate.ToResponse(),
-        ragStatus = activity.RagStatus,
+        startDate = activity.StartDate,
+        targetDate = activity.TargetDate,
+        endDate = activity.EndDate,
+        dueDate = activity.DueDate,
         tags = activity.Tags.Items,
+        position = activity.Position,
+        ragStatus = activity.RagStatus,
         stage = activity.Stage
       };
     }
@@ -242,7 +235,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
     static internal object ToResponse(this Summary summary) {
       return new {
-        id = summary.Id,
         uid = summary.UID,
         type = summary.ProjectObjectType.Name,
         name = summary.Name,
@@ -257,30 +249,21 @@ namespace Empiria.ProjectManagement.WebApi {
           name = summary.Resource.Name,
         },
         parent = new {
-          id = summary.Parent.Id,
           uid = summary.Parent.UID,
           type = summary.Parent.ProjectObjectType.Name,
           name = summary.Parent.Name,
         },
         estimatedDuration = summary.EstimatedDuration.ToString(),
-        startDate = summary.StartDate.ToResponse(),
-        targetDate = summary.TargetDate.ToResponse(),
-        endDate = summary.EndDate.ToResponse(),
-        dueDate = summary.DueDate.ToResponse(),
+        startDate = summary.StartDate,
+        targetDate = summary.TargetDate,
+        endDate = summary.EndDate,
+        dueDate = summary.DueDate,
+        position = summary.Position,
         ragStatus = summary.RagStatus,
         stage = summary.Stage
       };
     }
 
-    static internal string ToResponse(this DateTime date) {
-      if (date == ExecutionServer.DateMaxValue) {
-        return String.Empty;
-      } else if (date == ExecutionServer.DateMinValue) {
-        return String.Empty;
-      } else {
-        return date.ToString("yyyy-MM-ddTHH:mm:ss");
-      }
-    }
 
     static internal object ToResponse(this Task task) {
       return new {
@@ -292,6 +275,7 @@ namespace Empiria.ProjectManagement.WebApi {
         endDate = task.EndDate,
         dueDate = task.DueDate,
         estimatedDuration = task.EstimatedDuration.ToString(),
+        position = task.Position,
         ragStatus = task.RagStatus,
         tags = task.Tags.Items,
         assignedToUID = task.AssignedTo.UID,
