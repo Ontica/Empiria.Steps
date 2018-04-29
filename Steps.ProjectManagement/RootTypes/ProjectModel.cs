@@ -85,7 +85,7 @@ namespace Empiria.ProjectManagement {
 
       data.Add("workflowObjectId", BaseProcess.Id);
 
-      ProjectObject baseItem = baseProject.AddActivity(data);
+      ProjectItem baseItem = baseProject.AddActivity(data);
 
       baseItem.SetDates(DateTime.Today, DateTime.Today);
 
@@ -96,7 +96,7 @@ namespace Empiria.ProjectManagement {
         var baseSummary = (Summary) baseItem;
         var stepAsJson = this.ConvertStepToJson(baseSummary, step, daysCount);
 
-        baseSummary.AddActivity(stepAsJson);
+        baseProject.AddActivity(stepAsJson);
 
         daysCount += step.EstimatedDuration.Value;
       }

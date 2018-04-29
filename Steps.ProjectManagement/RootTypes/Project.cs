@@ -4,51 +4,56 @@
 *  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : Project                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a project as a set of well defined activities.                                       *
+w  Summary  : Describes a project as well defined set of activities.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 
+using Empiria.Collections;
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.StateEnums;
+
+using Empiria.Workflow.Definition;
 
 using Empiria.ProjectManagement.Resources;
 
-namespace Empiria.ProjectManagement {
+  namespace Empiria.ProjectManagement {
 
-  /// <summary>Describes a project as a set of well defined activities.</summary>
-  public class Project : ProjectObject {
+  /// <summary>Describes a project as well defined set of activities.</summary>
+  public class Project : BaseObject {
 
     #region Fields
 
-    private Lazy<List<ProjectObject>> itemsList = null;
+    private Lazy<List<ProjectItem>> itemsList = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected Project() : this(ProjectObjectType.ProjectType) {
-
+    protected Project() {
+      // Required by Empiria Framework.
     }
 
-    protected Project(ProjectObjectType powertype) : base(powertype) {
-      // Required by Empiria Framework for all partitioned types.
-    }
 
-    static internal new Project Parse(int id) {
+    static internal Project Parse(int id) {
       return BaseObject.ParseId<Project>(id);
     }
+
 
     static public Project Parse(string uid) {
       return BaseObject.ParseKey<Project>(uid);
     }
 
-    static public new Project Empty {
+
+    static public Project Empty {
       get {
         return BaseObject.ParseEmpty<Project>();
       }
     }
+
 
     static public FixedList<Project> GetList(string filter = "") {
       var ownerOrManager = Contact.Parse(51);
@@ -58,13 +63,144 @@ namespace Empiria.ProjectManagement {
       return list.ToFixedList();
     }
 
+
     protected override void OnInitialize() {
-      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetProjectActivities(this));
+      itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetProjectActivities(this));
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
+
+    [DataField("UID")]
+    public string UID {
+      get;
+      private set;
+    }
+
+
+    [DataField("Name")]
+    public string Name {
+      get;
+      private set;
+    }
+
+
+    [DataField("Notes")]
+    public string Notes {
+      get;
+      private set;
+    }
+
+
+    [DataField("EstimatedDuration")]
+    public Duration EstimatedDuration {
+      get;
+      private set;
+    } = Duration.Empty;
+
+
+    [DataField("StartDate")]
+    public DateTime StartDate {
+      get;
+      private set;
+    } = ExecutionServer.DateMinValue;
+
+
+    [DataField("TargetDate")]
+    public DateTime TargetDate {
+      get;
+      private set;
+    } = ExecutionServer.DateMinValue;
+
+
+    [DataField("EndDate")]
+    public DateTime EndDate {
+      get;
+      private set;
+    } = ExecutionServer.DateMinValue;
+
+
+    [DataField("DueDate")]
+    public DateTime DueDate {
+      get;
+      private set;
+    } = ExecutionServer.DateMinValue;
+
+
+    [DataField("Tags")]
+    public TagsCollection Tags {
+      get;
+      private set;
+    } = TagsCollection.Empty;
+
+
+    [DataField("RagStatus", Default = RAGStatus.NoColor)]
+    public RAGStatus RagStatus {
+      get;
+      private set;
+    }
+
+
+    public string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.Name, this.Tags.ToString());
+      }
+    }
+
+
+    [DataField("ItemPosition")]
+    public int Position {
+      get;
+      private set;
+    }
+
+
+    [DataField("OwnerId")]
+    public Contact Owner {
+      get;
+      private set;
+    }
+
+
+    protected Project Parent {
+      get;
+      private set;
+    }
+
+
+    protected internal ProjectItem CreatedFrom {
+      get;
+      private set;
+    }
+
+
+    [DataField("ExtData")]
+    protected internal JsonObject ExtensionData {
+      get;
+      private set;
+    }
+
+
+    [DataField("Status", Default = ActivityStatus.Pending)]
+    public ActivityStatus Status {
+      get;
+      private set;
+    }
+
+
+    [DataField("Stage", Default = ItemStage.Backlog)]
+    public ItemStage Stage {
+      get;
+      private set;
+    }
+
+
+    [DataField("WorkflowObjectId")]
+    public WorkflowObject WorkflowObject {
+      get;
+      private set;
+    } = WorkflowObject.Empty;
 
 
     [DataField("ResponsibleId")]
@@ -85,13 +221,13 @@ namespace Empiria.ProjectManagement {
 
     #region Project structure
 
-    public FixedList<ProjectObject> Items {
+    public FixedList<ProjectItem> Items {
       get {
         return itemsList.Value.ToFixedList();
       }
     }
 
-    public FixedList<ProjectObject> GetActivities(ActivityFilter filter = null,
+    public FixedList<ProjectItem> GetActivities(ActivityFilter filter = null,
                                                   ActivityOrder orderBy = ActivityOrder.Default) {
       if (filter == null) {
         filter = new ActivityFilter();
@@ -111,17 +247,20 @@ namespace Empiria.ProjectManagement {
       }
     }
 
+
     public FixedList<Contact> Requesters {
       get {
         return ProjectContactsData.GetProjectRequesters(this);
       }
     }
 
+
     public FixedList<Contact> TaskManagers {
       get {
         return ProjectContactsData.GetProjectTaskManagers(this);
       }
     }
+
 
     internal FixedList<Contact> GetInvolvedContacts() {
       var list = new Contact[6];
@@ -142,10 +281,11 @@ namespace Empiria.ProjectManagement {
 
     public Activity AddActivity(JsonObject data) {
       Assertion.AssertObject(data, "data");
-      ProjectObject parent = GetParentFromJson(data);
+
+      ProjectItem parent = GetParentFromJson(data);
       int position = GetPositionFromJson(data);
 
-      var activity = new Activity(parent, data);
+      var activity = new Activity(this, parent, data);
 
       activity.SetPosition(position);
 
@@ -154,7 +294,7 @@ namespace Empiria.ProjectManagement {
       if (activity.Position <= itemsList.Value.Count) {
         ProjectData.UpdatePositionsStartingFrom(activity);
 
-        itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetProjectActivities(this));
+        itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetProjectActivities(this));
 
       } else {
         itemsList.Value.Add(activity);
@@ -184,16 +324,16 @@ namespace Empiria.ProjectManagement {
 
       ProjectData.UpdatePositionsStartingFrom(activity);
 
-      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetProjectActivities(this));
+      itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetProjectActivities(this));
     }
 
 
     public Summary AddSummary(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
-      ProjectObject parent = GetParentFromJson(data);
+      ProjectItem parent = GetParentFromJson(data);
 
-      Summary summary = new Summary(this, data);
+      Summary summary = new Summary(this, parent, data);
 
       summary.Save();
 
@@ -211,11 +351,12 @@ namespace Empiria.ProjectManagement {
 
     #region Private methods
 
-    private ProjectObject GetParentFromJson(JsonObject data) {
-      ProjectObject parent = data.Get<ProjectObject>("parentUID", ProjectObject.Empty);
+
+    private ProjectItem GetParentFromJson(JsonObject data) {
+      ProjectItem parent = data.Get<ProjectItem>("parentUID", ProjectItem.Empty);
 
       if (parent.IsEmptyInstance) {
-        return this;
+        return parent;
       }
 
       Assertion.Assert(this.Items.Contains(parent),

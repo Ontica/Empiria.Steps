@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Solution : Empiria Steps                                    System  : Project Management System           *
 *  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
-*  Type     : ProjectObject                                    License : Please read LICENSE.txt file        *
+*  Type     : ProjectItem                                      License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a project as a set of well defined activities.                                       *
+*  Summary  : Abstract class that describes a project item.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -21,22 +21,29 @@ using Empiria.Workflow.Definition;
 
 namespace Empiria.ProjectManagement {
 
-  /// <summary>Describes a project as a set of well defined activities.</summary>
-  [PartitionedType(typeof(ProjectObjectType))]
-  public class ProjectObject : BaseObject {
+  /// <summary>Abstract class that describes a project item.</summary>
+  [PartitionedType(typeof(ProjectItemType))]
+  public abstract class ProjectItem : BaseObject {
 
     #region Constructors and parsers
 
-    protected ProjectObject(ProjectObjectType powertype) : base(powertype) {
+    protected ProjectItem(ProjectItemType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal ProjectObject(ProjectObjectType type,
-                                     ProjectObject parent, JsonObject data) : base(type) {
+    protected internal ProjectItem(ProjectItemType type,
+                                   Project project, ProjectItem parent,
+                                   JsonObject data) : base(type) {
       Assertion.AssertObject(type, "type");
+      Assertion.AssertObject(project, "project");
       Assertion.AssertObject(parent, "parent");
       Assertion.AssertObject(data, "data");
 
+      Assertion.Assert(!project.IsEmptyInstance,
+                       "Project can't be the empty instance.");
+
+
+      this.Project = project;
       this.Parent = parent;
       this.Owner = parent.Owner;
 
@@ -45,20 +52,23 @@ namespace Empiria.ProjectManagement {
       this.Load(data);
     }
 
-    static public ProjectObject Parse(int id) {
-      return BaseObject.ParseId<ProjectObject>(id);
+
+    static public ProjectItem Parse(int id) {
+      return BaseObject.ParseId<ProjectItem>(id);
     }
 
-    static public ProjectObject Empty {
+
+    static public ProjectItem Empty {
       get {
-        return BaseObject.ParseEmpty<ProjectObject>();
+        return BaseObject.ParseEmpty<ProjectItem>();
       }
     }
 
+
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       if ((int) row["ProjectObjectId"] != -1) {
-        this.Parent = ProjectObject.Parse((int) row["ParentId"]);
-        this.CreatedFrom = ProjectObject.Parse((int) row["CreatedFromId"]);
+        this.Parent = ProjectItem.Parse((int) row["ParentId"]);
+        this.CreatedFrom = ProjectItem.Parse((int) row["CreatedFromId"]);
       } else {
         this.Parent = this;
         this.CreatedFrom = this;
@@ -69,9 +79,9 @@ namespace Empiria.ProjectManagement {
 
     #region Public properties
 
-    public ProjectObjectType ProjectObjectType {
+    public ProjectItemType ProjectObjectType {
       get {
-        return (ProjectObjectType) base.GetEmpiriaType();
+        return (ProjectItemType) base.GetEmpiriaType();
       }
     }
 
@@ -152,6 +162,7 @@ namespace Empiria.ProjectManagement {
       }
     }
 
+
     [DataField("ItemPosition")]
     public int Position {
       get;
@@ -166,13 +177,20 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    protected ProjectObject Parent {
+    [DataField("BaseProjectId")]
+    public Project Project {
       get;
       private set;
     }
 
 
-    protected internal ProjectObject CreatedFrom {
+    public ProjectItem Parent {
+      get;
+      private set;
+    }
+
+
+    protected internal ProjectItem CreatedFrom {
       get;
       private set;
     }
@@ -214,6 +232,7 @@ namespace Empiria.ProjectManagement {
       Assertion.AssertObject(data, "data");
     }
 
+
     public virtual void Close(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
@@ -228,43 +247,18 @@ namespace Empiria.ProjectManagement {
       this.Status = ActivityStatus.Completed;
 
       this.Save();
-
-
-      //FixedList<WorkflowObject> nextSteps = this.WorkflowObject.NextSteps();
-
-      //foreach (var step in nextSteps) {
-
-      //}
-
-      //int daysCount = 0;
-
-      //foreach (var step in nextSteps) {
-      //  if (step is Process) {
-
-      //  } else if (step is ProcessActivity) {
-      //    this.Add
-      //  }
-
-      //}
-
-      //    var stepAsJson = this.ConvertStepToJson(baseActivity, step, daysCount);
-
-      //  baseActivity.AddActivity(stepAsJson);
-
-      //  daysCount += step.EstimatedDuration.Value;
-      //}
-
-      //baseActivity.SetDates(startDate, startDate.AddDays(daysCount));
     }
+
 
     internal void Delete() {
       Assertion.Assert(this.Status == ActivityStatus.Pending,
-                       "Deletion is only possible to activities in active or pending status.");
+                       "Deletion is only possible to project items in pending status.");
 
       this.Status = ActivityStatus.Deleted;
 
       this.Save();
     }
+
 
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
@@ -272,11 +266,10 @@ namespace Empiria.ProjectManagement {
       this.RagStatus = data.Get<RAGStatus>("ragStatus", this.RagStatus);
 
       var tags = data.GetList<string>("tags", false);
-      if (tags == null || tags.Count == 0) {
-        // no-op
-      } else {
+      if (tags != null && tags.Count != 0) {
         this.Tags = TagsCollection.Parse(tags);
       }
+
       this.StartDate = data.Get("startDate", this.StartDate.Date);
       this.TargetDate = data.Get("targetDate", this.TargetDate.Date);
       this.DueDate = data.Get("dueDate", this.DueDate.Date);
@@ -285,22 +278,26 @@ namespace Empiria.ProjectManagement {
                                                             this.EstimatedDuration.ToString()));
 
       this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
+
       if (this.Name.Length == 0) {
         this.Name = this.WorkflowObject.Name;
       }
+
       if (!this.IsEmptyInstance) {
         int parentId = data.Get<int>("parentId", -1);
-        this.Parent = parentId != -1 ? ProjectObject.Parse(parentId) : this.Parent;
+        this.Parent = parentId != -1 ? ProjectItem.Parse(parentId) : this.Parent;
 
-        this.CreatedFrom = ProjectObject.Empty;
+        this.CreatedFrom = ProjectItem.Empty;
       }
     }
+
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
         this.UID = EmpiriaString.BuildRandomString(6, 24);
       }
     }
+
 
     protected override void OnSave() {
       throw Assertion.AssertNoReachThisCode();
@@ -329,6 +326,6 @@ namespace Empiria.ProjectManagement {
 
     #endregion Private methods
 
-  } // class ProjectObject
+  } // class ProjectItem
 
 } // namespace Empiria.ProjectManagement

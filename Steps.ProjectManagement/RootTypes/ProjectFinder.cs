@@ -39,7 +39,7 @@ namespace Empiria.ProjectManagement {
 
     #region Public methods
 
-    public FixedList<ProjectObject> GetActivitiesList(ActivityOrder orderBy = ActivityOrder.Default) {
+    public FixedList<ProjectItem> GetActivitiesList(ActivityOrder orderBy = ActivityOrder.Default) {
       var list = ProjectData.GetNoSummaryActivities(this.FilterAsSql());
 
       list = this.ApplyNoSqlFilter(list);
@@ -48,7 +48,7 @@ namespace Empiria.ProjectManagement {
       return list.ToFixedList();
     }
 
-    public FixedList<ProjectObject> GetActivitiesTree(ActivityOrder orderBy = ActivityOrder.Default) {
+    public FixedList<ProjectItem> GetActivitiesTree(ActivityOrder orderBy = ActivityOrder.Default) {
       throw new NotImplementedException();
 
       //var project = ProjectData.GetNoSummaryActivities(this.Filter);
@@ -63,7 +63,7 @@ namespace Empiria.ProjectManagement {
 
     #region Private methods
 
-    private List<ProjectObject> ApplySort(List<ProjectObject> list, ActivityOrder orderBy) {
+    private List<ProjectItem> ApplySort(List<ProjectItem> list, ActivityOrder orderBy) {
       switch (orderBy) {
         case ActivityOrder.DueDate:
 
@@ -114,7 +114,7 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-    private List<ProjectObject> ApplyNoSqlFilter(List<ProjectObject> list) {
+    private List<ProjectItem> ApplyNoSqlFilter(List<ProjectItem> list) {
       return list;
     }
 

@@ -75,7 +75,7 @@ namespace Empiria.ProjectManagement.WebApi {
         var fullActivitiesList = project.GetActivities();
 
         return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
-                                   typeof(ProjectObject).FullName);
+                                   typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

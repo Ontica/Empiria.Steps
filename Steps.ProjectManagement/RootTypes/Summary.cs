@@ -18,34 +18,28 @@ using Empiria.ProjectManagement.Resources;
 namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project activity.</summary>
-  public class Summary : ProjectObject {
+  public class Summary : ProjectItem {
 
     #region Fields
 
-    private Lazy<List<ProjectObject>> itemsList = null;
+    private Lazy<List<ProjectItem>> itemsList = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected Summary() : this(ProjectObjectType.SummaryType) {
+    protected Summary() : this(ProjectItemType.SummaryType) {
 
     }
 
 
-    protected Summary(ProjectObjectType powertype) : base(powertype) {
+    protected Summary(ProjectItemType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal Summary(ProjectObject parent, JsonObject data) :
-                               base(ProjectObjectType.SummaryType, parent, data) {
-      if (parent is Activity) {
-        this.Project = ((Activity) parent).Project;
-      } else if (parent is Summary) {
-        this.Project = ((Summary) parent).Project;
-      } else {
-        this.Project = (Project) parent;
-      }
+    protected internal Summary(Project project, ProjectItem parent, JsonObject data) :
+                               base(ProjectItemType.SummaryType, project, parent, data) {
+
       this.AssertIsValid(data);
       this.Load(data);
     }
@@ -65,7 +59,7 @@ namespace Empiria.ProjectManagement {
     }
 
     protected override void OnInitialize() {
-      itemsList = new Lazy<List<ProjectObject>>(() => ProjectData.GetAllActivities(this));
+      itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetAllActivities(this));
     }
 
     #endregion Constructors and parsers
@@ -105,21 +99,14 @@ namespace Empiria.ProjectManagement {
     #region Properties related to the activity structure
 
 
-    [DataField("BaseProjectId")]
-    public Project Project {
-      get;
-      private set;
-    }
-
-
-    public FixedList<ProjectObject> Subactivities {
+    public FixedList<ProjectItem> Subactivities {
       get {
         return itemsList.Value.ToFixedList();
       }
     }
 
 
-    public new ProjectObject Parent {
+    public new ProjectItem Parent {
       get {
         return base.Parent;
       }
@@ -127,7 +114,7 @@ namespace Empiria.ProjectManagement {
 
     public int Level {
       get {
-        if (this.Parent.ProjectObjectType == ProjectObjectType.SummaryType) {
+        if (this.Parent.ProjectObjectType == ProjectItemType.SummaryType) {
           return ((Summary) this.Parent).Level + 1;
         } else {
           return 1;
@@ -151,17 +138,6 @@ namespace Empiria.ProjectManagement {
       this.Responsible = Contact.Parse(data.Get("responsibleUID", "Undefined"));
       this.RequestedTime = data.Get<DateTime>("requestedTime", this.RequestedTime);
       this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Undefined"));
-    }
-
-
-    public Activity AddActivity(JsonObject data) {
-      var activity = new Activity(this, data);
-
-      activity.Save();
-
-      itemsList.Value.Add(activity);
-
-      return activity;
     }
 
 

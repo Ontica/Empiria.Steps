@@ -18,7 +18,7 @@ using Empiria.ProjectManagement.Resources;
 namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project activity.</summary>
-  public class Activity : ProjectObject {
+  public class Activity : ProjectItem {
 
     #region Fields
 
@@ -29,28 +29,19 @@ namespace Empiria.ProjectManagement {
 
     #region Constructors and parsers
 
-    protected Activity() : this(ProjectObjectType.ActivityType) {
+    protected Activity() : this(ProjectItemType.ActivityType) {
 
     }
 
 
-    protected Activity(ProjectObjectType powertype) : base(powertype) {
+    protected Activity(ProjectItemType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
 
-    protected internal Activity(ProjectObject parent, JsonObject data) :
-                                base(ProjectObjectType.ActivityType, parent, data) {
-      if (parent is Activity) {
-        this.Project = ((Activity) parent).Project;
+    protected internal Activity(Project project, ProjectItem parent, JsonObject data) :
+                                base(ProjectItemType.ActivityType, project, parent, data) {
 
-      } else if (parent is Summary) {
-        this.Project = ((Summary) parent).Project;
-
-      } else {
-        this.Project = (Project) parent;
-
-      }
       this.AssertIsValid(data);
       this.Load(data);
     }
@@ -111,23 +102,9 @@ namespace Empiria.ProjectManagement {
     #region Properties related to the activity structure
 
 
-    [DataField("BaseProjectId")]
-    public Project Project {
-      get;
-      private set;
-    }
-
-
     public FixedList<Activity> Subactivities {
       get {
         return subactivitiesList.Value.ToFixedList();
-      }
-    }
-
-
-    public new ProjectObject Parent {
-      get {
-        return base.Parent;
       }
     }
 
@@ -156,20 +133,10 @@ namespace Empiria.ProjectManagement {
       this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Undefined"));
     }
 
-    public Activity AddActivity(JsonObject data) {
-      var activity = new Activity(this, data);
-
-      activity.Save();
-
-      subactivitiesList.Value.Add(activity);
-
-      return activity;
-    }
 
     protected override void OnSave() {
       ProjectData.WriteActivity(this);
     }
-
 
     #endregion Public methods
 

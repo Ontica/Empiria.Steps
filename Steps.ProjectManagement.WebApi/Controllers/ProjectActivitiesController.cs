@@ -37,7 +37,7 @@ namespace Empiria.ProjectManagement.WebApi {
         var fullActivitiesList = project.GetActivities(filter, orderBy);
 
         return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
-                                   typeof(ProjectObject).FullName);
+                                   typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -57,10 +57,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var finder = new ProjectFinder(filter);
 
-        FixedList<ProjectObject> activities = finder.GetActivitiesList(orderBy);
+        FixedList<ProjectItem> activities = finder.GetActivitiesList(orderBy);
 
         return new CollectionModel(this.Request, activities.ToResponse(),
-                                   typeof(ProjectObject).FullName);
+                                   typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -84,7 +84,7 @@ namespace Empiria.ProjectManagement.WebApi {
         var fullActivitiesList = project.GetActivities();
 
         return new CollectionModel(this.Request, fullActivitiesList.ToGanttResponse(),
-                                   typeof(ProjectObject).FullName);
+                                   typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -107,7 +107,7 @@ namespace Empiria.ProjectManagement.WebApi {
         }
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
-                                     typeof(ProjectObject).FullName);
+                                     typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -131,7 +131,7 @@ namespace Empiria.ProjectManagement.WebApi {
         Activity activity = (Activity) project.AddActivity(bodyAsJson);
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
-                                     typeof(ProjectObject).FullName);
+                                     typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

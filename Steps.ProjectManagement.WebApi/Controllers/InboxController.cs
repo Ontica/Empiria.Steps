@@ -31,10 +31,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var finder = new ProjectFinder(filter);
 
-        FixedList<ProjectObject> activities = finder.GetActivitiesList(orderBy);
+        FixedList<ProjectItem> activities = finder.GetActivitiesList(orderBy);
 
         return new CollectionModel(this.Request, activities.ToInboxResponse(),
-                                   typeof(ProjectObject).FullName);
+                                   typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

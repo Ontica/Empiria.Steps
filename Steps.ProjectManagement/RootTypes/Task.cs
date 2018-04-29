@@ -15,34 +15,29 @@ using Empiria.Json;
 namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a task.</summary>
-  public class Task : ProjectObject {
+  public class Task : ProjectItem {
 
     #region Constructors and parsers
 
-    protected Task(ProjectObjectType powertype) : base(powertype) {
+    protected Task(ProjectItemType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected Task() : this(ProjectObjectType.TaskType) {
+    protected Task() : this(ProjectItemType.TaskType) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal Task(Project project, JsonObject data) :
-                                    base(ProjectObjectType.TaskType, project, data) {
+    protected internal Task(Project project, ProjectItem parent, JsonObject data) :
+                            base(ProjectItemType.TaskType, project, parent, data) {
       this.AssertIsValid(data);
 
       this.Load(data);
     }
 
-    static public new Task Parse(int id) {
+    static internal new Task Parse(int id) {
       return BaseObject.ParseId<Task>(id);
     }
 
-    static public new Task Empty {
-      get {
-        return BaseObject.ParseEmpty<Task>();
-      }
-    }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       base.OnLoadObjectData(row);

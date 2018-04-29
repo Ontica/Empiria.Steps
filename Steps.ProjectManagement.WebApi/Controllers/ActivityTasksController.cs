@@ -32,7 +32,7 @@ namespace Empiria.ProjectManagement.WebApi {
         }
 
         return new CollectionModel(this.Request, activity.Tasks.ToResponse(),
-                                   typeof(ProjectObject).FullName);
+                                   typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

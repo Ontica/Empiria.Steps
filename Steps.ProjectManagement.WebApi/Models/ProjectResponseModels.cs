@@ -56,7 +56,7 @@ namespace Empiria.ProjectManagement.WebApi {
       return array;
     }
 
-    static internal ICollection ToResponse(this IList<ProjectObject> list) {
+    static internal ICollection ToResponse(this IList<ProjectItem> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var item in list) {
@@ -72,7 +72,7 @@ namespace Empiria.ProjectManagement.WebApi {
     }
 
 
-    static internal ICollection ToInboxResponse(this IList<ProjectObject> list) {
+    static internal ICollection ToInboxResponse(this IList<ProjectItem> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var item in list) {
@@ -128,7 +128,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     /// <summary>Converts a list of project activities as a response useful for the Gantt component.</summary>
-    static internal ICollection ToGanttResponse(this IList<ProjectObject> list) {
+    static internal ICollection ToGanttResponse(this IList<ProjectItem> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var item in list) {
