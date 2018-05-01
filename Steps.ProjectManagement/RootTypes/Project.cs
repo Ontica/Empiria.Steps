@@ -343,6 +343,13 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
+    protected override void OnBeforeSave() {
+      if (this.IsNew) {
+        this.UID = EmpiriaString.BuildRandomString(6, 24);
+      }
+    }
+
+
     protected override void OnSave() {
       ProjectData.WriteProject(this);
     }

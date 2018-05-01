@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : ProjectsModelsController                     License   : Please read LICENSE.txt file          *
+*  Type     : ProjectModelsController                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Web services used to interact with project models.                                             *
 *                                                                                                            *
@@ -18,7 +18,7 @@ using Empiria.Workflow.Definition;
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Web services used to interact with project models.</summary>
-  public class ProjectsModelsController : WebApiController {
+  public class ProjectModelController : WebApiController {
 
     #region GET methods
 
@@ -84,6 +84,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #endregion UPDATE methods
 
-  }  // class ProjectsModelsController
+  }  // class ProjectModelsController
 
 }  // namespace Empiria.ProjectManagement.WebApi

@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : ProjectsController                           License   : Please read LICENSE.txt file          *
+*  Type     : ProjectController                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and set projects data.                                                  *
 *                                                                                                            *
@@ -17,9 +17,9 @@ using Empiria.Contacts;
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Public API to retrieve and set projects data.</summary>
-  public class ProjectsController : WebApiController {
+  public class ProjectController : WebApiController {
 
-    #region GET methods
+    #region Get methods
 
     [HttpGet]
     [Route("v1/project-management/projects")]
@@ -42,7 +42,7 @@ namespace Empiria.ProjectManagement.WebApi {
       try {
         var project = Project.Parse(projectUID);
 
-        return new CollectionModel(this.Request, project.Responsibles.ToResponse(),
+        return new CollectionModel(this.Request, project.Responsibles.ToShortResponse(),
                                    typeof(Contact).FullName);
 
       } catch (Exception e) {
@@ -57,7 +57,7 @@ namespace Empiria.ProjectManagement.WebApi {
       try {
         var project = Project.Parse(projectUID);
 
-        return new CollectionModel(this.Request, project.Requesters.ToResponse(),
+        return new CollectionModel(this.Request, project.Requesters.ToShortResponse(),
                                    typeof(Contact).FullName);
 
       } catch (Exception e) {
@@ -72,7 +72,7 @@ namespace Empiria.ProjectManagement.WebApi {
       try {
         var project = Project.Parse(projectUID);
 
-        return new CollectionModel(this.Request, project.TaskManagers.ToResponse(),
+        return new CollectionModel(this.Request, project.TaskManagers.ToShortResponse(),
                                    typeof(Contact).FullName);
 
       } catch (Exception e) {
@@ -80,8 +80,32 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
-    #endregion GET methods
 
-  }  // class ProjectsController
+    [HttpGet]
+    [Route("v1/project-management/projects/{projectUID}/as-tree")]
+    public CollectionModel GetProjectActivitiesAsTree([FromUri] string projectUID,
+                                                      [FromUri] ActivityFilter filter = null,
+                                                      [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
+      try {
+
+        if (filter == null) {
+          filter = new ActivityFilter();
+        }
+
+        var project = Project.Parse(projectUID);
+
+        var fullActivitiesList = project.GetActivities(filter, orderBy);
+
+        return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
+                                   typeof(ProjectItem).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    #endregion Get methods
+
+  }  // class ProjectController
 
 }  // namespace Empiria.ProjectManagement.WebApi

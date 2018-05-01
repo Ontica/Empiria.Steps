@@ -2,16 +2,14 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Response methods                      *
-*  Type     : ResourceResponseModels                       License   : Please read LICENSE.txt file          *
+*  Type     : ResourceResponses                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Response static methods for resources models.                                                  *
+*  Summary  : Response static methods for resources.                                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
-using Empiria.Collections;
 
 namespace Empiria.ProjectManagement.Resources.WebApi {
 
@@ -27,19 +25,6 @@ namespace Empiria.ProjectManagement.Resources.WebApi {
           type = resource.ResourceType.Name,
           name = resource.Name,
           notes = resource.Notes,
-        };
-        array.Add(item);
-      }
-      return array;
-    }
-
-    static internal ICollection ToResponse(this TagsCollection tags) {
-      ArrayList array = new ArrayList(tags.Count);
-
-      foreach (var tag in tags.Items) {
-        var item = new {
-          name = tag,
-          color = "default",
         };
         array.Add(item);
       }
@@ -82,6 +67,6 @@ namespace Empiria.ProjectManagement.Resources.WebApi {
     //  };
     //}
 
-  }  // class ResourceResponseModels
+  }  // class ResourceResponses
 
 }  // namespace Empiria.ProjectManagement.Resources.WebApi

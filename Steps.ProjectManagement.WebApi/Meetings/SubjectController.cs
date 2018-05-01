@@ -2,7 +2,7 @@
 //*                                                                                                            *
 //*  Module   : Project Meetings                             Component : Web Api                               *
 //*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-//*  Type     : MeetingSubjectsController                    License   : Please read LICENSE.txt file          *
+//*  Type     : SubjectController                            License   : Please read LICENSE.txt file          *
 //*                                                                                                            *
 //*  Summary  : Set of web services used to interact with the list of subjects of a project meeting.           *
 //*                                                                                                            *
@@ -15,9 +15,9 @@
 //namespace Empiria.ProjectManagement.Meetings.WebApi {
 
 //  /// <summary>Set of web services used to interact with the list of subjects of a project meeting.</summary>
-//  public class MeetingSubjectsController : WebApiController {
+//  public class SubjectController : WebApiController {
 
-//    #region GET methods
+//    #region Get methods
 
 //    [HttpGet]
 //    [Route("v1/project-management/meetings/{meetingUID}/subjects/available")]
@@ -34,9 +34,9 @@
 //      }
 //    }
 
-//    #endregion GET methods
+//    #endregion Get methods
 
-//    #region UPDATE methods
+//    #region Update methods
 
 //    [HttpPost]
 //    [Route("v1/project-management/meetings/{meetingUID}/subjects")]
@@ -80,8 +80,8 @@
 //      }
 //    }
 
-//    #endregion UPDATE methods
+//    #endregion Update methods
 
-//  }  // class MeetingSubjectsController
+//  }  // class SubjectController
 
 //}  // namespace Empiria.ProjectManagement.Meetings.WebApi

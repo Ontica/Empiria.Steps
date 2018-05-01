@@ -18,7 +18,7 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
   /// <summary>Web services to manage the list of participants of a project meeting.</summary>
   public class MeetingsParticipantsController : WebApiController {
 
-    #region GET methods
+    #region Get methods
 
     [HttpGet]
     [Route("v1/project-management/meetings/{meetingUID}/participants/available")]
@@ -28,16 +28,16 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
         FixedList<Contact> participants = meeting.GetAvailableParticipants();
 
-        return new SingleObjectModel(this.Request, participants.ToResponse(),
+        return new SingleObjectModel(this.Request, participants.ToShortResponse(),
                                      typeof(Meeting).FullName);
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
 
-    #endregion GET methods
+    #endregion Get methods
 
-    #region UPDATE methods
+    #region Update methods
 
     [HttpPost]
     [Route("v1/project-management/meetings/{meetingUID}/participants")]
@@ -89,7 +89,7 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
       }
     }
 
-    #endregion UPDATE methods
+    #endregion Update methods
 
   }  // class MeetingsParticipantsController
 

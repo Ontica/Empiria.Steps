@@ -2,36 +2,46 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Response methods                      *
-*  Type     : ContactResponseModels                        License   : Please read LICENSE.txt file          *
+*  Type     : ProjectModelResponseModels                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Response static methods for contact entities.                                                  *
+*  Summary  : Response static methods for project models.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using Empiria.Contacts;
-
 namespace Empiria.ProjectManagement.WebApi {
 
-  /// <summary>Response static methods for contact entities.</summary>
-  static internal class ContactResponseModels {
+  /// <summary>Response static methods for project models.</summary>
+  static internal class ProjectModelResponseModels {
 
-    static internal ICollection ToResponse(this IList<Contact> list) {
+    #region Responses
+
+    static internal ICollection ToResponse(this IList<ProjectModel> list) {
       ArrayList array = new ArrayList(list.Count);
 
-      foreach (var contact in list) {
+      foreach (var model in list) {
+        var process = model.BaseProcess;
+
         var item = new {
-          uid = contact.UID,
-          name = contact.FullName,
-          shortName = contact.Nickname
+          uid = process.UID,
+          type = process.WorkflowObjectType.Name,
+          name = process.Name,
+          notes = process.Notes,
+          ownerUID = process.Owner.UID,
+          //                         resourceTypeId = process.ResourceType.Id,
+          links = process.Links,
+          steps = new string[0]     //model.Steps.ToResponse()
         };
         array.Add(item);
       }
       return array;
     }
 
-  }  // class ContactResponseModels
+
+    #endregion Responses
+
+  }  // class ProjectModelResponseModels
 
 }  // namespace Empiria.ProjectManagement.WebApi

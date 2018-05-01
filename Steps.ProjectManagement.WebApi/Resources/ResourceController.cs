@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : ResourcesController                          License   : Please read LICENSE.txt file          *
+*  Type     : ResourceController                           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and set project resources.                                              *
 *                                                                                                            *
@@ -16,7 +16,7 @@ using Empiria.WebApi;
 namespace Empiria.ProjectManagement.Resources.WebApi {
 
   /// <summary>Public API to retrieve and set project resources.</summary>
-  public class ResourcesController : WebApiController {
+  public class ResourceController : WebApiController {
 
     #region Public APIs
 
@@ -33,6 +33,7 @@ namespace Empiria.ProjectManagement.Resources.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpGet]
     [Route("v1/project-management/tags")]
@@ -72,6 +73,6 @@ namespace Empiria.ProjectManagement.Resources.WebApi {
 
     #endregion Public APIs
 
-  }  // class ResourcesController
+  }  // class ResourceController
 
 }  // namespace Empiria.ProjectManagement.Resources.WebApi

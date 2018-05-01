@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : ProjectActivitiesController                  License   : Please read LICENSE.txt file          *
+*  Type     : ActivityController                           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and set project activities.                                             *
 *                                                                                                            *
@@ -16,81 +16,9 @@ using Empiria.WebApi;
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Public API to retrieve and set project activities.</summary>
-  public class ProjectActivitiesController : WebApiController {
+  public class ActivityController : WebApiController {
 
-    #region GET methods
-
-    [HttpGet]
-    [Route("v1/project-management/projects/{projectUID}/activities")]
-    [Route("v1/project-management/projects/{projectUID}/activities/as-tree")]
-    public CollectionModel GetProjectActivitiesAsTree([FromUri] string projectUID,
-                                                      [FromUri] ActivityFilter filter = null,
-                                                      [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
-      try {
-
-        if (filter == null) {
-          filter = new ActivityFilter();
-        }
-
-        var project = Project.Parse(projectUID);
-
-        var fullActivitiesList = project.GetActivities(filter, orderBy);
-
-        return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
-                                   typeof(ProjectItem).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v1/project-management/projects/activities/as-work-list")]
-    public CollectionModel GetProjectActivitiesAsWorklist([FromUri] ActivityFilter filter = null,
-                                                          [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
-      try {
-
-        if (filter == null) {
-          filter = new ActivityFilter();
-        }
-
-        var finder = new ProjectFinder(filter);
-
-        FixedList<ProjectItem> activities = finder.GetActivitiesList(orderBy);
-
-        return new CollectionModel(this.Request, activities.ToResponse(),
-                                   typeof(ProjectItem).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v1/project-management/projects/{projectUID}/activities/as-gantt")]
-    public CollectionModel GetProjectActivitiesAsGantt(string projectUID,
-                                                       [FromUri] ActivityFilter filter = null,
-                                                       [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
-      try {
-
-        if (filter == null) {
-          filter = new ActivityFilter();
-        }
-
-        var project = Project.Parse(projectUID);
-
-        var fullActivitiesList = project.GetActivities();
-
-        return new CollectionModel(this.Request, fullActivitiesList.ToGanttResponse(),
-                                   typeof(ProjectItem).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
+    #region Get methods
 
     [HttpGet]
     [Route("v1/project-management/activities/{activityUIDOrId}")]
@@ -114,9 +42,9 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
-    #endregion GET methods
+    #endregion Get methods
 
-    #region UPDATE methods
+    #region Update methods
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities")]
@@ -137,6 +65,7 @@ namespace Empiria.ProjectManagement.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/close")]
@@ -184,6 +113,7 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
+
     [HttpDelete]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}")]
     public NoDataModel DeleteActivity(string projectUID, string activityUID) {
@@ -201,8 +131,8 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
-    #endregion UPDATE methods
+    #endregion Update methods
 
-  }  // class ProjectActivitiesController
+  }  // class ActivityController
 
 }  // namespace Empiria.ProjectManagement.WebApi

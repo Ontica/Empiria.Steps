@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : ActivityTasksController                      License   : Please read LICENSE.txt file          *
+*  Type     : ActivityTaskController                       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and control activities tasks (checklists).                              *
 *                                                                                                            *
@@ -15,9 +15,9 @@ using Empiria.WebApi;
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Public API to retrieve and control activities tasks (checklists).</summary>
-  public class ActivityTasksController : WebApiController {
+  public class ActivityTaskController : WebApiController {
 
-    #region GET methods
+    #region Get methods
 
     [HttpGet]
     [Route("v1/project-management/activities/{activityUID}/tasks")]
@@ -39,8 +39,8 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
-    #endregion GET methods
+    #endregion Get methods
 
-  }  // class ActivityTasksController
+  }  // class ActivityTaskController
 
 } // namespace Empiria.ProjectManagement.WebApi

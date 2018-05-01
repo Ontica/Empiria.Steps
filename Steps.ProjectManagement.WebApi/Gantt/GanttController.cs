@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : InboxController                              License   : Please read LICENSE.txt file          *
+*  Type     : GanttController                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web services to interact with task inboxes.                                                    *
+*  Summary  : Web services used to interact with the gantt component.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,26 +14,27 @@ using Empiria.WebApi;
 
 namespace Empiria.ProjectManagement.WebApi {
 
-  /// <summary>Web services to interact with task inboxes.</summary>
-  public class InboxController : WebApiController {
+  /// <summary>Web services used to interact with the gantt component.</summary>
+  public class GanttController : WebApiController {
 
-    #region Public APIs
+    #region Get methods
 
     [HttpGet]
-    [Route("v1/inboxes/my-inbox")]
-    public CollectionModel GetMyInbox([FromUri] ActivityFilter filter = null,
-                                      [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
+    [Route("v1/project-management/projects/{projectUID}/as-gantt")]
+    public CollectionModel GetProjectActivitiesAsGantt(string projectUID,
+                                                       [FromUri] ActivityFilter filter = null,
+                                                       [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
       try {
 
         if (filter == null) {
           filter = new ActivityFilter();
         }
 
-        var finder = new ProjectFinder(filter);
+        var project = Project.Parse(projectUID);
 
-        FixedList<ProjectItem> activities = finder.GetActivitiesList(orderBy);
+        var fullActivitiesList = project.GetActivities();
 
-        return new CollectionModel(this.Request, activities.ToInboxResponse(),
+        return new CollectionModel(this.Request, fullActivitiesList.ToGanttResponse(),
                                    typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
@@ -41,8 +42,8 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
-    #endregion Public APIs
+    #endregion Get methods
 
-  }  // class InboxController
+  }  // class GanttController
 
 }  // namespace Empiria.ProjectManagement.WebApi

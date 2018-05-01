@@ -1,8 +1,8 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
 *  Module   : Project Meetings                             Component : Web Api                               *
-*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Response methods                      *
-*  Type     : MeetingsResponseModel                        License   : Please read LICENSE.txt file          *
+*  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Response models library               *
+*  Type     : MeetingResponseModels                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Response static methods for help desk tickets and their related entities.                      *
 *                                                                                                            *
@@ -15,8 +15,8 @@ using Empiria.Contacts;
 
 namespace Empiria.ProjectManagement.Meetings.WebApi {
 
-  /// <summary>Response static methods for help desk tickets and their related entities.</summary>
-  static internal class MeetingsResponseModel {
+  /// <summary>Response static methods for meetings and their related entities.</summary>
+  static internal class MeetingResponseModels {
 
     static internal ICollection ToResponse(this IList<Meeting> list) {
       ArrayList array = new ArrayList(list.Count);
@@ -40,13 +40,13 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
           uid = meeting.Project.UID,
           name = meeting.Project.Name
         },
-        date = meeting.Date.ToResponse(),
+        date = meeting.Date,
         startTime = meeting.StartTime,
         endTime = meeting.EndTime,
         location = meeting.Location,
         status = meeting.Status,
 
-        participants = meeting.Participants.ToResponse(),
+        participants = meeting.Participants.ToShortResponse(),
 
         topics = new string[0],
 
@@ -57,30 +57,6 @@ namespace Empiria.ProjectManagement.Meetings.WebApi {
 
     }
 
-    static internal ICollection ToResponse(this IList<Contact> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var contact in list) {
-        var item = new {
-          uid = contact.UID,
-          shortName = contact.Alias,
-          email = contact.EMail
-        };
-        array.Add(item);
-      }
-
-      return array;
-    }
-
-    static internal string ToResponse(this DateTime dateTime) {
-      if (ExecutionServer.DateMinValue == dateTime ||
-          ExecutionServer.DateMaxValue == dateTime) {
-        return String.Empty;
-      } else {
-        return dateTime.ToString("yyyy-MM-dd");
-      }
-    }
-
-  }  // class MeetingsResponseModel
+  }  // class MeetingResponseModel
 
 }  // namespace Empiria.ProjectManagement.Meetings.WebApi

@@ -16,7 +16,7 @@ using Empiria.WebApi;
 namespace Empiria.ProjectManagement.Meetings.WebApi {
 
   /// <summary>Web API controller for project meetings and their related entities.</summary>
-  public class MeetingsController : WebApiController {
+  public class MeetingController : WebApiController {
 
     #region GET methods
 

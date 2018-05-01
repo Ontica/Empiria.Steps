@@ -127,10 +127,10 @@ namespace Empiria.ProjectManagement {
     protected override void Load(JsonObject data) {
       base.Load(data);
 
-      this.Resource = Resource.Parse(data.Get("resourceUID", "Undefined"));
-      this.Responsible = Contact.Parse(data.Get("responsibleUID", "Undefined"));
+      this.Resource = Resource.Parse(data.Get("resourceUID", "Empty"));
+      this.Responsible = Contact.Parse(data.Get("responsibleUID", "Empty"));
       this.RequestedTime = data.Get<DateTime>("requestedTime", this.RequestedTime);
-      this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Undefined"));
+      this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Empty"));
     }
 
 
