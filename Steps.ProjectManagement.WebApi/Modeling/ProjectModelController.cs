@@ -15,12 +15,14 @@ using Empiria.WebApi;
 
 using Empiria.Workflow.Definition;
 
-namespace Empiria.ProjectManagement.WebApi {
+using Empiria.ProjectManagement.WebApi;
+
+namespace Empiria.ProjectManagement.Modeling.WebApi {
 
   /// <summary>Web services used to interact with project models.</summary>
   public class ProjectModelController : WebApiController {
 
-    #region GET methods
+    #region Get methods
 
     [HttpGet]
     [Route("v1/projects/process-models/for-activities")]
@@ -53,9 +55,9 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
-    #endregion GET methods
+    #endregion Get methods
 
-    #region UPDATE methods
+    #region Update methods
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/create-from-process-model/{processModelUID}")]
@@ -82,7 +84,7 @@ namespace Empiria.ProjectManagement.WebApi {
       }
     }
 
-    #endregion UPDATE methods
+    #endregion Update methods
 
   }  // class ProjectModelsController
 

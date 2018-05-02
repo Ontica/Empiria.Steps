@@ -14,7 +14,7 @@ using Empiria.Json;
 
 using Empiria.Workflow.Definition;
 
-namespace Empiria.ProjectManagement {
+namespace Empiria.ProjectManagement.Modeling {
 
   /// <summary>Slice of a workflow process that serves as an activity
   /// model to build a project instance.</summary>

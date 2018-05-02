@@ -11,7 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Empiria.ProjectManagement.WebApi {
+namespace Empiria.ProjectManagement.Modeling.WebApi {
 
   /// <summary>Response static methods for project models.</summary>
   static internal class ProjectModelResponseModels {
