@@ -72,7 +72,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         projectModel.CreateInstance(project, bodyAsJson);
 
-        var fullActivitiesList = project.GetActivities();
+        var fullActivitiesList = project.GetItems();
 
         return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
                                    typeof(ProjectItem).FullName);

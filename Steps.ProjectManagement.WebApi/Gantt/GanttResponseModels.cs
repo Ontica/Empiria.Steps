@@ -16,62 +16,58 @@ namespace Empiria.ProjectManagement.WebApi {
   /// <summary>Response static methods for project entities.</summary>
   static internal class GanttResponseModels {
 
-    #region Collection responses
+    #region Responses
 
     /// <summary>Converts a list of project activities as a response useful for the Gantt component.</summary>
     static internal ICollection ToGanttResponse(this IList<ProjectItem> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var item in list) {
-        if (item is Activity) {
-          array.Add(((Activity) item).ToGanttResponse());
-
-        } else if (item is Summary) {
-          array.Add(((Summary) item).ToGanttResponse());
-
-        }
+        array.Add(item.ToGanttResponse());
       }
-
       return array;
     }
 
-    #endregion Collection responses
 
-    #region Entities responses
-
-    static internal object ToGanttResponse(this Activity activity) {
+    static internal object ToGanttResponse(this ProjectItem projectItem) {
       return new {
-        id = activity.Id,
-        type = activity.ProjectObjectType.Name,
-        text = activity.Name,
-        start_date = (activity.EndDate < ExecutionServer.DateMaxValue ?
-                            activity.StartDate : activity.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
-        duration = activity.EndDate < ExecutionServer.DateMaxValue ?
-                            (int) activity.EndDate.Subtract(activity.StartDate).TotalDays : activity.EstimatedDuration.Value,
-        position = activity.Position,
-        ragStatus = activity.RagStatus,
-        parent = activity.Parent is Summary ? activity.Parent.Id : 0
+        id = projectItem.Id,
+        type = projectItem.ProjectObjectType.Name,
+        text = projectItem.Name,
+        start_date = CalculateGanttItemStartDate(projectItem).ToString("yyyy-MM-dd HH:mm"),
+        duration = CalculateGanttItemDurationInDays(projectItem),
+        position = projectItem.Position,
+        level = projectItem.Level,
+        ragStatus = projectItem.RagStatus,
+        parent = projectItem.Parent is Summary ? projectItem.Parent.Id : 0
       };
     }
 
+    #endregion Responses
 
-    static internal object ToGanttResponse(this Summary summary) {
-      return new {
-        id = summary.Id,
-        type = summary.ProjectObjectType.Name,
-        text = summary.Name,
-        level = summary.Level,
-        start_date = (summary.StartDate < ExecutionServer.DateMaxValue ?
-                                  summary.StartDate : summary.RequestedTime).ToString("yyyy-MM-dd HH:mm"),
-        duration = summary.EndDate < ExecutionServer.DateMaxValue ?
-                           (int) summary.EndDate.Subtract(summary.StartDate).TotalDays : summary.EstimatedDuration.Value,
-        position = summary.Position,
-        ragStatus = summary.RagStatus,
-        parent = summary.Parent is Summary ? summary.Parent.Id : 0
-      };
+    #region Auxiliary methods
+
+    private static int CalculateGanttItemDurationInDays(ProjectItem projectItem) {
+      if (projectItem.EndDate < ExecutionServer.DateMaxValue) {
+        return (int) projectItem.EndDate.Subtract(projectItem.StartDate).TotalDays;
+
+      } else {
+        return projectItem.EstimatedDuration.Value;
+
+      }
     }
 
-    #endregion Entities responses
+
+    private static DateTime CalculateGanttItemStartDate(ProjectItem projectItem) {
+      if (projectItem.StartDate < ExecutionServer.DateMaxValue) {
+        return projectItem.StartDate;
+
+      } else {
+        return DateTime.Today.AddDays(-1 * projectItem.EstimatedDuration.Value - 7);
+      }
+    }
+
+    #endregion Auxiliary methods
 
   }  // class GanttResponseModels
 

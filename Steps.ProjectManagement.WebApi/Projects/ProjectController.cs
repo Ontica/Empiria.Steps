@@ -94,7 +94,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        var fullActivitiesList = project.GetActivities(filter, orderBy);
+        var fullActivitiesList = project.GetItems(filter, orderBy);
 
         return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
                                    typeof(ProjectItem).FullName);

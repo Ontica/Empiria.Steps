@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
+
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Response static methods for project's activities.</summary>
@@ -26,10 +28,6 @@ namespace Empiria.ProjectManagement.WebApi {
           uid = activity.Project.UID,
           name = activity.Project.Name,
         },
-        responsible = new {
-          uid = activity.Responsible.UID,
-          name = activity.Responsible.Nickname,
-        },
         parent = new {
           uid = activity.Parent.UID,
           name = activity.Parent.Name,
@@ -42,9 +40,13 @@ namespace Empiria.ProjectManagement.WebApi {
         dueDate = activity.DueDate,
         tags = activity.Tags.Items,
         position = activity.Position,
+        level = activity.Level,
         ragStatus = activity.RagStatus,
         stage = activity.Stage,
-        status = activity.Status
+        status = activity.Status,
+        responsible = activity.Responsible.ToShortResponse(),
+        assignedDate = activity.AssignedDate,
+        assignedBy = activity.AssignedBy.ToShortResponse(),
       };
     }
 
@@ -54,7 +56,6 @@ namespace Empiria.ProjectManagement.WebApi {
         uid = summary.UID,
         type = summary.ProjectObjectType.Name,
         name = summary.Name,
-        level = summary.Level,
         notes = summary.Notes,
         project = new {
           uid = summary.Project.UID,
@@ -71,6 +72,7 @@ namespace Empiria.ProjectManagement.WebApi {
         endDate = summary.EndDate,
         dueDate = summary.DueDate,
         position = summary.Position,
+        level = summary.Level,
         ragStatus = summary.RagStatus,
         stage = summary.Stage,
         status = summary.Status

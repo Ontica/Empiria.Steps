@@ -27,7 +27,7 @@ namespace Empiria.ProjectManagement.WebApi {
           name = project.Name,
           notes = project.Notes,
           ownerUID = project.Owner.UID,
-          managerUID = project.Manager.UID,
+          managerUID = project.Responsible.UID,
           status = project.Status
         };
         array.Add(item);
@@ -62,7 +62,7 @@ namespace Empiria.ProjectManagement.WebApi {
         name = project.Name,
         notes = project.Notes,
         ownerUID = project.Owner.UID,
-        managerUID = project.Manager.UID,
+        managerUID = project.Responsible.UID,
         status = project.Status
       };
     }

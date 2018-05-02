@@ -32,7 +32,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        var fullActivitiesList = project.GetActivities();
+        var fullActivitiesList = project.GetItems();
 
         return new CollectionModel(this.Request, fullActivitiesList.ToGanttResponse(),
                                    typeof(ProjectItem).FullName);

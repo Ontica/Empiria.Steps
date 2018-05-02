@@ -11,6 +11,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using Empiria.Contacts;
+
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Response static methods for project activity tasks (check or to do lists).</summary>
@@ -33,20 +35,22 @@ namespace Empiria.ProjectManagement.WebApi {
     static internal object ToResponse(this Task task) {
       return new {
         uid = task.UID,
+        activityUID = task.Activity.UID,
         name = task.Name,
         notes = task.Notes,
+        estimatedDuration = task.EstimatedDuration.ToString(),
         startDate = task.StartDate,
         targetDate = task.TargetDate,
         endDate = task.EndDate,
         dueDate = task.DueDate,
-        estimatedDuration = task.EstimatedDuration.ToString(),
+        tags = task.Tags.Items,
         position = task.Position,
         ragStatus = task.RagStatus,
-        tags = task.Tags.Items,
-        assignedToUID = task.AssignedTo.UID,
-        assignationTime = task.AssignationTime,
-        state = task.Status,
-        activityUID = task.Activity.UID
+        stage = task.Stage,
+        status = task.Status,
+        responsible = task.Responsible.ToShortResponse(),
+        assignedDate = task.AssignedDate,
+        assignedBy = task.AssignedBy.ToShortResponse(),
       };
     }
 
