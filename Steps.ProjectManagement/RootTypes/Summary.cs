@@ -17,12 +17,6 @@ namespace Empiria.ProjectManagement {
   /// <summary>Describes a project activity.</summary>
   public class Summary : ProjectItem {
 
-    #region Fields
-
-    private Lazy<List<ProjectItem>> itemsList = null;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     protected Summary() : this(ProjectItemType.SummaryType) {
@@ -34,6 +28,7 @@ namespace Empiria.ProjectManagement {
       // Required by Empiria Framework for all partitioned types.
     }
 
+
     protected internal Summary(Project project, JsonObject data) :
                                base(ProjectItemType.SummaryType, project, data) {
 
@@ -41,13 +36,16 @@ namespace Empiria.ProjectManagement {
       this.Load(data);
     }
 
+
     static public Activity Parse(string uid) {
       return BaseObject.ParseKey<Activity>(uid);
     }
 
+
     static internal new Activity Parse(int id) {
       return BaseObject.ParseId<Activity>(id);
     }
+
 
     static public new Activity Empty {
       get {
@@ -55,21 +53,10 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-    protected override void OnInitialize() {
-      itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetAllActivities(this));
-    }
 
     #endregion Constructors and parsers
 
-    #region Properties related to the activity structure
-
-
-    public FixedList<ProjectItem> Subactivities {
-      get {
-        return itemsList.Value.ToFixedList();
-      }
-    }
-
+    #region Properties
 
     public new ProjectItem Parent {
       get {
@@ -77,7 +64,7 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-    #endregion Properties related to the activity structure
+    #endregion Properties
 
     #region Public methods
 
@@ -92,7 +79,7 @@ namespace Empiria.ProjectManagement {
 
 
     protected override void OnSave() {
-      ProjectData.WriteSummary(this);
+      ProjectItemData.WriteSummary(this);
     }
 
     #endregion Public methods

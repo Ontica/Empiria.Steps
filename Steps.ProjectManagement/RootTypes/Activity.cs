@@ -12,18 +12,12 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Json;
+using Empiria.Security;
 
 namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project activity.</summary>
   public class Activity : ProjectItem {
-
-    #region Fields
-
-    private Lazy<List<Activity>> subactivitiesList = null;
-    private Lazy<List<Task>> tasksList = null;
-
-    #endregion Fields
 
     #region Constructors and parsers
 
@@ -58,10 +52,6 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-    protected override void OnInitialize() {
-      subactivitiesList = new Lazy<List<Activity>>(() => ProjectData.GetChildrenActivities(this));
-      tasksList = new Lazy<List<Task>>(() => ProjectData.GetProjectActivityTasks(this));
-    }
 
     #endregion Constructors and parsers
 
@@ -96,25 +86,36 @@ namespace Empiria.ProjectManagement {
 
     #endregion Properties
 
-    #region Properties related to the activity structure
-
-    public FixedList<Activity> Subactivities {
-      get {
-        return subactivitiesList.Value.ToFixedList();
-      }
-    }
-
+    #region Activity structure
 
     public FixedList<Task> Tasks {
       get {
-        return tasksList.Value.ToFixedList();
+        return ProjectItemData.GetActivityTasks(this)
+                              .ToFixedList();
       }
     }
 
 
-    #endregion Properties related to the activity structure
+    #endregion Activity structure
 
     #region Public methods
+
+    public void Assign(JsonObject data) {
+      if (!data.Contains("responsibleUID")) {
+        return;
+      }
+
+      this.Responsible = data.Get<Contact>("responsibleUID", this.Responsible);
+
+      if (!this.Responsible.IsEmptyInstance) {
+        this.AssignedDate = DateTime.Now;
+        this.AssignedBy = EmpiriaUser.Current.AsContact();
+      } else {
+        this.AssignedDate = ExecutionServer.DateMaxValue;
+        this.AssignedBy = Contact.Empty;
+      }
+
+    }
 
     protected override void AssertIsValid(JsonObject data) {
       base.AssertIsValid(data);
@@ -123,11 +124,12 @@ namespace Empiria.ProjectManagement {
     protected override void Load(JsonObject data) {
       base.Load(data);
       base.LoadDateFields(data);
+      this.Assign(data);
     }
 
 
     protected override void OnSave() {
-      ProjectData.WriteActivity(this);
+      ProjectItemData.WriteActivity(this);
     }
 
     #endregion Public methods
