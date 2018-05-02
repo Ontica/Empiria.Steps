@@ -31,6 +31,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     static internal object ToGanttResponse(this ProjectItem projectItem) {
       return new {
+        uid = projectItem.UID,
         id = projectItem.Id,
         type = projectItem.ProjectObjectType.Name,
         text = projectItem.Name,
@@ -51,9 +52,11 @@ namespace Empiria.ProjectManagement.WebApi {
       if (projectItem.EndDate < ExecutionServer.DateMaxValue) {
         return (int) projectItem.EndDate.Subtract(projectItem.StartDate).TotalDays;
 
-      } else {
+      } else if (!projectItem.EstimatedDuration.IsEmptyInstance) {
         return projectItem.EstimatedDuration.Value;
 
+      } else {
+        return 7;
       }
     }
 
