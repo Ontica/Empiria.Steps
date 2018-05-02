@@ -10,10 +10,7 @@ w  Summary  : Describes a project activity.                                     
 using System;
 using System.Collections.Generic;
 
-using Empiria.Contacts;
 using Empiria.Json;
-
-using Empiria.ProjectManagement.Resources;
 
 namespace Empiria.ProjectManagement {
 
@@ -37,8 +34,8 @@ namespace Empiria.ProjectManagement {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal Summary(Project project, ProjectItem parent, JsonObject data) :
-                               base(ProjectItemType.SummaryType, project, parent, data) {
+    protected internal Summary(Project project, JsonObject data) :
+                               base(ProjectItemType.SummaryType, project, data) {
 
       this.AssertIsValid(data);
       this.Load(data);
@@ -64,38 +61,6 @@ namespace Empiria.ProjectManagement {
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-
-    [DataField("ResourceId")]
-    public Resource Resource {
-      get;
-      private set;
-    } = Resource.Empty;
-
-
-    [DataField("ResponsibleId")]
-    public Contact Responsible {
-      get;
-      private set;
-    }
-
-
-    [DataField("RequestedTime")]
-    public DateTime RequestedTime {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
-    public Contact RequestedBy {
-      get;
-      private set;
-    } = Contact.Empty;
-
-
-    #endregion Public properties
-
     #region Properties related to the activity structure
 
 
@@ -112,17 +77,6 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-    public int Level {
-      get {
-        if (this.Parent.ProjectObjectType == ProjectItemType.SummaryType) {
-          return ((Summary) this.Parent).Level + 1;
-        } else {
-          return 1;
-        }
-      }
-    }
-
-
     #endregion Properties related to the activity structure
 
     #region Public methods
@@ -131,13 +85,9 @@ namespace Empiria.ProjectManagement {
       base.AssertIsValid(data);
     }
 
+
     protected override void Load(JsonObject data) {
       base.Load(data);
-
-      this.Resource = Resource.Parse(data.Get("resourceUID", "Empty"));
-      this.Responsible = Contact.Parse(data.Get("responsibleUID", "Empty"));
-      this.RequestedTime = data.Get<DateTime>("requestedTime", this.RequestedTime);
-      this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Empty"));
     }
 
 

@@ -13,8 +13,6 @@ using System.Collections.Generic;
 using Empiria.Contacts;
 using Empiria.Json;
 
-using Empiria.ProjectManagement.Resources;
-
 namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project activity.</summary>
@@ -39,8 +37,8 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    protected internal Activity(Project project, ProjectItem parent, JsonObject data) :
-                                base(ProjectItemType.ActivityType, project, parent, data) {
+    protected internal Activity(Project project, JsonObject data) :
+                                base(ProjectItemType.ActivityType, project, data) {
 
       this.AssertIsValid(data);
       this.Load(data);
@@ -67,15 +65,7 @@ namespace Empiria.ProjectManagement {
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-
-    [DataField("ResourceId")]
-    public Resource Resource {
-      get;
-      private set;
-    } = Resource.Empty;
-
+    #region Properties
 
     [DataField("ResponsibleId")]
     public Contact Responsible {
@@ -84,23 +74,29 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    [DataField("RequestedTime")]
-    public DateTime RequestedTime {
+    [DataField("AssignedDate")]
+    public DateTime AssignedDate {
       get;
       private set;
-    } = ExecutionServer.DateMinValue;
+    } = ExecutionServer.DateMaxValue;
 
 
-    public Contact RequestedBy {
+
+    [DataField("AssignedById")]
+    public Contact AssignedBy {
       get;
       private set;
-    } = Contact.Empty;
+    }
 
+    public bool IsAssigned {
+      get {
+        return !this.Responsible.IsEmptyInstance;
+      }
+    }
 
-    #endregion Public properties
+    #endregion Properties
 
     #region Properties related to the activity structure
-
 
     public FixedList<Activity> Subactivities {
       get {
@@ -126,11 +122,7 @@ namespace Empiria.ProjectManagement {
 
     protected override void Load(JsonObject data) {
       base.Load(data);
-
-      this.Resource = Resource.Parse(data.Get("resourceUID", "Empty"));
-      this.Responsible = Contact.Parse(data.Get("responsibleUID", "Empty"));
-      this.RequestedTime = data.Get<DateTime>("requestedTime", this.RequestedTime);
-      this.RequestedBy = Contact.Parse(data.Get("requestedByUID", "Empty"));
+      base.LoadDateFields(data);
     }
 
 

@@ -4,7 +4,7 @@
 *  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : ProjectItem                                      License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary  : Abstract class that describes a project item.                                                  *
+*  Summary  : Abstract class that describes a project item, like an activity, a task or summary.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,15 +13,15 @@ using Empiria.Contacts;
 using Empiria.Collections;
 using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.Ontology;
 using Empiria.StateEnums;
 
-using Empiria.Ontology;
-
+using Empiria.ProjectManagement.Resources;
 using Empiria.Workflow.Definition;
 
 namespace Empiria.ProjectManagement {
 
-  /// <summary>Abstract class that describes a project item.</summary>
+  /// <summary>Abstract class that describes a project item, like an activity, a task or summary.</summary>
   [PartitionedType(typeof(ProjectItemType))]
   public abstract class ProjectItem : BaseObject {
 
@@ -31,12 +31,12 @@ namespace Empiria.ProjectManagement {
       // Required by Empiria Framework for all partitioned types.
     }
 
+
     protected internal ProjectItem(ProjectItemType type,
-                                   Project project, ProjectItem parent,
+                                   Project project,
                                    JsonObject data) : base(type) {
       Assertion.AssertObject(type, "type");
       Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(parent, "parent");
       Assertion.AssertObject(data, "data");
 
       Assertion.Assert(!project.IsEmptyInstance,
@@ -44,8 +44,7 @@ namespace Empiria.ProjectManagement {
 
 
       this.Project = project;
-      this.Parent = parent;
-      this.Owner = parent.Owner;
+      this.Parent = ProjectItem.Empty;
 
       this.AssertIsValid(data);
 
@@ -66,12 +65,10 @@ namespace Empiria.ProjectManagement {
 
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
-      if ((int) row["ProjectObjectId"] != -1) {
+      if (!this.IsEmptyInstance) {
         this.Parent = ProjectItem.Parse((int) row["ParentId"]);
-        this.CreatedFrom = ProjectItem.Parse((int) row["CreatedFromId"]);
       } else {
         this.Parent = this;
-        this.CreatedFrom = this;
       }
     }
 
@@ -107,41 +104,6 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    [DataField("EstimatedDuration")]
-    public Duration EstimatedDuration {
-      get;
-      private set;
-    } = Duration.Empty;
-
-
-    [DataField("StartDate")]
-    public DateTime StartDate {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
-    [DataField("TargetDate")]
-    public DateTime TargetDate {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
-    [DataField("EndDate")]
-    public DateTime EndDate {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
-    [DataField("DueDate")]
-    public DateTime DueDate {
-      get;
-      private set;
-    } = ExecutionServer.DateMinValue;
-
-
     [DataField("Tags")]
     public TagsCollection Tags {
       get;
@@ -149,8 +111,22 @@ namespace Empiria.ProjectManagement {
     } = TagsCollection.Empty;
 
 
+    [DataField("ResourceId")]
+    public Resource Resource {
+      get;
+      private set;
+    } = Resource.Empty;
+
+
     [DataField("RagStatus", Default = RAGStatus.NoColor)]
     public RAGStatus RagStatus {
+      get;
+      private set;
+    }
+
+
+    [DataField("ExtData")]
+    protected internal JsonObject ExtensionData {
       get;
       private set;
     }
@@ -169,13 +145,15 @@ namespace Empiria.ProjectManagement {
       private set;
     }
 
-
-    [DataField("OwnerId")]
-    public Contact Owner {
-      get;
-      private set;
+    public int Level {
+      get {
+        if (!this.Parent.IsEmptyInstance) {
+          return this.Parent.Level + 1;
+        } else {
+          return 1;
+        }
+      }
     }
-
 
     [DataField("BaseProjectId")]
     public Project Project {
@@ -190,17 +168,39 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    protected internal ProjectItem CreatedFrom {
+    [DataField("EstimatedDuration")]
+    public Duration EstimatedDuration {
       get;
-      private set;
-    }
+      protected set;
+    } = Duration.Empty;
 
 
-    [DataField("ExtData")]
-    protected internal JsonObject ExtensionData {
+    [DataField("StartDate")]
+    public DateTime StartDate {
       get;
-      private set;
-    }
+      protected set;
+    } = ExecutionServer.DateMaxValue;
+
+
+    [DataField("TargetDate")]
+    public DateTime TargetDate {
+      get;
+      protected set;
+    } = ExecutionServer.DateMaxValue;
+
+
+    [DataField("EndDate")]
+    public DateTime EndDate {
+      get;
+      protected set;
+    } = ExecutionServer.DateMaxValue;
+
+
+    [DataField("DueDate")]
+    public DateTime DueDate {
+      get;
+      protected set;
+    } = ExecutionServer.DateMaxValue;
 
 
     [DataField("Status", Default = ActivityStatus.Pending)]
@@ -239,7 +239,7 @@ namespace Empiria.ProjectManagement {
       this.AssertIsValid(data);
       this.Load(data);
 
-      this.EndDate = data.Get<DateTime>("endDate", this.EndDate);
+      this.EndDate = data.Get("endDate", this.EndDate);
       this.StartDate = this.StartDate == ExecutionServer.DateMaxValue
                             ? this.EndDate : this.StartDate;
 
@@ -263,38 +263,27 @@ namespace Empiria.ProjectManagement {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
-      this.RagStatus = data.Get<RAGStatus>("ragStatus", this.RagStatus);
+      this.RagStatus = data.Get("ragStatus", this.RagStatus);
 
       var tags = data.GetList<string>("tags", false);
       if (tags != null && tags.Count != 0) {
         this.Tags = TagsCollection.Parse(tags);
       }
+      this.Resource = data.Get<Resource>("resourceUID", this.Resource);
+    }
+
+    protected void LoadDateFields(JsonObject data) {
+      this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
+                                              this.EstimatedDuration.ToString()));
 
       this.StartDate = data.Get("startDate", this.StartDate.Date);
       this.TargetDate = data.Get("targetDate", this.TargetDate.Date);
       this.DueDate = data.Get("dueDate", this.DueDate.Date);
-
-      this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
-                                                            this.EstimatedDuration.ToString()));
-
-      this.WorkflowObject = WorkflowObject.Parse(data.Get<int>("workflowObjectId", -1));
-
-      if (this.Name.Length == 0) {
-        this.Name = this.WorkflowObject.Name;
-      }
-
-      if (!this.IsEmptyInstance) {
-        int parentId = data.Get<int>("parentId", -1);
-        this.Parent = parentId != -1 ? ProjectItem.Parse(parentId) : this.Parent;
-
-        this.CreatedFrom = ProjectItem.Empty;
-      }
     }
-
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 24);
+        this.UID = EmpiriaString.BuildRandomString(6, 36);
       }
     }
 
@@ -304,7 +293,16 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    internal void SetParent(ProjectItem parent) {
+      Assertion.AssertObject(parent, "parent");
+
+      this.Parent = parent;
+    }
+
+
     internal void SetPosition(int position) {
+      Assertion.Assert(position > 0, "position must be greater than zero.");
+
       this.Position = position;
     }
 

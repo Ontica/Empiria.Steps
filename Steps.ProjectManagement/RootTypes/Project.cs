@@ -93,6 +93,58 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
+    [DataField("Tags")]
+    public TagsCollection Tags {
+      get;
+      private set;
+    } = TagsCollection.Empty;
+
+
+    [DataField("RagStatus", Default = RAGStatus.NoColor)]
+    public RAGStatus RagStatus {
+      get;
+      private set;
+    }
+
+
+    [DataField("ExtData")]
+    protected internal JsonObject ExtensionData {
+      get;
+      private set;
+    }
+
+
+    public string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.Name, this.Tags.ToString());
+      }
+    }
+
+
+    [DataField("ItemPosition")]
+    public int Position {
+      get;
+      private set;
+    }
+
+
+    public int Level {
+      get {
+        if (!this.Parent.IsEmptyInstance) {
+          return this.Parent.Level + 1;
+        } else {
+          return 1;
+        }
+      }
+    }
+
+
+    internal protected Project Parent {
+      get;
+      private set;
+    }
+
+
     [DataField("EstimatedDuration")]
     public Duration EstimatedDuration {
       get;
@@ -128,34 +180,6 @@ using Empiria.ProjectManagement.Resources;
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("Tags")]
-    public TagsCollection Tags {
-      get;
-      private set;
-    } = TagsCollection.Empty;
-
-
-    [DataField("RagStatus", Default = RAGStatus.NoColor)]
-    public RAGStatus RagStatus {
-      get;
-      private set;
-    }
-
-
-    public string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(this.Name, this.Tags.ToString());
-      }
-    }
-
-
-    [DataField("ItemPosition")]
-    public int Position {
-      get;
-      private set;
-    }
-
-
     [DataField("OwnerId")]
     public Contact Owner {
       get;
@@ -163,34 +187,8 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
-    protected Project Parent {
-      get;
-      private set;
-    }
-
-
-    protected internal ProjectItem CreatedFrom {
-      get;
-      private set;
-    }
-
-
-    [DataField("ExtData")]
-    protected internal JsonObject ExtensionData {
-      get;
-      private set;
-    }
-
-
     [DataField("Status", Default = ActivityStatus.Pending)]
     public ActivityStatus Status {
-      get;
-      private set;
-    }
-
-
-    [DataField("Stage", Default = ItemStage.Backlog)]
-    public ItemStage Stage {
       get;
       private set;
     }
@@ -204,7 +202,7 @@ using Empiria.ProjectManagement.Resources;
 
 
     [DataField("ResponsibleId")]
-    public Contact Manager {
+    public Contact Responsible {
       get;
       private set;
     }
@@ -221,14 +219,15 @@ using Empiria.ProjectManagement.Resources;
 
     #region Project structure
 
-    public FixedList<ProjectItem> Items {
+    public List<ProjectItem> ItemsList {
       get {
-        return itemsList.Value.ToFixedList();
+        return this.itemsList.Value;
       }
     }
 
-    public FixedList<ProjectItem> GetActivities(ActivityFilter filter = null,
-                                                  ActivityOrder orderBy = ActivityOrder.Default) {
+
+    public FixedList<ProjectItem> GetItems(ActivityFilter filter = null,
+                                           ActivityOrder orderBy = ActivityOrder.Default) {
       if (filter == null) {
         filter = new ActivityFilter();
       }
@@ -263,17 +262,9 @@ using Empiria.ProjectManagement.Resources;
 
 
     internal FixedList<Contact> GetInvolvedContacts() {
-      var list = new Contact[6];
-
-      list[0] = Contact.Parse(2);
-      list[1] = Contact.Parse(4);
-      list[2] = Contact.Parse(8);
-      list[3] = Contact.Parse(9);
-      list[4] = Contact.Parse(10);
-      list[5] = Contact.Parse(11);
-
-      return new FixedList<Contact>(list);
+      return ProjectContactsData.GetProjectInvolvedContacts(this);
     }
+
 
     #endregion Project participants
 
@@ -282,22 +273,19 @@ using Empiria.ProjectManagement.Resources;
     public Activity AddActivity(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
-      ProjectItem parent = GetParentFromJson(data);
-      int position = GetPositionFromJson(data);
+      var activity = new Activity(this, data);
 
-      var activity = new Activity(this, parent, data);
-
-      activity.SetPosition(position);
+      SetParentAndPositionFromJson(activity, data);
 
       activity.Save();
 
-      if (activity.Position <= itemsList.Value.Count) {
+      if (activity.Position <= ItemsList.Count) {
         ProjectData.UpdatePositionsStartingFrom(activity);
 
         itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetProjectActivities(this));
 
       } else {
-        itemsList.Value.Add(activity);
+        ItemsList.Add(activity);
       }
 
       return activity;
@@ -307,7 +295,7 @@ using Empiria.ProjectManagement.Resources;
     public Activity GetActivity(string activityUID) {
       Assertion.AssertObject(activityUID, "activityUID");
 
-      Activity activity = this.Items.Find((x) => x.UID == activityUID && x is Activity) as Activity;
+      Activity activity = ItemsList.Find((x) => x.UID == activityUID && x is Activity) as Activity;
 
       Assertion.AssertObject(activity,
                              $"Activity with uid ({activityUID}) is not part of project {this.Name}.");
@@ -315,9 +303,10 @@ using Empiria.ProjectManagement.Resources;
       return activity;
     }
 
+
     public void RemoveActivity(Activity activity) {
       Assertion.AssertObject(activity, "activity");
-      Assertion.Assert(this.Items.Contains(activity),
+      Assertion.Assert(ItemsList.Contains(activity),
                       $"Activity {activity.Name} doesn't belong to this project.");
 
       activity.Delete();
@@ -331,13 +320,13 @@ using Empiria.ProjectManagement.Resources;
     public Summary AddSummary(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
-      ProjectItem parent = GetParentFromJson(data);
+      Summary summary = new Summary(this, data);
 
-      Summary summary = new Summary(this, parent, data);
+      SetParentAndPositionFromJson(summary, data);
 
       summary.Save();
 
-      itemsList.Value.Add(summary);
+      ItemsList.Add(summary);
 
       return summary;
     }
@@ -345,7 +334,7 @@ using Empiria.ProjectManagement.Resources;
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 24);
+        this.UID = EmpiriaString.BuildRandomString(6, 36);
       }
     }
 
@@ -363,10 +352,10 @@ using Empiria.ProjectManagement.Resources;
       ProjectItem parent = data.Get<ProjectItem>("parentUID", ProjectItem.Empty);
 
       if (parent.IsEmptyInstance) {
-        return parent;
+        return ProjectItem.Empty;
       }
 
-      Assertion.Assert(this.Items.Contains(parent),
+      Assertion.Assert(ItemsList.Contains(parent),
                        new ValidationException("UnrecognizedActivityParent",
                                                $"Invalid activity parent ({parent.Name}) for project ({this.UID})."));
       return parent;
@@ -377,16 +366,27 @@ using Empiria.ProjectManagement.Resources;
       int position = data.Get("position", -1);
 
       if (position == -1) {
-        return this.Items.Count + 1;
+        return this.ItemsList.Count + 1;
       }
 
-
-      Assertion.Assert(1 <= position && position <= this.Items.Count + 1,
+      Assertion.Assert(1 <= position && position <= ItemsList.Count + 1,
                        new ValidationException("PositionOutOfIndex",
                                                $"Invalid activity position ({position}) for project ({this.UID})."));
 
       return position;
     }
+
+
+    private void SetParentAndPositionFromJson(ProjectItem item, JsonObject data) {
+      ProjectItem parent = GetParentFromJson(data);
+
+      item.SetParent(parent);
+
+      int position = GetPositionFromJson(data);
+
+      item.SetPosition(position);
+    }
+
 
     #endregion Private methods
 

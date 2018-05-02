@@ -13,8 +13,6 @@ using System.Collections.Generic;
 using Empiria.Contacts;
 using Empiria.Data;
 
-using Empiria.ProjectManagement.Resources;
-
 namespace Empiria.ProjectManagement {
 
   /// <summary>Project's data read and write methods.</summary>
@@ -93,19 +91,6 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    static internal void WriteActivity(Activity o) {
-      var op = DataOperation.Parse("writeBPMProjectObject",
-                o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
-                o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
-                o.Resource.Id, o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
-                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
-
-      DataWriter.Execute(op);
-    }
-
-
     static internal void UpdatePositionsStartingFrom(Activity from) {
       var op = DataOperation.Parse("doBPMUpdateProjectObjectsPositionFrom",
                                     from.Project.Id, from.Id,
@@ -116,13 +101,14 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    static internal void WriteSummary(Summary o) {
+    static internal void WriteActivity(Activity o) {
       var op = DataOperation.Parse("writeBPMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
-                o.Resource.Id, o.Owner.Id, o.Responsible.Id, o.RequestedTime, o.RequestedBy.Id,
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id,
+                o.Resource.Id, o.Project.Owner.Id,
+                o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
                 o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
 
       DataWriter.Execute(op);
@@ -134,9 +120,24 @@ namespace Empiria.ProjectManagement {
                 o.Id, o.GetEmpiriaType().Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
-                o.Resource.Id, o.Owner.Id, o.Manager.Id, ExecutionServer.DateMinValue, Contact.Empty.Id,
-                -1, -1, (char) o.Stage, (char) o.Status);
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id,
+                o.Resource.Id, o.Owner.Id,
+                o.Responsible.Id, ExecutionServer.DateMaxValue, -1,
+                -1, o.Parent.Id, 'U', (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
+
+    static internal void WriteSummary(Summary o) {
+      var op = DataOperation.Parse("writeBPMProjectObject",
+                o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
+                o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
+                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id,
+                o.Resource.Id, o.Project.Owner.Id,
+                -1, ExecutionServer.DateMaxValue, -1,
+                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
 
       DataWriter.Execute(op);
     }
@@ -147,8 +148,9 @@ namespace Empiria.ProjectManagement {
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id, o.CreatedFrom.Id,
-                Resource.Empty.Id, o.Owner.Id, o.AssignedTo.Id, o.AssignationTime, o.AssignedTo.Id,
+                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id,
+                o.Resource.Id, o.Project.Owner.Id,
+                o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
                 o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status);
 
       DataWriter.Execute(op);

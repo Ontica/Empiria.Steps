@@ -14,7 +14,7 @@ using Empiria.Ontology;
 namespace Empiria.ProjectManagement {
 
   /// <summary>Power type that defines a project object type:
-  /// a project activity, an event, a milestone, deadlines, etc.</summary>
+  /// a project activity, a task, a summary, an event, a milestone, etc.</summary>
   [Powertype(typeof(ProjectItem))]
   public sealed class ProjectItemType : Powertype {
 

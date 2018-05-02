@@ -27,8 +27,8 @@ namespace Empiria.ProjectManagement {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal Task(Project project, ProjectItem parent, JsonObject data) :
-                            base(ProjectItemType.TaskType, project, parent, data) {
+    protected internal Task(Project project, JsonObject data) :
+                            base(ProjectItemType.TaskType, project, data) {
       this.AssertIsValid(data);
 
       this.Load(data);
@@ -45,7 +45,7 @@ namespace Empiria.ProjectManagement {
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
     public Activity Activity {
       get {
@@ -54,37 +54,45 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-
     [DataField("ResponsibleId")]
-    public Contact AssignedTo {
+    public Contact Responsible {
       get;
       private set;
     }
 
 
-    [DataField("RequestedTime")]
-    public DateTime AssignationTime {
+    [DataField("AssignedDate")]
+    public DateTime AssignedDate {
+      get;
+      private set;
+    } = ExecutionServer.DateMaxValue;
+
+
+
+    [DataField("AssignedById")]
+    public Contact AssignedBy {
       get;
       private set;
     }
-
 
     public bool IsAssigned {
       get {
-        return !this.AssignedTo.IsEmptyInstance;
+        return !this.Responsible.IsEmptyInstance;
       }
     }
 
-    #endregion Public properties
+    #endregion Properties
+
 
     #region Private methods
 
     protected override void AssertIsValid(JsonObject data) {
-
+      base.AssertIsValid(data);
     }
 
     protected override void Load(JsonObject data) {
-
+      base.Load(data);
+      base.LoadDateFields(data);
     }
 
     protected override void OnSave() {

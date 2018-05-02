@@ -121,11 +121,10 @@ namespace Empiria.ProjectManagement {
 
       json.Add("resourceUID", parent.Resource.UID);
 
-      json.Add("requestedByUID", parent.RequestedBy.UID);
-      json.Add("requestedTime", parent.RequestedTime);
-      json.Add("responsibleUID", parent.Responsible.UID);
+      //json.Add("responsibleUID", parent.Responsible.UID);
 
       json.Add("workflowObjectId", step.Id);
+
       json.Add("parentId", parent.Id);
 
       return json;
