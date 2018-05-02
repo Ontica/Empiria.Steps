@@ -48,17 +48,6 @@ namespace Empiria.ProjectManagement {
       return list.ToFixedList();
     }
 
-    public FixedList<ProjectItem> GetActivitiesTree(ActivityOrder orderBy = ActivityOrder.Default) {
-      throw new NotImplementedException();
-
-      //var project = ProjectData.GetNoSummaryActivities(this.Filter);
-
-      //var list = project.GetActivities(this.Filter, orderBy)
-      //                  .FindAll((x) => x.ProjectObjectType != ProjectObjectType.SummaryType);
-
-      //return list;
-    }
-
     #endregion Public methods
 
     #region Private methods

@@ -18,7 +18,7 @@ namespace Empiria.Workflow.Definition {
   static internal class WorkflowDefinitionData {
 
     static internal List<Process> GetProcesses(string filter) {
-      string sql = $"SELECT * FROM BPMWorkflowObjects " +
+      string sql = $"SELECT * FROM WFWorkflowObjects " +
                    $"WHERE WorkflowObjectTypeId = {WorkflowObjectType.Process.Id} " +
                    $"AND Status <> 'X'";
 

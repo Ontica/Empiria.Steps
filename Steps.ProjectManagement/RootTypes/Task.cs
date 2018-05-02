@@ -96,7 +96,7 @@ namespace Empiria.ProjectManagement {
     }
 
     protected override void OnSave() {
-      ProjectData.WriteTask(this);
+      ProjectItemData.WriteTask(this);
     }
 
     #endregion Private methods

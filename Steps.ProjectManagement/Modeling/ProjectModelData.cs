@@ -15,7 +15,7 @@ using Empiria.Data;
 
 using Empiria.Workflow.Definition;
 
-namespace Empiria.ProjectManagement {
+namespace Empiria.ProjectManagement.Modeling {
 
   /// <summary>Data read and write methods for workflow objects.</summary>
   static internal class ProjectModelData {
@@ -32,7 +32,7 @@ namespace Empiria.ProjectManagement {
 
 
     static internal FixedList<ProjectModel> GetProjectModels(Contact owner, string categories = "") {
-      string sql = $"SELECT * FROM BPMWorkflowObjects " +
+      string sql = $"SELECT * FROM WFWorkflowObjects " +
                    $"WHERE WorkflowObjectTypeId = {WorkflowObjectType.Process.Id} AND " +
                    $"Categories LIKE '%{categories}%' AND Status <> 'X'";
 
@@ -52,7 +52,7 @@ namespace Empiria.ProjectManagement {
 
 
     static internal FixedList<ProcessActivity> GetSteps(ProjectModel projectModel) {
-      string sql = $"SELECT * FROM BPMWorkflowObjects " +
+      string sql = $"SELECT * FROM WFWorkflowObjects " +
                    $"WHERE ParentId = {projectModel.BaseProcess.Id} AND " +
                    $"WorkflowObjectTypeId = {WorkflowObjectType.Activity.Id} AND " +
                    $"Status <> 'X'";

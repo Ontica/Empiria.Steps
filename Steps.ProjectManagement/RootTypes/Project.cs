@@ -242,27 +242,27 @@ using Empiria.ProjectManagement.Resources;
 
     public FixedList<Contact> Responsibles {
       get {
-        return ProjectContactsData.GetProjectResponsibles(this);
+        return ProjectData.GetProjectResponsibles(this);
       }
     }
 
 
     public FixedList<Contact> Requesters {
       get {
-        return ProjectContactsData.GetProjectRequesters(this);
+        return ProjectData.GetProjectRequesters(this);
       }
     }
 
 
     public FixedList<Contact> TaskManagers {
       get {
-        return ProjectContactsData.GetProjectTaskManagers(this);
+        return ProjectData.GetProjectTaskManagers(this);
       }
     }
 
 
     internal FixedList<Contact> GetInvolvedContacts() {
-      return ProjectContactsData.GetProjectInvolvedContacts(this);
+      return ProjectData.GetProjectInvolvedContacts(this);
     }
 
 
@@ -279,14 +279,9 @@ using Empiria.ProjectManagement.Resources;
 
       activity.Save();
 
-      if (activity.Position <= ItemsList.Count) {
-        ProjectData.UpdatePositionsStartingFrom(activity);
+      this.ItemsList.Insert(activity.Position - 1, activity);
 
-        itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetProjectActivities(this));
-
-      } else {
-        ItemsList.Add(activity);
-      }
+      this.UpdateItemsPositionsBelow(activity);
 
       return activity;
     }
@@ -311,9 +306,10 @@ using Empiria.ProjectManagement.Resources;
 
       activity.Delete();
 
-      ProjectData.UpdatePositionsStartingFrom(activity);
+      ItemsList.Remove(activity);
 
-      itemsList = new Lazy<List<ProjectItem>>(() => ProjectData.GetProjectActivities(this));
+      this.UpdateItemsPositionsBelow(activity);
+
     }
 
 
@@ -346,7 +342,6 @@ using Empiria.ProjectManagement.Resources;
     #endregion Public methods
 
     #region Private methods
-
 
     private ProjectItem GetParentFromJson(JsonObject data) {
       ProjectItem parent = data.Get<ProjectItem>("parentUID", ProjectItem.Empty);
@@ -387,6 +382,20 @@ using Empiria.ProjectManagement.Resources;
       item.SetPosition(position);
     }
 
+
+    private void UpdateItemsPositionsBelow(Activity activity) {
+      var items = this.ItemsList.FindAll((x) => x.Position >= activity.Position &&
+                                                !x.Equals(activity));
+
+      foreach (var item in items) {
+        if (activity.Status != ActivityStatus.Deleted) {
+          item.SetPosition(item.Position + 1);
+        } else {
+          item.SetPosition(item.Position - 1);
+        }
+        ProjectItemData.UpdatePosition(item);
+      }
+    }
 
     #endregion Private methods
 
