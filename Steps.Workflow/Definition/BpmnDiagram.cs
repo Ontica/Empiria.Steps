@@ -60,12 +60,6 @@ namespace Empiria.Workflow.Definition {
 
     #region Public properties
 
-    [DataField("ObjectKey")]
-    public string UID {
-      get;
-      private set;
-    }
-
 
     [DataField("ObjectName")]
     public string Name {
@@ -113,13 +107,6 @@ namespace Empiria.Workflow.Definition {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Xml = data.GetClean("xml");
-    }
-
-
-    protected override void OnBeforeSave() {
-      if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 24);
-      }
     }
 
 

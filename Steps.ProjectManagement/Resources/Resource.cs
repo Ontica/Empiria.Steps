@@ -56,13 +56,6 @@ namespace Empiria.ProjectManagement.Resources {
       }
     }
 
-    [DataField("UID")]
-    public string UID {
-      get;
-      private set;
-    }
-
-
     [DataField("Name")]
     public string Name {
       get;

@@ -57,6 +57,11 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    static public ProjectItem Parse(string uid) {
+      return BaseObject.ParseKey<ProjectItem>(uid);
+    }
+
+
     static public ProjectItem Empty {
       get {
         return BaseObject.ParseEmpty<ProjectItem>();
@@ -80,13 +85,6 @@ namespace Empiria.ProjectManagement {
       get {
         return (ProjectItemType) base.GetEmpiriaType();
       }
-    }
-
-
-    [DataField("UID")]
-    public string UID {
-      get;
-      private set;
     }
 
 
@@ -145,6 +143,7 @@ namespace Empiria.ProjectManagement {
       private set;
     }
 
+
     public int Level {
       get {
         if (!this.Parent.IsEmptyInstance) {
@@ -154,6 +153,7 @@ namespace Empiria.ProjectManagement {
         }
       }
     }
+
 
     [DataField("BaseProjectId")]
     public Project Project {
@@ -269,8 +269,10 @@ namespace Empiria.ProjectManagement {
       if (tags != null && tags.Count != 0) {
         this.Tags = TagsCollection.Parse(tags);
       }
+
       this.Resource = data.Get<Resource>("resourceUID", this.Resource);
     }
+
 
     protected void LoadDateFields(JsonObject data) {
       this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
@@ -279,12 +281,6 @@ namespace Empiria.ProjectManagement {
       this.StartDate = data.Get("startDate", this.StartDate.Date);
       this.TargetDate = data.Get("targetDate", this.TargetDate.Date);
       this.DueDate = data.Get("dueDate", this.DueDate.Date);
-    }
-
-    protected override void OnBeforeSave() {
-      if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 36);
-      }
     }
 
 
@@ -316,14 +312,15 @@ namespace Empiria.ProjectManagement {
 
 
     public virtual void Update(JsonObject data) {
-      Assertion.AssertObject(data, "data");
-
       this.AssertIsValid(data);
+
       this.Load(data);
+
+      this.Save();
     }
 
     #endregion Private methods
 
-  } // class ProjectItem
+    } // class ProjectItem
 
 } // namespace Empiria.ProjectManagement

@@ -54,13 +54,6 @@ namespace Empiria.ProjectManagement.Meetings {
 
     #region Public properties
 
-    [DataField("UID")]
-    public string UID {
-      get;
-      private set;
-    } = String.Empty;
-
-
     [DataField("ProjectId")]
     public Project Project {
       get;
@@ -280,15 +273,6 @@ namespace Empiria.ProjectManagement.Meetings {
     }
 
 
-    protected override void OnBeforeSave() {
-      if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 36);
-
-        this.ControlNo = MeetingData.GetNextMeetingControlNo(this.Project);
-      }
-    }
-
-
     protected override void OnInitialize() {
       base.OnInitialize();
 
@@ -297,6 +281,10 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     protected override void OnSave() {
+      if (this.IsNew) {
+        this.ControlNo = MeetingData.GetNextMeetingControlNo(this.Project);
+      }
+
       MeetingData.WriteMeeting(this);
     }
 

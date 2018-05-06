@@ -67,13 +67,6 @@ namespace Empiria.Workflow.Definition {
     }
 
 
-    [DataField("UID")]
-    public string UID {
-      get;
-      private set;
-    }
-
-
     [DataField("Name")]
     public string Name {
       get;
@@ -175,13 +168,6 @@ namespace Empiria.Workflow.Definition {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
-    }
-
-
-    protected override void OnBeforeSave() {
-      if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 24);
-      }
     }
 
 
