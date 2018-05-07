@@ -37,7 +37,7 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    static public Activity Parse(string uid) {
+    static public new Activity Parse(string uid) {
       return BaseObject.ParseKey<Activity>(uid);
     }
 
@@ -57,6 +57,8 @@ namespace Empiria.ProjectManagement {
     #endregion Constructors and parsers
 
     #region Properties
+
+
 
     public new ProjectItem Parent {
       get {

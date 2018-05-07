@@ -83,18 +83,12 @@ namespace Empiria.ProjectManagement.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/as-tree")]
-    public CollectionModel GetProjectActivitiesAsTree([FromUri] string projectUID,
-                                                      [FromUri] ActivityFilter filter = null,
-                                                      [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
+    public CollectionModel GetProjectActivitiesAsTree([FromUri] string projectUID) {
       try {
-
-        if (filter == null) {
-          filter = new ActivityFilter();
-        }
 
         var project = Project.Parse(projectUID);
 
-        var fullActivitiesList = project.GetItems(filter, orderBy);
+        var fullActivitiesList = project.GetItems();
 
         return new CollectionModel(this.Request, fullActivitiesList.ToResponse(),
                                    typeof(ProjectItem).FullName);
@@ -103,6 +97,7 @@ namespace Empiria.ProjectManagement.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
 
     #endregion Get methods
 

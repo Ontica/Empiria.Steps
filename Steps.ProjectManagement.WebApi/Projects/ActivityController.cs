@@ -24,17 +24,16 @@ namespace Empiria.ProjectManagement.WebApi {
     [Route("v1/project-management/activities/{activityUIDOrId}")]
     public SingleObjectModel GetProjectActivity(string activityUIDOrId) {
       try {
-        Activity activity = null;
+        Activity projectItem;
 
         if (EmpiriaString.IsInteger(activityUIDOrId)) {
-          activity = Activity.Parse(int.Parse(activityUIDOrId));
+          projectItem = Activity.Parse(int.Parse(activityUIDOrId));
 
         } else {
-          activity = Activity.Parse(activityUIDOrId);
-
+          projectItem = Activity.Parse(activityUIDOrId);
         }
 
-        return new SingleObjectModel(this.Request, activity.ToResponse(),
+        return new SingleObjectModel(this.Request, projectItem.ToResponse(),
                                      typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
@@ -102,8 +101,6 @@ namespace Empiria.ProjectManagement.WebApi {
         Activity activity = project.GetActivity(activityUID);
 
         activity.Update(bodyAsJson);
-
-        activity.Save();
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(Activity).FullName);

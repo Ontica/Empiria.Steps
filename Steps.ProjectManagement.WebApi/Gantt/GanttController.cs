@@ -21,14 +21,8 @@ namespace Empiria.ProjectManagement.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/as-gantt")]
-    public CollectionModel GetProjectActivitiesAsGantt(string projectUID,
-                                                       [FromUri] ActivityFilter filter = null,
-                                                       [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
+    public CollectionModel GetProjectActivitiesAsGantt(string projectUID) {
       try {
-
-        if (filter == null) {
-          filter = new ActivityFilter();
-        }
 
         var project = Project.Parse(projectUID);
 
