@@ -131,7 +131,7 @@ namespace Empiria.ProjectManagement {
     public override void Update(JsonObject data) {
       this.Load(data);
 
-      this.Project.UpdateParentAndPositionFromJson(this, data);
+      this.Project.UpdateItemParentAndPosition(this, data);
 
       this.Save();
     }
