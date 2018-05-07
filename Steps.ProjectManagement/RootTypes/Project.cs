@@ -1,10 +1,10 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
-*  Type     : Project                                          License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Domain services                       *
+*  Assembly : Empiria.ProjectManagement.dll                Pattern   : Aggregate root                        *
+*  Type     : ActivityController                           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-w  Summary  : Describes a project as well defined set of activities.                                         *
+*  Summary  : Describes a project as a tree of activities.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -22,7 +22,7 @@ using Empiria.ProjectManagement.Resources;
 
   namespace Empiria.ProjectManagement {
 
-  /// <summary>Describes a project as well defined set of activities.</summary>
+  /// <summary>Describes a project as a tree of activities.</summary>
   public class Project : BaseObject {
 
     #region Fields
@@ -71,13 +71,6 @@ using Empiria.ProjectManagement.Resources;
     #endregion Constructors and parsers
 
     #region Public properties
-
-    [DataField("UID")]
-    public string UID {
-      get;
-      private set;
-    }
-
 
     [DataField("Name")]
     public string Name {
@@ -219,7 +212,7 @@ using Empiria.ProjectManagement.Resources;
 
     #region Project structure
 
-    public List<ProjectItem> ItemsList {
+    private List<ProjectItem> ItemsList {
       get {
         return this.itemsList.Value;
       }
@@ -275,13 +268,12 @@ using Empiria.ProjectManagement.Resources;
 
       var activity = new Activity(this, data);
 
-      SetParentAndPositionFromJson(activity, data);
-
+      activity.SetPosition(this.ItemsList.Count + 1);
       activity.Save();
 
-      this.ItemsList.Insert(activity.Position - 1, activity);
+      this.ItemsList.Add(activity);
 
-      this.UpdateItemsPositionsBelow(activity);
+      UpdateParentAndPositionFromJson(activity, data);
 
       return activity;
     }
@@ -293,45 +285,9 @@ using Empiria.ProjectManagement.Resources;
       Activity activity = ItemsList.Find((x) => x.UID == activityUID && x is Activity) as Activity;
 
       Assertion.AssertObject(activity,
-                             $"Activity with uid ({activityUID}) is not part of project {this.Name}.");
+                             $"Activity with uid '{activityUID}' is not part of project '{this.Name}'.");
 
       return activity;
-    }
-
-
-    public void RemoveActivity(Activity activity) {
-      Assertion.AssertObject(activity, "activity");
-      Assertion.Assert(ItemsList.Contains(activity),
-                      $"Activity {activity.Name} doesn't belong to this project.");
-
-      activity.Delete();
-
-      ItemsList.Remove(activity);
-
-      this.UpdateItemsPositionsBelow(activity);
-
-    }
-
-
-    public Summary AddSummary(JsonObject data) {
-      Assertion.AssertObject(data, "data");
-
-      Summary summary = new Summary(this, data);
-
-      SetParentAndPositionFromJson(summary, data);
-
-      summary.Save();
-
-      ItemsList.Add(summary);
-
-      return summary;
-    }
-
-
-    protected override void OnBeforeSave() {
-      if (this.IsNew) {
-        this.UID = EmpiriaString.BuildRandomString(6, 36);
-      }
     }
 
 
@@ -339,12 +295,192 @@ using Empiria.ProjectManagement.Resources;
       ProjectData.WriteProject(this);
     }
 
+
+    public void RemoveActivity(Activity activity) {
+      Assertion.AssertObject(activity, "activity");
+      Assertion.Assert(ItemsList.Contains(activity),
+                      $"Activity '{activity.Name}' doesn't belong to this project.");
+      Assertion.Assert(this.IsLeaf(activity),
+                      $"Activity '{activity.Name}' can't be deleted because has children.");
+
+      activity.Delete();
+
+      ItemsList.Remove(activity);
+
+      this.RefreshPositions();
+    }
+
+
+    internal void UpdateParentAndPositionFromJson(ProjectItem item, JsonObject data) {
+      ProjectItem parentFromJson = TryGetParentFromJson(data);
+      int? positionFromJson = TryGetPositionFromJson(data);
+
+      if (parentFromJson != null && item.Parent.Equals(parentFromJson)) {
+        parentFromJson = null;          // Nothing to change
+      }
+      if (positionFromJson != null && item.Position == positionFromJson.Value) {
+        positionFromJson = null;        // Nothing to change
+      }
+
+      if (parentFromJson != null && positionFromJson != null) {
+        Assertion.AssertFail("It is not possible to change position and parent at the same time.");
+        return;
+
+      } else if (parentFromJson != null && positionFromJson == null) {
+        this.ChangeParent(item, parentFromJson);
+        return;
+
+      } else if (parentFromJson == null && positionFromJson != null) {
+        this.ChangePosition(item, positionFromJson.Value);
+        return;
+
+      } else if (parentFromJson == null && positionFromJson == null) {
+        // No-op. Nothing to change.
+        return;
+
+      } else {
+        throw Assertion.AssertNoReachThisCode();
+      }
+
+    }
+
     #endregion Public methods
 
     #region Private methods
 
-    private ProjectItem GetParentFromJson(JsonObject data) {
-      ProjectItem parent = data.Get<ProjectItem>("parentUID", ProjectItem.Empty);
+    private void ChangeParent(ProjectItem item, ProjectItem newParent) {
+      var branchToMove = this.GetBranch(item);
+
+      Assertion.Assert(!branchToMove.Contains(newParent),
+                       $"Can't change the parent of '{item.Name}' because it is a branch " +
+                       $"and '{newParent.Name}' is one of its children.");
+
+      foreach (var branchItem in branchToMove) {
+        ItemsList.Remove(branchItem);
+      }
+
+      var lastChild = this.TryGetLastChildOf(newParent);
+
+      int insertionIndex = 0;
+      if (lastChild != null) {
+        var lastChildBranch = this.GetBranch(lastChild);
+
+        insertionIndex = this.ItemsList.IndexOf(lastChildBranch[lastChildBranch.Count - 1]) + 1;
+      } else {
+        insertionIndex = this.ItemsList.IndexOf(newParent) + 1;
+      }
+
+      foreach (var branchItem in branchToMove) {
+        ItemsList.Insert(insertionIndex, branchItem);
+
+        insertionIndex++;
+      }
+
+      this.RefreshPositions();
+
+      item.SetParent(newParent);
+
+      item.Save();
+    }
+
+
+    private void ChangePosition(ProjectItem item, int newPosition) {
+      var branchToMove = this.GetBranch(item);
+
+      Assertion.Assert(newPosition < branchToMove[0].Position ||
+                       newPosition > branchToMove[branchToMove.Count - 1].Position,
+                       "Can't move item because it's a branch and the requested new position is inside it.");
+
+      int insertionIndex = Math.Min(newPosition - 1, this.ItemsList.Count);
+
+      // Get the insertion before item point
+      ProjectItem insertBeforeItem = insertionIndex < this.ItemsList.Count ? this.ItemsList[insertionIndex] : null;
+
+      // Then remove the whole branch an reinsert it in the new position
+      foreach (var branchItem in branchToMove) {
+        ItemsList.Remove(branchItem);
+      }
+
+      // Recalculate the new insertion index
+      insertionIndex = insertBeforeItem != null ? this.ItemsList.IndexOf(insertBeforeItem) : this.ItemsList.Count;
+
+      foreach (var branchItem in branchToMove) {
+        ItemsList.Insert(insertionIndex, branchItem);
+
+        insertionIndex++;
+      }
+
+      this.RefreshPositions();
+
+      // Then change item's parent
+      if (insertBeforeItem != null) {
+        item.SetParent(insertBeforeItem.Parent);
+      } else {
+        item.SetParent(ProjectItem.Empty);
+      }
+
+      item.Save();
+    }
+
+
+    private FixedList<ProjectItem> GetBranch(ProjectItem root) {
+      var branch = new List<ProjectItem>();
+
+      branch.Add(root);
+
+      var rootIndex = this.ItemsList.IndexOf(root);
+
+      if (rootIndex == -1) {
+        return branch.ToFixedList();
+      }
+
+      for (int i = rootIndex + 1; i < this.ItemsList.Count; i++) {
+        var item = this.ItemsList[i];
+
+        if (item.Level > root.Level) {
+          branch.Add(item);
+        } else {
+          break;
+        }
+      }
+      return branch.ToFixedList();
+    }
+
+    private FixedList<ProjectItem> GetChildren(ProjectItem item) {
+
+      return this.ItemsList.FindAll((x) => x.Parent.Equals(item))
+                           .ToFixedList();
+    }
+
+
+    private bool IsLeaf(ProjectItem item) {
+      return (this.GetChildren(item).Count == 0);
+    }
+
+
+    private void RefreshPositions() {
+      for (int i = 0; i < this.ItemsList.Count; i++) {
+        var item = this.ItemsList[i];
+
+        if (item.Position != (i + 1)) {
+          item.SetPosition(i + 1);
+
+          ProjectItemData.UpdatePosition(item);
+        }
+      }  // for
+    }
+
+
+    private ProjectItem TryGetLastChildOf(ProjectItem parent) {
+      return this.ItemsList.FindLast((x) => x.Parent.Equals(parent));
+    }
+
+    private ProjectItem TryGetParentFromJson(JsonObject data) {
+      if (!data.Contains("parentUID")) {
+        return null;
+      }
+
+      var parent = data.Get<ProjectItem>("parentUID");
 
       if (parent.IsEmptyInstance) {
         return ProjectItem.Empty;
@@ -352,49 +488,23 @@ using Empiria.ProjectManagement.Resources;
 
       Assertion.Assert(ItemsList.Contains(parent),
                        new ValidationException("UnrecognizedActivityParent",
-                                               $"Invalid activity parent ({parent.Name}) for project ({this.UID})."));
+                                               $"Invalid activity parent '{parent.Name}' for project '{this.Name}'."));
       return parent;
     }
 
 
-    private int GetPositionFromJson(JsonObject data) {
-      int position = data.Get("position", -1);
-
-      if (position == -1) {
-        return this.ItemsList.Count + 1;
+    private int? TryGetPositionFromJson(JsonObject data) {
+      if (!data.Contains("position")) {
+        return null;
       }
+
+      var position = data.Get<int>("position");
 
       Assertion.Assert(1 <= position && position <= ItemsList.Count + 1,
                        new ValidationException("PositionOutOfIndex",
                                                $"Invalid activity position ({position}) for project ({this.UID})."));
 
       return position;
-    }
-
-
-    private void SetParentAndPositionFromJson(ProjectItem item, JsonObject data) {
-      ProjectItem parent = GetParentFromJson(data);
-
-      item.SetParent(parent);
-
-      int position = GetPositionFromJson(data);
-
-      item.SetPosition(position);
-    }
-
-
-    private void UpdateItemsPositionsBelow(Activity activity) {
-      var items = this.ItemsList.FindAll((x) => x.Position >= activity.Position &&
-                                                !x.Equals(activity));
-
-      foreach (var item in items) {
-        if (activity.Status != ActivityStatus.Deleted) {
-          item.SetPosition(item.Position + 1);
-        } else {
-          item.SetPosition(item.Position - 1);
-        }
-        ProjectItemData.UpdatePosition(item);
-      }
     }
 
     #endregion Private methods

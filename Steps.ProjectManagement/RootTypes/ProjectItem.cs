@@ -291,6 +291,8 @@ namespace Empiria.ProjectManagement {
 
     internal void SetParent(ProjectItem parent) {
       Assertion.AssertObject(parent, "parent");
+      Assertion.Assert(!parent.Equals(this),
+                      "A project item can't be parent of itself.");
 
       this.Parent = parent;
     }

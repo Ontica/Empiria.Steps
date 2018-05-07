@@ -38,7 +38,7 @@ namespace Empiria.ProjectManagement {
       this.Load(data);
     }
 
-    static public Activity Parse(string uid) {
+    static public new Activity Parse(string uid) {
       return BaseObject.ParseKey<Activity>(uid);
     }
 
@@ -117,10 +117,6 @@ namespace Empiria.ProjectManagement {
 
     }
 
-    protected override void AssertIsValid(JsonObject data) {
-      base.AssertIsValid(data);
-    }
-
     protected override void Load(JsonObject data) {
       base.Load(data);
       base.LoadDateFields(data);
@@ -132,8 +128,18 @@ namespace Empiria.ProjectManagement {
       ProjectItemData.WriteActivity(this);
     }
 
+    public override void Update(JsonObject data) {
+      this.Load(data);
+
+      this.Project.UpdateParentAndPositionFromJson(this, data);
+
+      this.Save();
+    }
+
+
+
     #endregion Public methods
 
-  } // class Activity
+    } // class Activity
 
 } // namespace Empiria.ProjectManagement
