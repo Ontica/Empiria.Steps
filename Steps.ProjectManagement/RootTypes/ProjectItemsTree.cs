@@ -75,6 +75,7 @@ namespace Empiria.ProjectManagement {
       this.ItemsList.Add(activity);
 
       UpdateItemParentAndPosition(activity, data);
+      activity.Save();
 
       return activity;
     }
@@ -126,10 +127,12 @@ namespace Empiria.ProjectManagement {
 
       if (parentFromJson != null && positionFromJson != null) {
         Assertion.AssertFail("It is not possible to change position and parent at the same time.");
+
         return;
 
       } else if (parentFromJson != null && positionFromJson == null) {
         this.ChangeParent(item, parentFromJson);
+
         return;
 
       } else if (parentFromJson == null && positionFromJson != null) {
@@ -161,16 +164,7 @@ namespace Empiria.ProjectManagement {
         ItemsList.Remove(branchItem);
       }
 
-      var lastChild = this.TryGetLastChildOf(newParent);
-
-      int insertionIndex = 0;
-      if (lastChild != null) {
-        var lastChildBranch = this.GetBranch(lastChild);
-
-        insertionIndex = this.ItemsList.IndexOf(lastChildBranch[lastChildBranch.Count - 1]) + 1;
-      } else {
-        insertionIndex = this.ItemsList.IndexOf(newParent) + 1;
-      }
+      int insertionIndex = this.ItemsList.IndexOf(newParent) + 1;
 
       foreach (var branchItem in branchToMove) {
         ItemsList.Insert(insertionIndex, branchItem);
@@ -181,8 +175,6 @@ namespace Empiria.ProjectManagement {
       this.RefreshPositions();
 
       item.SetParent(newParent);
-
-      item.Save();
     }
 
 
@@ -220,8 +212,6 @@ namespace Empiria.ProjectManagement {
       } else {
         item.SetParent(ProjectItem.Empty);
       }
-
-      item.Save();
     }
 
 
@@ -231,10 +221,6 @@ namespace Empiria.ProjectManagement {
       branch.Add(root);
 
       var rootIndex = this.ItemsList.IndexOf(root);
-
-      if (rootIndex == -1) {
-        return branch.ToFixedList();
-      }
 
       for (int i = rootIndex + 1; i < this.ItemsList.Count; i++) {
         var item = this.ItemsList[i];
