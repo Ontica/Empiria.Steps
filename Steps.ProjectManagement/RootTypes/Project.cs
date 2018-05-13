@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Collections;
 using Empiria.Contacts;
@@ -28,6 +27,7 @@ using Empiria.ProjectManagement.Resources;
     #region Fields
 
     private Lazy<ProjectItemsTree> itemsTree = null;
+    private readonly object __treeLock = new object();
 
     #endregion Fields
 
@@ -246,7 +246,9 @@ using Empiria.ProjectManagement.Resources;
     public Activity AddActivity(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
-      return this.Items.AddActivity(data);
+      lock (__treeLock) {
+        return this.Items.AddActivity(data);
+      }
     }
 
 
@@ -282,7 +284,9 @@ using Empiria.ProjectManagement.Resources;
     public void RemoveActivity(Activity activity) {
       Assertion.AssertObject(activity, "activity");
 
-      this.Items.RemoveActivity(activity);
+      lock (__treeLock) {
+        this.Items.RemoveActivity(activity);
+      }
     }
 
 
@@ -290,7 +294,9 @@ using Empiria.ProjectManagement.Resources;
       Assertion.AssertObject(activity, "activity");
       Assertion.AssertObject(data, "data");
 
-      this.Items.UpdateItemParentAndPosition(activity, data);
+      lock (__treeLock) {
+        this.Items.UpdateItemParentAndPosition(activity, data);
+      }
     }
 
     #endregion Project items

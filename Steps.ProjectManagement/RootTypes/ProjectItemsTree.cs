@@ -15,7 +15,7 @@ using Empiria.Json;
 namespace Empiria.ProjectManagement {
 
   /// <summary>Tree structure of project items.</summary>
-  public class ProjectItemsTree {
+  internal class ProjectItemsTree {
 
     #region Fields
 
