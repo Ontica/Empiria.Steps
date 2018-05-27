@@ -278,9 +278,17 @@ namespace Empiria.ProjectManagement {
       this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
                                               this.EstimatedDuration.ToString()));
 
-      this.StartDate = data.Get("startDate", this.StartDate.Date);
-      this.TargetDate = data.Get("targetDate", this.TargetDate.Date);
-      this.DueDate = data.Get("dueDate", this.DueDate.Date);
+      if (data.Contains("startDate")) {
+        this.StartDate = data.Get("startDate", ExecutionServer.DateMaxValue);
+      }
+
+      if (data.Contains("targetDate")) {
+        this.TargetDate = data.Get("targetDate", ExecutionServer.DateMaxValue);
+      }
+
+      if (data.Contains("dueDate")) {
+        this.DueDate= data.Get("dueDate", ExecutionServer.DateMaxValue);
+      }
     }
 
 
