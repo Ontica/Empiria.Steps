@@ -40,7 +40,7 @@ namespace Empiria.ProjectManagement.WebApi {
         position = projectItem.Position,
         level = projectItem.Level,
         ragStatus = projectItem.RagStatus,
-        parent = projectItem.Parent is Summary ? projectItem.Parent.Id : 0
+        parent = projectItem.Parent.IsEmptyInstance ? 0 : projectItem.Parent.Id
       };
     }
 
