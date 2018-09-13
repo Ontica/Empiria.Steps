@@ -270,6 +270,7 @@ using Empiria.ProjectManagement.Resources;
       return this.Items.ToFixedList();
     }
 
+    [Obsolete]
     public FixedList<ProjectItem> GetItems(ActivityFilter filter = null,
                                            ActivityOrder orderBy = ActivityOrder.Default) {
       if (filter == null) {

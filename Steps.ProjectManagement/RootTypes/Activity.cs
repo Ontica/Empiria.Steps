@@ -117,6 +117,7 @@ namespace Empiria.ProjectManagement {
 
     }
 
+
     protected override void Load(JsonObject data) {
       base.Load(data);
       base.LoadDateFields(data);
@@ -128,6 +129,7 @@ namespace Empiria.ProjectManagement {
       ProjectItemData.WriteActivity(this);
     }
 
+
     public override void Update(JsonObject data) {
       this.Load(data);
 
@@ -135,7 +137,6 @@ namespace Empiria.ProjectManagement {
 
       this.Save();
     }
-
 
 
     #endregion Public methods
