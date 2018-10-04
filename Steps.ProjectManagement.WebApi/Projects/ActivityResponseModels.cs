@@ -33,6 +33,7 @@ namespace Empiria.ProjectManagement.WebApi {
           name = activity.Parent.Name,
           type = activity.Parent.ProjectObjectType.Name,
         },
+        config = activity.Configuration.ToObject(),
         estimatedDuration = activity.EstimatedDuration.ToString(),
         startDate = activity.StartDate,
         targetDate = activity.TargetDate,

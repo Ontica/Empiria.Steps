@@ -74,6 +74,8 @@ namespace Empiria.ProjectManagement {
       } else {
         this.Parent = this;
       }
+
+      this.ExtensionData = JsonObject.Parse((string) row["ExtData"]);
     }
 
     #endregion Constructors and parsers
@@ -122,10 +124,16 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    [DataField("ExtData")]
     protected internal JsonObject ExtensionData {
       get;
       private set;
+    } = new JsonObject();
+
+
+    public JsonObject Configuration {
+      get {
+        return this.ExtensionData.Slice("config", false);
+      }
     }
 
 
@@ -267,6 +275,10 @@ namespace Empiria.ProjectManagement {
       var tags = data.GetList<string>("tags", false);
       if (tags != null && tags.Count != 0) {
         this.Tags = TagsCollection.Parse(tags);
+      }
+
+      if (data.Contains("config")) {
+        this.ExtensionData.Set("config", data.Slice("config"));
       }
 
       this.Resource = data.Get<Resource>("resourceUID", this.Resource);
