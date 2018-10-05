@@ -20,6 +20,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     static internal object ToResponse(this Activity activity) {
       return new {
+        id = activity.Id,
         uid = activity.UID,
         type = activity.ProjectObjectType.Name,
         name = activity.Name,
@@ -54,6 +55,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     static internal object ToResponse(this Summary summary) {
       return new {
+        id = summary.Id,
         uid = summary.UID,
         type = summary.ProjectObjectType.Name,
         name = summary.Name,
