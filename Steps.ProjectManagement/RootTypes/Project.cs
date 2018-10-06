@@ -63,6 +63,13 @@ using Empiria.ProjectManagement.Resources;
       return list.ToFixedList();
     }
 
+    static public FixedList<Project> GetTemplatesList(string filter = "") {
+      var ownerOrManager = Contact.Parse(51);
+
+      var list = ProjectData.GetTemplates(ownerOrManager);
+
+      return list.ToFixedList();
+    }
 
     protected override void OnInitialize() {
       itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));

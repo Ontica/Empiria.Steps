@@ -37,6 +37,21 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpGet]
+    [Route("v1/project-management/templates")]
+    public CollectionModel GetTemplatesList() {
+      try {
+        var list = Project.GetTemplatesList();
+
+        return new CollectionModel(this.Request, list.ToResponse(),
+                                   typeof(Project).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/responsibles")]
     public CollectionModel GetProjectResponsiblesList(string projectUID) {
       try {

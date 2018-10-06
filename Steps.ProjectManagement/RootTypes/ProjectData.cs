@@ -20,7 +20,14 @@ namespace Empiria.ProjectManagement {
 
     static internal List<Project> GetProjects(Contact ownerOrManager) {
       string filter = $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
-                      $"AND Status <> 'X' AND ExtData LIKE '%designPattern%'";
+                      $"AND Status <> 'X' AND ExtData NOT LIKE '%template%'";
+
+      return BaseObject.GetList<Project>(filter, "ItemPosition");
+    }
+
+    static internal List<Project> GetTemplates(Contact ownerOrManager) {
+      string filter = $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
+                      $"AND Status <> 'X' AND ExtData LIKE '%template%'";
 
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
