@@ -215,7 +215,7 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    private FixedList<ProjectItem> GetBranch(ProjectItem root) {
+    internal FixedList<ProjectItem> GetBranch(ProjectItem root) {
       var branch = new List<ProjectItem>();
 
       branch.Add(root);

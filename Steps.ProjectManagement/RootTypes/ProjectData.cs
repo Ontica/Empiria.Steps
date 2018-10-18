@@ -32,6 +32,25 @@ namespace Empiria.ProjectManagement {
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
 
+
+    static internal FixedList<ProjectItem> GetEvents(Contact ownerOrManager) {
+      var templateProjects = GetTemplates(ownerOrManager);
+
+      var events = new List<ProjectItem>();
+
+      foreach (var project in templateProjects) {
+        var items = project.GetItems();
+
+        items = items.FindAll(x => x is Activity);
+        items = items.FindAll(x => ((Activity) x).Template.ActivityType == "Event");
+
+        events.AddRange(items);
+      }
+
+      return events.ToFixedList();
+
+    }
+
     #region Project structure methods
 
     static internal List<ProjectItem> GetProjectActivities(Project project,

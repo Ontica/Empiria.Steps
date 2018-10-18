@@ -71,6 +71,14 @@ using Empiria.ProjectManagement.Resources;
       return list.ToFixedList();
     }
 
+
+    static public FixedList<ProjectItem> GetEventsList(string filter = "") {
+      var ownerOrManager = Contact.Parse(51);
+
+      return ProjectData.GetEvents(ownerOrManager);
+    }
+
+
     protected override void OnInitialize() {
       itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));
     }
@@ -113,6 +121,12 @@ using Empiria.ProjectManagement.Resources;
       private set;
     }
 
+
+    public bool IsTemplate {
+      get {
+        return this.ExtensionData.Contains("template");
+      }
+    }
 
     public string Keywords {
       get {
@@ -273,6 +287,13 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
+    public FixedList<ProjectItem> GetBranch(ProjectItem root) {
+      Assertion.AssertObject(root, "root");
+
+      return this.Items.GetBranch(root);
+    }
+
+
     public FixedList<ProjectItem> GetItems() {
       return this.Items.ToFixedList();
     }
@@ -298,12 +319,12 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
-    internal void UpdateItemParentAndPosition(Activity activity, JsonObject data) {
-      Assertion.AssertObject(activity, "activity");
+    internal void UpdateItemParentAndPosition(ProjectItem projectItem, JsonObject data) {
+      Assertion.AssertObject(projectItem, "projectItem");
       Assertion.AssertObject(data, "data");
 
       lock (__treeLock) {
-        this.Items.UpdateItemParentAndPosition(activity, data);
+        this.Items.UpdateItemParentAndPosition(projectItem, data);
       }
     }
 
