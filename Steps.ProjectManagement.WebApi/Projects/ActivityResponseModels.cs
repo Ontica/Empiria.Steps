@@ -34,7 +34,7 @@ namespace Empiria.ProjectManagement.WebApi {
           name = activity.Parent.Name,
           type = activity.Parent.ProjectObjectType.Name,
         },
-        config = activity.Configuration.ToObject(),
+        config = activity.ConfigurationJson.ToObject(),
         estimatedDuration = activity.EstimatedDuration.ToString(),
         startDate = activity.StartDate,
         targetDate = activity.TargetDate,
@@ -49,6 +49,8 @@ namespace Empiria.ProjectManagement.WebApi {
         responsible = activity.Responsible.ToShortResponse(),
         assignedDate = activity.AssignedDate,
         assignedBy = activity.AssignedBy.ToShortResponse(),
+        template = activity.Template,
+        workflowObject = activity.WorkflowObjectId > 0 ? ToResponse(Activity.Parse(activity.WorkflowObjectId)) : new object()
       };
     }
 

@@ -130,13 +130,6 @@ namespace Empiria.ProjectManagement {
     } = new JsonObject();
 
 
-    public JsonObject Configuration {
-      get {
-        return this.ExtensionData.Slice("config", false);
-      }
-    }
-
-
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.Name, this.Tags.ToString());
@@ -225,10 +218,10 @@ namespace Empiria.ProjectManagement {
 
 
     [DataField("WorkflowObjectId")]
-    public WorkflowObject WorkflowObject {
+    public int WorkflowObjectId {
       get;
       private set;
-    } = WorkflowObject.Empty;
+    } = -1;
 
 
     #endregion Public properties
@@ -266,6 +259,9 @@ namespace Empiria.ProjectManagement {
       this.Save();
     }
 
+    public FixedList<ProjectItem> GetBranch() {
+      return this.Project.GetBranch(this);
+    }
 
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
@@ -282,6 +278,8 @@ namespace Empiria.ProjectManagement {
       }
 
       this.Resource = data.Get<Resource>("resourceUID", this.Resource);
+
+      this.WorkflowObjectId = data.Get<int>("workflowObjectId", this.WorkflowObjectId);
     }
 
 
@@ -314,6 +312,16 @@ namespace Empiria.ProjectManagement {
                       "A project item can't be parent of itself.");
 
       this.Parent = parent;
+    }
+
+    public void SetAndSaveParent(ProjectItem parent) {
+      Assertion.AssertObject(parent, "parent");
+      Assertion.Assert(!parent.Equals(this),
+                      "A project item can't be parent of itself.");
+
+      this.Parent = parent;
+
+      this.Save();
     }
 
 

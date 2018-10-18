@@ -55,10 +55,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var project = Project.Parse(projectUID);
 
-        Activity activity = (Activity) project.AddActivity(bodyAsJson);
+        Activity activity = project.AddActivity(bodyAsJson);
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
-                                     typeof(ProjectItem).FullName);
+                                     typeof(Activity).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -87,6 +87,7 @@ namespace Empiria.ProjectManagement.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpPut, HttpPatch]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}")]

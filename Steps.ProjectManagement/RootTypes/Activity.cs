@@ -8,7 +8,6 @@ w  Summary  : Describes a project activity.                                     
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Json;
@@ -81,6 +80,25 @@ namespace Empiria.ProjectManagement {
     public bool IsAssigned {
       get {
         return !this.Responsible.IsEmptyInstance;
+      }
+    }
+
+
+    public JsonObject ConfigurationJson {
+      get {
+        return this.ExtensionData.Slice("config", false);
+      }
+    }
+
+    public ActivityModel Template {
+      get {
+        var json = this.ConfigurationJson;
+
+        if (json.IsEmptyInstance) {
+          return ActivityModel.Empty;
+        } else {
+          return ActivityModel.Parse(json);
+        }
       }
     }
 
