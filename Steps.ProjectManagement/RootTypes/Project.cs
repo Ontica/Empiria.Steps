@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Domain services                       *
 *  Assembly : Empiria.ProjectManagement.dll                Pattern   : Aggregate root                        *
-*  Type     : ActivityController                           License   : Please read LICENSE.txt file          *
+*  Type     : Project                                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Describes a project as a tree of activities.                                                   *
 *                                                                                                            *

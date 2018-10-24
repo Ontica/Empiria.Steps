@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 using System.Web.Http;
 
 using Empiria.Json;
@@ -60,88 +59,19 @@ namespace Empiria.ProjectManagement.WebApi {
                                             [FromBody] object body) {
       try {
         base.RequireBody(body);
+
         var bodyAsJson = JsonObject.Parse(body);
+
+        var eventModel = bodyAsJson.Get<Activity>("eventUID");
+        var eventDate = bodyAsJson.Get<DateTime>("eventDate", DateTime.Today);
 
         var project = Project.Parse(projectUID);
 
-        var model = bodyAsJson.Get<Activity>("eventUID");
-        var templateProject = model.Project;
+        var handler = new ActivityCreator(project);
 
-        var targetDate = bodyAsJson.Get<DateTime>("targetDate", DateTime.Today);
+        handler.CreateFromEvent(eventModel, eventDate);
 
-        var modelBranch = model.GetBranch();
-
-        List<Activity> createdActivities = new List<Activity>();
-
-        DateTime? dueDate = targetDate;
-
-        foreach (var modelItem in modelBranch) {
-          dueDate = CalculateNewDueDate(modelItem, targetDate);
-
-          var json = new JsonObject();
-
-          json.Add("name", modelItem.Name);
-          json.Add("notes", modelItem.Notes);
-
-          if (createdActivities.Count == 0) {
-            json.Add("targetDate", targetDate);
-          }
-
-          if (dueDate.HasValue) {
-            json.Add("dueDate", dueDate);
-          } else if (createdActivities.Count == 0) {
-            json.Add("dueDate", targetDate);
-          }
-
-          if (createdActivities.Count != 0) {
-            json.Add("workflowObjectId", modelItem.Id);
-          }
-
-          var activity = project.AddActivity(json);
-
-          if (createdActivities.Count != 0) {
-            activity.SetAndSaveParent(createdActivities[0]);
-          }
-
-          createdActivities.Add(activity);
-        }
-
-
-        var dependencies = templateProject.GetItems()
-                                          .FindAll( x => ((Activity) x).Template.DueOnControllerId == model.Id
-                                                          && !createdActivities.Exists(y => y.WorkflowObjectId == x.Id));
-
-        foreach (var dependency in dependencies) {
-          dueDate = CalculateNewDueDate(dependency, targetDate);
-
-          var json = new JsonObject();
-
-          json.Add("name", dependency.Name);
-          json.Add("notes", dependency.Notes);
-
-          if (createdActivities.Count == 0) {
-            json.Add("targetDate", targetDate);
-          }
-
-          if (dueDate.HasValue) {
-            json.Add("dueDate", dueDate);
-          } else if (createdActivities.Count == 0) {
-            json.Add("dueDate", targetDate);
-          }
-
-          json.Add("workflowObjectId", dependency.Id);
-
-          var activity = project.AddActivity(json);
-
-          if (createdActivities.Count != 0) {
-            activity.SetAndSaveParent(createdActivities[0]);
-          }
-
-          createdActivities.Add(activity);
-
-        }
-
-        return new SingleObjectModel(this.Request, model.ToResponse(),
+        return new SingleObjectModel(this.Request, eventModel.ToResponse(),
                                      typeof(Activity).FullName);
 
       } catch (Exception e) {
@@ -151,41 +81,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     #endregion Update methods
-
-    private DateTime? CalculateNewDueDate(ProjectItem template, DateTime baseDate) {
-      if (!(template is Activity)) {
-        return null;
-      }
-      var dueOnTerm = ((Activity) template).Template.DueOnTerm;
-
-      if (String.IsNullOrWhiteSpace(dueOnTerm)) {
-        return null;
-      }
-
-      var term = int.Parse(dueOnTerm);
-
-      switch (((Activity) template).Template.DueOnTermUnit) {
-        case "BusinessDays":
-          return baseDate.AddDays(Math.Round(term * 7.0 / 5.0, 0));
-
-        case "CalendarDays":
-          return baseDate.AddDays(term);
-
-        case "Hours":
-          return baseDate.AddHours(term);
-
-        case "Months":
-          return baseDate.AddMonths(term);
-
-        case "Years":
-          return baseDate.AddYears(term);
-
-        default:
-          return null;
-      }
-
-
-    }
 
   }  // class TemplatesController
 

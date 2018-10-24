@@ -42,7 +42,8 @@ namespace Empiria.ProjectManagement {
         var items = project.GetItems();
 
         items = items.FindAll(x => x is Activity);
-        items = items.FindAll(x => ((Activity) x).Template.ActivityType == "Event");
+        items = items.FindAll(x => ((Activity) x).Template.ActivityType == "Event" ||
+                                   (((Activity) x).Template.ActivityType == "Milestone"));
 
         events.AddRange(items);
       }
