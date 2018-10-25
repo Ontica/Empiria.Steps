@@ -31,19 +31,28 @@ namespace Empiria.ProjectManagement {
 
 
     protected internal Activity(Project project, JsonObject data) :
-                                base(ProjectItemType.ActivityType, project, data) {
+                                  base(ProjectItemType.ActivityType, project, data) {
 
       this.AssertIsValid(data);
       this.Load(data);
     }
 
+
+    protected internal Activity(Project project, ProjectItem data) :
+                                              base(ProjectItemType.ActivityType, project) {
+      this.Load(data);
+    }
+
+
     static public new Activity Parse(string uid) {
       return BaseObject.ParseKey<Activity>(uid);
     }
 
+
     static public new Activity Parse(int id) {
       return BaseObject.ParseId<Activity>(id);
     }
+
 
     static public new Activity Empty {
       get {

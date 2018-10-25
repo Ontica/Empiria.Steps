@@ -89,6 +89,56 @@ namespace Empiria.ProjectManagement.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/copyTo/{targetProjectUID}")]
+    public SingleObjectModel CopyActivity(string projectUID, string activityUID,
+                                          string targetProjectUID, [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var project = Project.Parse(projectUID);
+        var targetProject = Project.Parse(targetProjectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+
+        var copy = targetProject.CopyActivity(activity, bodyAsJson);
+
+        return new SingleObjectModel(this.Request, copy.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/moveTo/{targetProjectUID}")]
+    public SingleObjectModel MoveActivityToProject(string projectUID, string activityUID,
+                                                   string targetProjectUID, [FromBody] object body) {
+      try {
+        Assertion.Assert(projectUID != targetProjectUID, "Source and target projects must be different.");
+
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var project = Project.Parse(projectUID);
+        var targetProject = Project.Parse(targetProjectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+
+        activity = targetProject.MoveActivity(activity, bodyAsJson);
+
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     [HttpPut, HttpPatch]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}")]
     public SingleObjectModel UpdateActivity(string projectUID, string activityUID,
@@ -120,7 +170,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Activity activity = project.GetActivity(activityUID);
 
-        project.RemoveActivity(activity);
+        project.DeleteActivity(activity);
 
         return new NoDataModel(this.Request);
 

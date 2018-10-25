@@ -273,6 +273,24 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
+    public Activity CopyActivity(Activity activity, JsonObject bodyAsJson) {
+      Assertion.AssertObject(activity, "activity");
+
+      lock (__treeLock) {
+        return this.Items.CopyActivity(activity);
+      }
+    }
+
+
+    public void DeleteActivity(Activity activity) {
+      Assertion.AssertObject(activity, "activity");
+
+      lock (__treeLock) {
+        this.Items.DeleteActivity(activity);
+      }
+    }
+
+
     private ProjectItemsTree Items {
       get {
         return this.itemsTree.Value;
@@ -298,23 +316,21 @@ using Empiria.ProjectManagement.Resources;
       return this.Items.ToFixedList();
     }
 
-    [Obsolete]
-    public FixedList<ProjectItem> GetItems(ActivityFilter filter = null,
-                                           ActivityOrder orderBy = ActivityOrder.Default) {
-      if (filter == null) {
-        filter = new ActivityFilter();
-      }
 
-      return ProjectData.GetProjectActivities(this, filter, orderBy)
-                        .ToFixedList();
-    }
-
-
-    public void RemoveActivity(Activity activity) {
+    public Activity MoveActivity(Activity activity, JsonObject options = null) {
       Assertion.AssertObject(activity, "activity");
 
       lock (__treeLock) {
-        this.Items.RemoveActivity(activity);
+        return this.Items.MoveActivity(activity);
+      }
+    }
+
+
+    internal void RemoveBranch(Activity root) {
+      Assertion.AssertObject(root, "root");
+
+      lock (__treeLock) {
+        this.Items.RemoveBranch(root);
       }
     }
 
@@ -334,6 +350,13 @@ using Empiria.ProjectManagement.Resources;
 
     protected override void OnSave() {
       ProjectData.WriteProject(this);
+    }
+
+
+    internal void Refresh() {
+      itemsTree.Value.RefreshPositions();
+
+      itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));
     }
 
     #endregion Public methods

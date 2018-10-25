@@ -81,19 +81,38 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    public Activity GetActivity(string activityUID) {
-      Assertion.AssertObject(activityUID, "activityUID");
+    internal Activity CopyActivity(Activity activity) {
+      Assertion.AssertObject(activity, "activity");
 
-      Activity activity = this.ItemsList.Find((x) => x.UID == activityUID && x is Activity) as Activity;
+      FixedList<ProjectItem> branchToCopy = activity.GetBranch();
 
-      Assertion.AssertObject(activity,
-                             $"Activity with uid '{activityUID}' is not part of project '{this.Project.Name}'.");
+      var copiedItems = new List<Tuple<Activity, string>>(branchToCopy.Count);
 
-      return activity;
+      foreach (var item in branchToCopy) {
+        var copy = new Activity(this.Project, item);
+
+        copy.SetPosition(this.ItemsList.Count + 1);
+
+        var parentInBranch = branchToCopy.Find(x => x.Id == item.Parent.Id);
+
+        if (parentInBranch != null) {
+          var copyParent = copiedItems.Find(x => x.Item2 == parentInBranch.UID);
+
+          copy.SetParent(copyParent.Item1);
+        }
+
+        copy.Save();
+
+        this.ItemsList.Add(copy);
+
+        copiedItems.Add(Tuple.Create(copy, item.UID));
+      }
+
+      return copiedItems[0].Item1;
     }
 
 
-    internal void RemoveActivity(Activity activity) {
+    internal void DeleteActivity(Activity activity) {
       Assertion.AssertObject(activity, "activity");
 
       Assertion.Assert(this.ItemsList.Contains(activity),
@@ -108,6 +127,57 @@ namespace Empiria.ProjectManagement {
 
       this.RefreshPositions();
     }
+
+
+    public Activity GetActivity(string activityUID) {
+      Assertion.AssertObject(activityUID, "activityUID");
+
+      Activity activity = this.ItemsList.Find((x) => x.UID == activityUID && x is Activity) as Activity;
+
+      Assertion.AssertObject(activity,
+                             $"Activity with uid '{activityUID}' is not part of project '{this.Project.Name}'.");
+
+      return activity;
+    }
+
+
+    internal Activity MoveActivity(Activity activity) {
+      Assertion.AssertObject(activity, "activity");
+      Assertion.Assert(!activity.Project.Equals(this.Project),
+            $"Can't move activity '{activity.Name}' because its project is the same than the target project.");
+
+      FixedList<ProjectItem> branch = activity.GetBranch();
+
+      var sourceProject = activity.Project;
+
+      activity.SetParent(Activity.Empty);
+      foreach (var item in branch) {
+        item.SetPosition(this.ItemsList.Count + 1);
+        item.SetProject(this.Project);
+
+        item.Save();
+
+        this.ItemsList.Add(item);
+      }
+
+      sourceProject.RemoveBranch(activity);
+
+      return activity;
+    }
+
+
+    internal void RemoveBranch(Activity root) {
+      Assertion.AssertObject(root, "root");
+
+      FixedList<ProjectItem> branch = root.GetBranch();
+
+      foreach (var item in branch) {
+        this.ItemsList.Remove(item);
+      }
+
+      this.RefreshPositions();
+    }
+
 
     internal FixedList<ProjectItem> ToFixedList() {
       return this.ItemsList.ToFixedList();
@@ -245,7 +315,7 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    private void RefreshPositions() {
+    internal void RefreshPositions() {
       for (int i = 0; i < this.ItemsList.Count; i++) {
         var item = this.ItemsList[i];
 

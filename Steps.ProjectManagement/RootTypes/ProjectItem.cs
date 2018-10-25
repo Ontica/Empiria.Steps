@@ -32,6 +32,20 @@ namespace Empiria.ProjectManagement {
 
 
     protected internal ProjectItem(ProjectItemType type,
+                                   Project project) : base(type) {
+      Assertion.AssertObject(type, "type");
+      Assertion.AssertObject(project, "project");
+
+      Assertion.Assert(!project.IsEmptyInstance,
+                       "Project can't be the empty instance.");
+
+
+      this.Project = project;
+      this.Parent = ProjectItem.Empty;
+
+    }
+
+    protected internal ProjectItem(ProjectItemType type,
                                    Project project,
                                    JsonObject data) : base(type) {
       Assertion.AssertObject(type, "type");
@@ -259,9 +273,22 @@ namespace Empiria.ProjectManagement {
       this.Save();
     }
 
+
     public FixedList<ProjectItem> GetBranch() {
       return this.Project.GetBranch(this);
     }
+
+
+    protected virtual void Load(ProjectItem data) {
+      this.Name = data.Name;
+      this.Notes = data.Notes;
+
+      this.Tags = data.Tags;
+      this.ExtensionData = data.ExtensionData;
+      this.Resource = data.Resource;
+      this.WorkflowObjectId = data.WorkflowObjectId;
+    }
+
 
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
@@ -329,6 +356,13 @@ namespace Empiria.ProjectManagement {
       Assertion.Assert(position > 0, "position must be greater than zero.");
 
       this.Position = position;
+    }
+
+
+    internal void SetProject(Project project) {
+      Assertion.AssertObject(project, "project");
+
+      this.Project = project;
     }
 
 
