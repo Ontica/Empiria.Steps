@@ -284,7 +284,7 @@ namespace Empiria.ProjectManagement {
       this.Notes = data.Notes;
 
       this.Tags = data.Tags;
-      this.ExtensionData = data.ExtensionData;
+      this.ExtensionData = JsonObject.Parse(data.ExtensionData.ToString());
       this.Resource = data.Resource;
       this.WorkflowObjectId = data.WorkflowObjectId;
     }
