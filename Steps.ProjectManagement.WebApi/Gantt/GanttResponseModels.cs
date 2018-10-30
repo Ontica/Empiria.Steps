@@ -49,14 +49,14 @@ namespace Empiria.ProjectManagement.WebApi {
     #region Auxiliary methods
 
     private static int CalculateGanttItemDurationInDays(ProjectItem projectItem) {
-      if (projectItem.EndDate < ExecutionServer.DateMaxValue) {
+      if (projectItem.StartDate < ExecutionServer.DateMaxValue) {
         return (int) projectItem.EndDate.Subtract(projectItem.StartDate).TotalDays;
 
       } else if (!projectItem.EstimatedDuration.IsEmptyInstance) {
         return projectItem.EstimatedDuration.Value;
 
       } else {
-        return 7;
+        return 30;
       }
     }
 
@@ -65,8 +65,12 @@ namespace Empiria.ProjectManagement.WebApi {
       if (projectItem.StartDate < ExecutionServer.DateMaxValue) {
         return projectItem.StartDate;
 
+      } else if (projectItem.DueDate < ExecutionServer.DateMaxValue) {
+        return projectItem.DueDate.AddDays(-1 * projectItem.EstimatedDuration.Value - 30);
+
       } else {
-        return DateTime.Today.AddDays(-1 * projectItem.EstimatedDuration.Value - 7);
+        return DateTime.Today.AddDays(-1 * projectItem.EstimatedDuration.Value - 30);
+
       }
     }
 
