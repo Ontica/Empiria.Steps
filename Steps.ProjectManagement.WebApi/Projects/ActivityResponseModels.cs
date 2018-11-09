@@ -35,7 +35,11 @@ namespace Empiria.ProjectManagement.WebApi {
           type = activity.Parent.ProjectObjectType.Name,
         },
         config = activity.ConfigurationJson.ToObject(),
-        estimatedDuration = activity.EstimatedDuration.ToString(),
+
+        estimatedDuration = activity.EstimatedDuration.ToJson(),
+        warnDays = activity.WarnDays,
+        warnType = activity.WarnType,
+
         startDate = activity.StartDate,
         targetDate = activity.TargetDate,
         endDate = activity.EndDate,

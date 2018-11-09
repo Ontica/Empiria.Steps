@@ -16,7 +16,6 @@ using Empiria.Ontology;
 using Empiria.StateEnums;
 
 using Empiria.ProjectManagement.Resources;
-using Empiria.Workflow.Definition;
 
 namespace Empiria.ProjectManagement {
 
@@ -189,6 +188,20 @@ namespace Empiria.ProjectManagement {
     } = Duration.Empty;
 
 
+    public int WarnDays {
+      get {
+        return this.ExtensionData.Get("warnDays", 0);
+      }
+    }
+
+
+    public string WarnType {
+      get {
+        return this.ExtensionData.Get("warnType", "DefaultConfig");
+      }
+    }
+
+
     [DataField("StartDate")]
     public DateTime StartDate {
       get;
@@ -311,8 +324,10 @@ namespace Empiria.ProjectManagement {
 
 
     protected void LoadDateFields(JsonObject data) {
-      this.EstimatedDuration = Duration.Parse(data.GetClean("estimatedDuration",
-                                              this.EstimatedDuration.ToString()));
+      if (data.HasValue("estimatedDuration/type")) {
+        this.EstimatedDuration = new Duration(data.Get<int>("estimatedDuration/value", 0),
+                                              data.Get<DurationType>("estimatedDuration/type", DurationType.Unknown));
+      }
 
       if (data.Contains("startDate")) {
         this.StartDate = data.Get("startDate", ExecutionServer.DateMaxValue);
@@ -325,6 +340,16 @@ namespace Empiria.ProjectManagement {
       if (data.Contains("dueDate")) {
         this.DueDate= data.Get("dueDate", ExecutionServer.DateMaxValue);
       }
+      if (data.Contains("endDate")) {
+        this.EndDate = data.Get("endDate", ExecutionServer.DateMaxValue);
+      }
+
+    //  if (data.HasValue("warnDays")) {
+        this.ExtensionData.Set("warnDays", data.Get<int>("warnDays", 0));
+  //    }
+ //     if (data.HasValue("warnType")) {
+        this.ExtensionData.Set("warnType", data.Get<string>("warnType", "DefaultConfig"));
+  //    }
     }
 
 
