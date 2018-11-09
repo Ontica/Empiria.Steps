@@ -10,6 +10,7 @@
 using System;
 using System.Web.Http;
 
+using Empiria.Json;
 using Empiria.WebApi;
 
 namespace Empiria.ProjectManagement.WebApi {
@@ -21,9 +22,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/activities/{activityUID}/tasks")]
-    public CollectionModel GetActivityTasks(string activityUID) {
+    public CollectionModel GetTasks(string activityUID) {
       try {
-        Activity activity = null;
+        Activity activity = ParseActivityWithUID(activityUID);
+
 
         if (EmpiriaString.IsInteger(activityUID)) {
           activity = Activity.Parse(int.Parse(activityUID));
@@ -32,7 +34,7 @@ namespace Empiria.ProjectManagement.WebApi {
         }
 
         return new CollectionModel(this.Request, activity.Tasks.ToResponse(),
-                                   typeof(ProjectItem).FullName);
+                                   typeof(Task).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -40,6 +42,70 @@ namespace Empiria.ProjectManagement.WebApi {
     }
 
     #endregion Get methods
+
+    #region Update methods
+
+
+    [HttpPost]
+    [Route("v1/project-management/activities/{activityUID}/tasks")]
+    public SingleObjectModel AddTask(string activityUID,
+                                    [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        Activity activity = ParseActivityWithUID(activityUID);
+
+        Task task = activity.AddTask(bodyAsJson);
+
+        task.Save();
+
+        return new SingleObjectModel(this.Request, task.ToResponse(),
+                                     typeof(Task).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPut, HttpPatch]
+    [Route("v1/project-management/activities/{activityUID}/tasks/{taskUID}")]
+    public SingleObjectModel UpdateTask(string activityUID, string taskUID,
+                                        [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var task = Task.Parse(taskUID);
+
+        Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
+
+
+        task.Update(bodyAsJson);
+
+
+        return new SingleObjectModel(this.Request, task.ToResponse(),
+                                     typeof(Task).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    #endregion Update methods
+
+    #region Private methods
+
+    private Activity ParseActivityWithUID(string activityUID) {
+      if (EmpiriaString.IsInteger(activityUID)) {
+        return Activity.Parse(int.Parse(activityUID));
+      } else {
+        return Activity.Parse(activityUID);
+      }
+    }
+
+    #endregion Private methods
 
   }  // class ActivityTaskController
 

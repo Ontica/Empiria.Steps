@@ -79,12 +79,12 @@ namespace Empiria.ProjectManagement {
     } = ExecutionServer.DateMaxValue;
 
 
-
     [DataField("AssignedById")]
     public Contact AssignedBy {
       get;
       private set;
     }
+
 
     public bool IsAssigned {
       get {
@@ -98,6 +98,7 @@ namespace Empiria.ProjectManagement {
         return this.ExtensionData.Slice("config", false);
       }
     }
+
 
     public ActivityModel Template {
       get {
@@ -126,6 +127,14 @@ namespace Empiria.ProjectManagement {
     #endregion Activity structure
 
     #region Public methods
+
+
+    public Task AddTask(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+
+      return new Task(this, data);
+    }
+
 
     public void Assign(JsonObject data) {
       if (!data.Contains("responsibleUID")) {

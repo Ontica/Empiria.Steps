@@ -22,7 +22,9 @@ namespace Empiria.ProjectManagement {
     static internal List<Task> GetActivityTasks(Activity activity) {
       string sql = $"SELECT * FROM PMProjectObjects " +
                    $"WHERE ProjectObjectTypeId = {ProjectItemType.TaskType.Id} AND " +
-                   $"ParentId = {activity.Id} AND Status <> 'X'";
+                   $"ParentId = {activity.Id} AND Status <> 'X' " +
+                   "ORDER BY ItemPosition";
+
 
       var op = DataOperation.Parse(sql);
 

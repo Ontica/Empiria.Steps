@@ -11,6 +11,7 @@ using System;
 
 using Empiria.Contacts;
 using Empiria.Json;
+using Empiria.Security;
 
 namespace Empiria.ProjectManagement {
 
@@ -27,15 +28,22 @@ namespace Empiria.ProjectManagement {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal Task(Project project, JsonObject data) :
-                            base(ProjectItemType.TaskType, project, data) {
+    protected internal Task(Activity activity, JsonObject data) :
+                            base(ProjectItemType.TaskType, activity.Project, data) {
       this.AssertIsValid(data);
+
+      base.SetParent(activity);
 
       this.Load(data);
     }
 
     static internal new Task Parse(int id) {
       return BaseObject.ParseId<Task>(id);
+    }
+
+
+    static public new Task Parse(string uid) {
+      return BaseObject.ParseKey<Task>(uid);
     }
 
 
@@ -53,6 +61,7 @@ namespace Empiria.ProjectManagement {
                           Activity.Empty : (Activity) base.Parent;
       }
     }
+
 
     [DataField("ResponsibleId")]
     public Contact Responsible {
@@ -75,6 +84,7 @@ namespace Empiria.ProjectManagement {
       private set;
     }
 
+
     public bool IsAssigned {
       get {
         return !this.Responsible.IsEmptyInstance;
@@ -86,14 +96,36 @@ namespace Empiria.ProjectManagement {
 
     #region Private methods
 
+    public void Assign(JsonObject data) {
+      if (!data.Contains("responsibleUID")) {
+        return;
+      }
+
+      this.Responsible = data.Get<Contact>("responsibleUID", this.Responsible);
+
+      if (!this.Responsible.IsEmptyInstance) {
+        this.AssignedDate = DateTime.Now;
+        this.AssignedBy = EmpiriaUser.Current.AsContact();
+      } else {
+        this.AssignedDate = ExecutionServer.DateMaxValue;
+        this.AssignedBy = Contact.Empty;
+      }
+
+    }
+
+
     protected override void AssertIsValid(JsonObject data) {
       base.AssertIsValid(data);
+      this.Assign(data);
     }
+
 
     protected override void Load(JsonObject data) {
       base.Load(data);
       base.LoadDateFields(data);
+      this.Assign(data);
     }
+
 
     protected override void OnSave() {
       ProjectItemData.WriteTask(this);

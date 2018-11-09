@@ -34,23 +34,45 @@ namespace Empiria.ProjectManagement.WebApi {
 
     static internal object ToResponse(this Task task) {
       return new {
+        id = task.Id,
         uid = task.UID,
-        activityUID = task.Activity.UID,
+        type = task.ProjectObjectType.Name,
         name = task.Name,
         notes = task.Notes,
-        estimatedDuration = task.EstimatedDuration.ToString(),
+        activity = new {
+          uid = task.Activity.UID,
+          name = task.Activity.Name,
+        },
+        project = new {
+          uid = task.Project.UID,
+          name = task.Project.Name,
+        },
+        //parent = new {
+        //  uid = activity.Parent.UID,
+        //  name = activity.Parent.Name,
+        //  type = activity.Parent.ProjectObjectType.Name,
+        //},
+        //config = activity.ConfigurationJson.ToObject(),
+
+        estimatedDuration = task.EstimatedDuration.ToJson(),
+        warnDays = task.WarnDays,
+        warnType = task.WarnType,
+
+
         startDate = task.StartDate,
         targetDate = task.TargetDate,
         endDate = task.EndDate,
         dueDate = task.DueDate,
         tags = task.Tags.Items,
         position = task.Position,
+        level = task.Level,
         ragStatus = task.RagStatus,
         stage = task.Stage,
         status = task.Status,
         responsible = task.Responsible.ToShortResponse(),
         assignedDate = task.AssignedDate,
         assignedBy = task.AssignedBy.ToShortResponse(),
+        //template = task.Template,
       };
     }
 
