@@ -54,8 +54,8 @@ namespace Empiria.ProjectManagement.WebApi {
         received = DateTime.Parse("2017-10-" + EmpiriaMath.GetRandom(01, 31)),
         status = "Active",
         extensionData = new {
-          targetDate = activity.TargetDate,
-          dueDate = activity.DueDate,
+          deadline = activity.Deadline,
+          plannedEndDate = activity.PlannedEndDate,
           ragStatus = activity.RagStatus,
           tags = activity.Tags.Items,
           stage = activity.Stage
@@ -85,8 +85,8 @@ namespace Empiria.ProjectManagement.WebApi {
         received = DateTime.Parse("2017-10-" + EmpiriaMath.GetRandom(01, 31)),
         status = "Active",
         extensionData = new {
-          targetDate = task.TargetDate,
-          dueDate = task.DueDate,
+          deadline = task.Deadline,
+          plannedEndDate = task.PlannedEndDate,
           ragStatus = task.RagStatus,
           tags = task.Tags.Items,
           stage = task.Stage

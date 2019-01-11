@@ -166,29 +166,29 @@ using Empiria.ProjectManagement.Resources;
     } = Duration.Empty;
 
 
-    [DataField("StartDate")]
-    public DateTime StartDate {
+    [DataField("ActualStartDate")]
+    public DateTime ActualStartDate {
       get;
       private set;
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("TargetDate")]
-    public DateTime TargetDate {
+    [DataField("ActualEndDate")]
+    public DateTime ActualEndDate {
       get;
       private set;
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("EndDate")]
-    public DateTime EndDate {
+    [DataField("PlannedEndDate")]
+    public DateTime PlannedEndDate {
       get;
       private set;
     } = ExecutionServer.DateMinValue;
 
 
-    [DataField("DueDate")]
-    public DateTime DueDate {
+    [DataField("Deadline")]
+    public DateTime Deadline {
       get;
       private set;
     } = ExecutionServer.DateMinValue;

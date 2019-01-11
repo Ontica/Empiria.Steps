@@ -54,10 +54,10 @@ namespace Empiria.ProjectManagement {
 
     private List<ProjectItem> ApplySort(List<ProjectItem> list, ActivityOrder orderBy) {
       switch (orderBy) {
-        case ActivityOrder.DueDate:
+        case ActivityOrder.Deadline:
 
           return (from item in list
-                  orderby item.DueDate, item.Name
+                  orderby item.Deadline, item.Name
                   select item)
                   .ToList();
 
@@ -66,21 +66,21 @@ namespace Empiria.ProjectManagement {
 
           var list1 = from item in list
                       where ((Activity) item).Responsible.Id != -1
-                      orderby ((Activity) item).Responsible.Nickname, item.DueDate, item.Name
+                      orderby ((Activity) item).Responsible.Nickname, item.Deadline, item.Name
                       select item;
 
           var list2 = from item in list
                       where ((Activity) item).Responsible.Id == -1
-                      orderby item.DueDate, item.Name
+                      orderby item.Deadline, item.Name
                       select item;
 
           return list1.Concat(list2).ToList();
 
 
-        case ActivityOrder.TargetDate:
+        case ActivityOrder.PlannedEndDate:
 
           return (from item in list
-                  orderby item.TargetDate, item.Name
+                  orderby item.PlannedEndDate, item.Name
                   select item)
                   .ToList();
 

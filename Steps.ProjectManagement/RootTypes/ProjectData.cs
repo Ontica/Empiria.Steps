@@ -145,7 +145,7 @@ namespace Empiria.ProjectManagement {
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.GetEmpiriaType().Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
+                o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline, (char) o.RagStatus,
                 o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id,
                 o.Resource.Id, o.Owner.Id,
                 o.Responsible.Id, ExecutionServer.DateMaxValue, -1,

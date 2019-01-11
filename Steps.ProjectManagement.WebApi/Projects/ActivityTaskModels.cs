@@ -47,22 +47,16 @@ namespace Empiria.ProjectManagement.WebApi {
           uid = task.Project.UID,
           name = task.Project.Name,
         },
-        //parent = new {
-        //  uid = activity.Parent.UID,
-        //  name = activity.Parent.Name,
-        //  type = activity.Parent.ProjectObjectType.Name,
-        //},
-        //config = activity.ConfigurationJson.ToObject(),
 
         estimatedDuration = task.EstimatedDuration.ToJson(),
+        deadline = task.Deadline,
+        plannedEndDate = task.PlannedEndDate,
+        actualStartDate = task.ActualStartDate,
+        actualEndDate = task.ActualEndDate,
+
         warnDays = task.WarnDays,
         warnType = task.WarnType,
 
-
-        startDate = task.StartDate,
-        targetDate = task.TargetDate,
-        endDate = task.EndDate,
-        dueDate = task.DueDate,
         tags = task.Tags.Items,
         position = task.Position,
         level = task.Level,
@@ -72,7 +66,6 @@ namespace Empiria.ProjectManagement.WebApi {
         responsible = task.Responsible.ToShortResponse(),
         assignedDate = task.AssignedDate,
         assignedBy = task.AssignedBy.ToShortResponse(),
-        //template = task.Template,
       };
     }
 

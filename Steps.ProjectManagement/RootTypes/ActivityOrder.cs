@@ -16,9 +16,9 @@ namespace Empiria.ProjectManagement {
 
     Default = 'U',
 
-    DueDate = 'D',
+    Deadline = 'D',
 
-    TargetDate = 'T',
+    PlannedEndDate = 'P',
 
     Responsible = 'R',
 

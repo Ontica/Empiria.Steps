@@ -54,8 +54,8 @@ namespace Empiria.ProjectManagement {
       // Set root dates
       var json = new JsonObject();
 
-      json.Add("targetDate", eventDate);
-      json.Add("dueDate", eventDate);
+      json.Add("deadline", eventDate);
+      json.Add("plannedEndDate", eventDate);
 
       this.createdActivities[0].Update(json);
 
@@ -116,7 +116,7 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    private DateTime? CalculateNewDueDate(ActivityModel template, DateTime baseDate) {
+    private DateTime? CalculateNewDeadline(ActivityModel template, DateTime baseDate) {
       var dueOnTerm = template.DueOnTerm;
 
       if (String.IsNullOrWhiteSpace(dueOnTerm)) {
@@ -218,7 +218,7 @@ namespace Empiria.ProjectManagement {
 
       foreach (var activity in this.createdActivities) {
 
-        if (activity.DueDate != ExecutionServer.DateMaxValue) {
+        if (activity.Deadline != ExecutionServer.DateMaxValue) {
           continue;
         }
 
@@ -235,20 +235,20 @@ namespace Empiria.ProjectManagement {
           continue;
         }
 
-        if (controller.DueDate == ExecutionServer.DateMaxValue) {
+        if (controller.Deadline == ExecutionServer.DateMaxValue) {
           continue;
         }
 
 
-        DateTime? dueDate = dueDate = CalculateNewDueDate(template, controller.DueDate);
+        DateTime? deadline = CalculateNewDeadline(template, controller.Deadline);
 
-        if (!dueDate.HasValue) {
+        if (!deadline.HasValue) {
           continue;
         }
 
         var json = new JsonObject();
 
-        json.Add("dueDate", dueDate.Value);
+        json.Add("deadline", deadline.Value);
 
         activity.Update(json);
 

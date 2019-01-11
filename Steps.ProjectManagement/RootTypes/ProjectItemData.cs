@@ -48,9 +48,9 @@ namespace Empiria.ProjectManagement {
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObjectId,
-                o.Resource.Id, o.Project.Owner.Id,
+                o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline,
+                (char) o.RagStatus, o.Tags.ToString(), o.Keywords, o.Position,
+                o.WorkflowObjectId, o.Resource.Id, o.Project.Owner.Id,
                 o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
                 o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
 
@@ -62,9 +62,9 @@ namespace Empiria.ProjectManagement {
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObjectId,
-                o.Resource.Id, o.Project.Owner.Id,
+                o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline,
+                (char) o.RagStatus, o.Tags.ToString(), o.Keywords, o.Position,
+                o.WorkflowObjectId, o.Resource.Id, o.Project.Owner.Id,
                 -1, ExecutionServer.DateMaxValue, -1,
                 o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
 
@@ -76,9 +76,9 @@ namespace Empiria.ProjectManagement {
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.StartDate, o.TargetDate, o.EndDate, o.DueDate, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObjectId,
-                o.Resource.Id, o.Project.Owner.Id,
+                o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline,
+                (char) o.RagStatus, o.Tags.ToString(), o.Keywords, o.Position,
+                o.WorkflowObjectId, o.Resource.Id, o.Project.Owner.Id,
                 o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
                 o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status);
 

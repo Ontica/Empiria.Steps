@@ -202,29 +202,29 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    [DataField("StartDate")]
-    public DateTime StartDate {
+    [DataField("ActualStartDate")]
+    public DateTime ActualStartDate {
       get;
       protected set;
     } = ExecutionServer.DateMaxValue;
 
 
-    [DataField("TargetDate")]
-    public DateTime TargetDate {
+    [DataField("ActualEndDate")]
+    public DateTime ActualEndDate {
       get;
       protected set;
     } = ExecutionServer.DateMaxValue;
 
 
-    [DataField("EndDate")]
-    public DateTime EndDate {
+    [DataField("PlannedEndDate")]
+    public DateTime PlannedEndDate {
       get;
       protected set;
     } = ExecutionServer.DateMaxValue;
 
 
-    [DataField("DueDate")]
-    public DateTime DueDate {
+    [DataField("Deadline")]
+    public DateTime Deadline {
       get;
       protected set;
     } = ExecutionServer.DateMaxValue;
@@ -266,9 +266,9 @@ namespace Empiria.ProjectManagement {
       this.AssertIsValid(data);
       this.Load(data);
 
-      this.EndDate = data.Get("endDate", this.EndDate);
-      this.StartDate = this.StartDate == ExecutionServer.DateMaxValue
-                            ? this.EndDate : this.StartDate;
+      this.ActualEndDate = data.Get("endDate", this.ActualEndDate);
+      this.ActualStartDate = this.ActualStartDate == ExecutionServer.DateMaxValue
+                            ? this.ActualEndDate : this.ActualStartDate;
 
       this.Stage = ItemStage.Done;
       this.Status = ActivityStatus.Completed;
@@ -329,19 +329,20 @@ namespace Empiria.ProjectManagement {
                                               data.Get<DurationType>("estimatedDuration/type", DurationType.Unknown));
       }
 
-      if (data.Contains("startDate")) {
-        this.StartDate = data.Get("startDate", ExecutionServer.DateMaxValue);
+      if (data.Contains("plannedEndDate")) {
+        this.PlannedEndDate = data.Get("plannedEndDate", ExecutionServer.DateMaxValue);
       }
 
-      if (data.Contains("targetDate")) {
-        this.TargetDate = data.Get("targetDate", ExecutionServer.DateMaxValue);
+      if (data.Contains("deadline")) {
+        this.Deadline = data.Get("deadline", ExecutionServer.DateMaxValue);
       }
 
-      if (data.Contains("dueDate")) {
-        this.DueDate= data.Get("dueDate", ExecutionServer.DateMaxValue);
+      if (data.Contains("actualStartDate")) {
+        this.ActualStartDate = data.Get("actualStartDate", ExecutionServer.DateMaxValue);
       }
-      if (data.Contains("endDate")) {
-        this.EndDate = data.Get("endDate", ExecutionServer.DateMaxValue);
+
+      if (data.Contains("actualEndDate")) {
+        this.ActualEndDate = data.Get("actualEndDate", ExecutionServer.DateMaxValue);
       }
 
     //  if (data.HasValue("warnDays")) {
@@ -391,9 +392,9 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    internal void SetDates(DateTime startDate, DateTime dueDate) {
-      this.StartDate = startDate;
-      this.DueDate = dueDate;
+    internal void SetDates(DateTime actualStartDate, DateTime deadline) {
+      this.ActualStartDate = actualStartDate;
+      this.Deadline = deadline;
 
       this.Save();
     }
