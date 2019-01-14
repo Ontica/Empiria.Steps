@@ -49,11 +49,12 @@ namespace Empiria.ProjectManagement.WebApi {
     #region Auxiliary methods
 
     private static int CalculateGanttItemDurationInDays(ProjectItem projectItem) {
-      if (projectItem.StartDate < ExecutionServer.DateMaxValue) {
-        return (int) projectItem.EndDate.Subtract(projectItem.StartDate).TotalDays;
+      if (projectItem.ActualStartDate < ExecutionServer.DateMaxValue &&
+          projectItem.ActualEndDate < ExecutionServer.DateMaxValue) {
+        return (int) projectItem.ActualEndDate.Subtract(projectItem.ActualStartDate).TotalDays;
 
       } else if (!projectItem.EstimatedDuration.IsEmptyInstance) {
-        return projectItem.EstimatedDuration.Value;
+        return (int) projectItem.EstimatedDuration.ToDays();
 
       } else {
         return 30;
@@ -62,14 +63,16 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     private static DateTime CalculateGanttItemStartDate(ProjectItem projectItem) {
-      if (projectItem.StartDate < ExecutionServer.DateMaxValue) {
-        return projectItem.StartDate;
+      if (projectItem.ActualStartDate < ExecutionServer.DateMaxValue) {
+        return projectItem.ActualStartDate;
 
-      } else if (projectItem.DueDate < ExecutionServer.DateMaxValue) {
-        return projectItem.DueDate.AddDays(-1 * projectItem.EstimatedDuration.Value - 30);
+      } else if (projectItem.PlannedEndDate < ExecutionServer.DateMaxValue) {
+        return projectItem.PlannedEndDate.AddDays(-1 * projectItem.EstimatedDuration.ToDays());
+      } else if (projectItem.Deadline < ExecutionServer.DateMaxValue) {
+        return projectItem.Deadline.AddDays(-1 * projectItem.EstimatedDuration.ToDays());
 
       } else {
-        return DateTime.Today.AddDays(-1 * projectItem.EstimatedDuration.Value - 30);
+        return DateTime.Today.AddDays(projectItem.EstimatedDuration.ToDays());
 
       }
     }
