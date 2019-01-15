@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Workflow.dll                             Pattern : Domain class                        *
 *  Type     : ProcessActivity                                  License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a workflow activity.                                                                 *
+*  Summary  : Describes a workflow activity.                                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

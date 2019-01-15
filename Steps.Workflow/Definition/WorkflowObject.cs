@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Workflow.dll                             Pattern : Domain class                        *
 *  Type     : WorkflowObject                                   License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a project as a set of well defined activities.                                       *
+*  Summary  : Describes a project as a set of well defined activities.                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -49,8 +49,8 @@ namespace Empiria.Workflow.Definition {
     }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
-      if ((int) row["WorkflowObjectId"] != -1) {
-        this.Parent = WorkflowObject.Parse((int) row["ParentId"]);
+      if ((int) row["WorkflowElementId"] != -1) {
+        this.Parent = WorkflowObject.Parse((int) row["WorkflowElementId"]);
       } else {
         this.Parent = this;
       }
@@ -81,15 +81,8 @@ namespace Empiria.Workflow.Definition {
     }
 
 
-    [DataField("InnerTag")]
-    public string InnerTag {
-      get;
-      private set;
-    }
-
-
-    [DataField("Categories")]
-    public string Categories {
+    [DataField("Tags")]
+    public string Tags {
       get;
       private set;
     }
@@ -114,7 +107,7 @@ namespace Empiria.Workflow.Definition {
     }
 
 
-    [DataField("EstimatedDuration")]
+    // [DataField("EstimatedDuration")]
     public Duration EstimatedDuration {
       get;
       private set;

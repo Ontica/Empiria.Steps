@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Workflow.dll                             Pattern : Domain class                        *
 *  Type     : Process                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a workflow model as an a activity network.                                           *
+*  Summary  : Describes a workflow model as an a activity network.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
