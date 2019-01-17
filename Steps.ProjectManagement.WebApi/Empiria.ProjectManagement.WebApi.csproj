@@ -60,7 +60,4 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.KnowledgeBase.WebApi" Version="1.0.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\knowledge.base\KB.WebApi\Empiria.KB.WebApi.csproj" />
-  </ItemGroup>
 </Project>
