@@ -8,14 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using Empiria.Collections;
 using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
-using Empiria.StateEnums;
-
 using Empiria.ProjectManagement.Resources;
+using Empiria.StateEnums;
 
 namespace Empiria.ProjectManagement {
 
@@ -244,8 +242,8 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    [DataField("WorkflowObjectId")]
-    public int WorkflowObjectId {
+    [DataField("TemplateId")]
+    public int TemplateId {
       get;
       private set;
     } = -1;
@@ -299,7 +297,7 @@ namespace Empiria.ProjectManagement {
       this.Tags = data.Tags;
       this.ExtensionData = JsonObject.Parse(data.ExtensionData.ToString());
       this.Resource = data.Resource;
-      this.WorkflowObjectId = data.WorkflowObjectId;
+      this.TemplateId = data.TemplateId;
     }
 
 
@@ -319,7 +317,7 @@ namespace Empiria.ProjectManagement {
 
       this.Resource = data.Get<Resource>("resourceUID", this.Resource);
 
-      this.WorkflowObjectId = data.Get<int>("workflowObjectId", this.WorkflowObjectId);
+      this.TemplateId = data.Get<int>("templateId", this.TemplateId);
     }
 
 

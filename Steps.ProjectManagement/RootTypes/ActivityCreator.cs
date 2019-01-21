@@ -169,12 +169,12 @@ namespace Empiria.ProjectManagement {
         json.Add("name", modelItem.Name);
         json.Add("notes", modelItem.Notes);
 
-        json.Add("workflowObjectId", modelItem.Id);
+        json.Add("templateId", modelItem.Id);
 
         var activity = this.targetProject.AddActivity(json);
 
         if (this.createdActivities.Count != 0) {
-          var parent = this.createdActivities.Find(x => x.WorkflowObjectId == modelItem.Parent.Id);
+          var parent = this.createdActivities.Find(x => x.TemplateId == modelItem.Parent.Id);
 
           if (parent != null) {
             activity.SetAndSaveParent(parent);
@@ -209,7 +209,7 @@ namespace Empiria.ProjectManagement {
                                                    .ToList();
 
       return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
-                                       !this.createdActivities.Exists(y => y.WorkflowObjectId == x.Id))
+                                       !this.createdActivities.Exists(y => y.TemplateId == x.Id))
                          .ToFixedList();
     }
 
@@ -222,13 +222,13 @@ namespace Empiria.ProjectManagement {
           continue;
         }
 
-        var template = Activity.Parse(activity.WorkflowObjectId).Template;
+        var template = Activity.Parse(activity.TemplateId).Template;
 
         if (template.DueOnControllerId == -1) {
           continue;
         }
 
-        var controller = targetProject.GetItems().Find(x => x.WorkflowObjectId == template.DueOnControllerId);
+        var controller = targetProject.GetItems().Find(x => x.TemplateId == template.DueOnControllerId);
 
 
         if (controller == null) {

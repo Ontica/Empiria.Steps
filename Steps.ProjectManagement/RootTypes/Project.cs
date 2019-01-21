@@ -15,8 +15,6 @@ using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.StateEnums;
 
-using Empiria.Workflow.Definition;
-
 using Empiria.ProjectManagement.Resources;
 
   namespace Empiria.ProjectManagement {
@@ -206,13 +204,6 @@ using Empiria.ProjectManagement.Resources;
       get;
       private set;
     }
-
-
-    [DataField("WorkflowObjectId")]
-    public WorkflowObject WorkflowObject {
-      get;
-      private set;
-    } = WorkflowObject.Empty;
 
 
     [DataField("ResponsibleId")]

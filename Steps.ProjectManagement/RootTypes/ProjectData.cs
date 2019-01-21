@@ -146,7 +146,7 @@ namespace Empiria.ProjectManagement {
                 o.Id, o.GetEmpiriaType().Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline, (char) o.RagStatus,
-                o.Tags.ToString(), o.Keywords, o.Position, o.WorkflowObject.Id,
+                o.Tags.ToString(), o.Keywords, o.Position, -1,
                 o.Resource.Id, o.Owner.Id,
                 o.Responsible.Id, ExecutionServer.DateMaxValue, -1,
                 -1, o.Parent.Id, 'U', (char) o.Status);
