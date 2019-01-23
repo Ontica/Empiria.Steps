@@ -4,11 +4,10 @@
 *  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : Summary                                          License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a project activity.                                                                  *
+*  Summary  : Describes a project activity.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Json;
 

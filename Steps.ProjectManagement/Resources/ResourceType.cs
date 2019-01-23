@@ -14,7 +14,7 @@ using Empiria.Ontology;
 namespace Empiria.ProjectManagement.Resources {
 
   /// <summary>Powertype that defines a resource such as a product, service
-  /// or result achieved by a project or used or defined by a workflow.</summary>
+  /// or result achieved by a project.</summary>
   [Powertype(typeof(Resource))]
   public sealed class ResourceType : Powertype {
 

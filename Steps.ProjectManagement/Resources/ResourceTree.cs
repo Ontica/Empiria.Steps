@@ -4,7 +4,7 @@
 //*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Composite Component                 *
 //*  Type     : ProjectModel                                     License : Please read LICENSE.txt file        *
 //*                                                                                                            *
-//w  Summary  : Represents a tree composition of resources applied to projects.                                *
+//*  Summary  : Represents a tree composition of resources applied to projects.                                *
 //*                                                                                                            *
 //************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 //using System;

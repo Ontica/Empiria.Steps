@@ -4,7 +4,7 @@
 *  Assembly : Empiria.ProjectManagement.dll                    Pattern : DTO                                 *
 *  Type     : ActivityModel                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : A project activity model DTO.                                                                  *
+*  Summary  : A project activity model DTO.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

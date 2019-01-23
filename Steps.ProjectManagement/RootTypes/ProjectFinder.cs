@@ -4,7 +4,7 @@
 *  Assembly : Empiria.ProjectManagement.dll                    Pattern : Finder                              *
 *  Type     : ProjectFinder                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Performs search operations over projects, activities, and other project items.                 *
+*  Summary  : Performs search operations over projects, activities, and other project items.                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

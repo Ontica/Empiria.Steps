@@ -4,7 +4,7 @@
 *  Assembly : Empiria.ProjectManagement.dll                    Pattern : Domain class                        *
 *  Type     : Task                                             License : Please read LICENSE.txt file        *
 *                                                                                                            *
-w  Summary  : Describes a task.                                                                              *
+*  Summary  : Describes a task.                                                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
