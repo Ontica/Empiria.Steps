@@ -34,16 +34,16 @@ namespace Empiria.ProjectManagement.WebApi {
           name = activity.Parent.Name,
           type = activity.Parent.ProjectObjectType.Name,
         },
-        config = activity.ConfigurationJson.ToObject(),
-
-        warnDays = activity.WarnDays,
-        warnType = activity.WarnType,
 
         estimatedDuration = activity.EstimatedDuration.ToJson(),
         deadline = activity.Deadline,
         plannedEndDate = activity.PlannedEndDate,
         actualStartDate = activity.ActualStartDate,
         actualEndDate = activity.ActualEndDate,
+
+        warnDays = activity.WarnDays,
+        warnType = activity.WarnType,
+
 
         position = activity.Position,
         level = activity.Level,
@@ -55,8 +55,8 @@ namespace Empiria.ProjectManagement.WebApi {
         responsible = activity.Responsible.ToShortResponse(),
         assignedDate = activity.AssignedDate,
         assignedBy = activity.AssignedBy.ToShortResponse(),
-        template = activity.Template,
-        workflowObject = activity.WorkflowObjectId > 0 ? ToResponse(Activity.Parse(activity.WorkflowObjectId)) : new object()
+        template = activity.TemplateId > 0 ?
+                        Activity.Parse(activity.TemplateId).ToActivityTemplateResponse() : new object()
       };
     }
 

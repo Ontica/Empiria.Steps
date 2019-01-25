@@ -68,6 +68,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
       } else if (projectItem.PlannedEndDate < ExecutionServer.DateMaxValue) {
         return projectItem.PlannedEndDate.AddDays(-1 * projectItem.EstimatedDuration.ToDays());
+
       } else if (projectItem.Deadline < ExecutionServer.DateMaxValue) {
         return projectItem.Deadline.AddDays(-1 * projectItem.EstimatedDuration.ToDays());
 

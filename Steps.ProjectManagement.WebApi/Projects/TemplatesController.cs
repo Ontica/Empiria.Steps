@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : TemplatesController                          License   : Please read LICENSE.txt file          *
+*  Type     : ProjectTemplatesController                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Public API to retrieve and set projects templates data.                                        *
+*  Summary  : Public API to retrieve and set ProjectTemplates data.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,12 +16,12 @@ using Empiria.WebApi;
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Public API to retrieve and set projects data.</summary>
-  public class TemplatesController : WebApiController {
+  public class ProjectTemplatesController : WebApiController {
 
     #region Get methods
 
     [HttpGet]
-    [Route("v1/project-management/templates")]
+    [Route("v1/project-management/project-templates")]
     public CollectionModel GetTemplatesList() {
       try {
         var list = Project.GetTemplatesList();
@@ -36,13 +36,32 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/templates/events")]
-    public CollectionModel GetEventsList() {
+    [Route("v1/project-management/project-templates/{projectTemplateUID}/as-tree")]
+    public CollectionModel GetProjectTemplateAsTree([FromUri] string projectTemplateUID) {
+      try {
+
+        var project = Project.Parse(projectTemplateUID);
+
+        var fullActivitiesList = project.GetItems();
+
+        return new CollectionModel(this.Request, fullActivitiesList.ToActivityTemplateResponse(),
+                                   typeof(ProjectItem).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+
+    [HttpGet]
+    [Route("v1/project-management/project-templates/start-events")]
+    public CollectionModel GetStartEventsList() {
       try {
         var list = Project.GetEventsList();
 
-        return new CollectionModel(this.Request, list.ToResponse(),
-                                   typeof(Project).FullName);
+        return new CollectionModel(this.Request, list.ToActivityTemplateResponse(),
+                                   typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -54,15 +73,15 @@ namespace Empiria.ProjectManagement.WebApi {
     #region Update methods
 
     [HttpPost]
-    [Route("v1/project-management/projects/{projectUID}/create-from-event")]
-    public SingleObjectModel CreateFromEvent(string projectUID,
-                                            [FromBody] object body) {
+    [Route("v1/project-management/projects/{projectUID}/create-from-activity-template")]
+    public SingleObjectModel CreateFromActivityTemplate(string projectUID,
+                                                       [FromBody] object body) {
       try {
         base.RequireBody(body);
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        var eventModel = bodyAsJson.Get<Activity>("eventUID");
+        var eventModel = bodyAsJson.Get<Activity>("activityTemplateUID");
         var eventDate = bodyAsJson.Get<DateTime>("eventDate", DateTime.Today);
 
         var project = Project.Parse(projectUID);
@@ -82,6 +101,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #endregion Update methods
 
-  }  // class TemplatesController
+  }  // class ProjectTemplatesController
 
 }  // namespace Empiria.ProjectManagement.WebApi
