@@ -51,7 +51,4 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Steps.Workflow\Empiria.Workflow.csproj" />
-  </ItemGroup>
 </Project>
