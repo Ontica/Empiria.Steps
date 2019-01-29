@@ -20,6 +20,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
+    <AssemblyName>Empiria.ProjectManagement</AssemblyName>
+    <RootNamespace>Empiria.ProjectManagement</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -51,4 +53,10 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Core" Version="7.0.0" />
+  </ItemGroup>
 </Project>

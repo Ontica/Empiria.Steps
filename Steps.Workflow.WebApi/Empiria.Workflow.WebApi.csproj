@@ -20,6 +20,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
+    <AssemblyName>Empiria.Workflow.WebApi</AssemblyName>
+    <RootNamespace>Empiria.Workflow.WebApi</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -52,15 +54,14 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Steps.Workflow\Empiria.Workflow.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.KnowledgeBase.WebApi" Version="1.0.0" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\knowledge.base\KB.WebApi\Empiria.KB.WebApi.csproj" />
+    <ProjectReference Include="..\Steps.Workflow\Empiria.Workflow.csproj" />
+    <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Workflow" Version="1.0.0" />
+    <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
   </ItemGroup>
 </Project>
