@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Controller                            *
-*  Type     : ProjectTemplatesController                   License   : Please read LICENSE.txt file          *
+*  Type     : ProjectTemplateController                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Public API to retrieve and set ProjectTemplates data.                                          *
 *                                                                                                            *
@@ -13,10 +13,12 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
-namespace Empiria.ProjectManagement.WebApi {
+using Empiria.ProjectManagement.WebApi;
+
+namespace Empiria.ProjectManagement.Templates.WebApi {
 
   /// <summary>Public API to retrieve and set projects data.</summary>
-  public class ProjectTemplatesController : WebApiController {
+  public class ProjectTemplateController : WebApiController {
 
     #region Get methods
 
@@ -101,6 +103,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #endregion Update methods
 
-  }  // class ProjectTemplatesController
+  }  // class ProjectTemplateController
 
-}  // namespace Empiria.ProjectManagement.WebApi
+}  // namespace Empiria.ProjectManagement.Templates.WebApi

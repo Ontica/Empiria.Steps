@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Web Api                               *
 *  Assembly : Empiria.ProjectManagement.WebApi.dll         Pattern   : Response methods                      *
-*  Type     : TemplateResponseModels                       License   : Please read LICENSE.txt file          *
+*  Type     : ActivityTemplateResponseModels               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Response static methods for ActivityTemplate data.                                             *
 *                                                                                                            *
@@ -13,8 +13,8 @@ using System.Collections.Generic;
 
 namespace Empiria.ProjectManagement.WebApi {
 
-  /// <summary>Response static methods for project's activities.</summary>
-  static internal class TemplateResponseModels {
+  /// <summary>Response static methods for ActivityTemplate data.</summary>
+  static internal class ActivityTemplateResponseModels {
 
     #region Response methods
 
@@ -26,6 +26,7 @@ namespace Empiria.ProjectManagement.WebApi {
       }
       return array;
     }
+
 
     static internal object ToActivityTemplateResponse(this Activity activity) {
       var template = activity.Template;
@@ -75,6 +76,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #endregion Response methods
 
-  }  // class TemplateResponseModels
+  }  // class ActivityTemplateResponseModels
 
 }  // namespace Empiria.ProjectManagement.WebApi
