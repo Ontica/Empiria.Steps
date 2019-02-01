@@ -69,6 +69,29 @@ namespace Empiria.ProjectManagement.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v1/project-management/activities/{activityUID}/tasks/{taskUID}/close")]
+    public SingleObjectModel CloseTask(string activityUID, string taskUID,
+                                       [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var task = Task.Parse(taskUID);
+
+        Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
+
+        task.Close(bodyAsJson);
+
+        return new SingleObjectModel(this.Request, task.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     [HttpPut, HttpPatch]
     [Route("v1/project-management/activities/{activityUID}/tasks/{taskUID}")]
     public SingleObjectModel UpdateTask(string activityUID, string taskUID,
