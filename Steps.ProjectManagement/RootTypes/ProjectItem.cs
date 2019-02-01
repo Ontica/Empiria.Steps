@@ -258,7 +258,7 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    public virtual void Close(JsonObject data) {
+    public virtual void Complete(JsonObject data) {
       Assertion.AssertObject(data, "data");
 
       this.AssertIsValid(data);

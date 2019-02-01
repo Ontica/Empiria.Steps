@@ -67,9 +67,9 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpPost]
-    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/close")]
-    public SingleObjectModel CloseActivity(string projectUID, string activityUID,
-                                           [FromBody] object body) {
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/complete")]
+    public SingleObjectModel CompleteActivity(string projectUID, string activityUID,
+                                              [FromBody] object body) {
       try {
         base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
@@ -78,7 +78,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Activity activity = project.GetActivity(activityUID);
 
-        activity.Close(bodyAsJson);
+        activity.Complete(bodyAsJson);
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(Activity).FullName);

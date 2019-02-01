@@ -70,9 +70,9 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpPost]
-    [Route("v1/project-management/activities/{activityUID}/tasks/{taskUID}/close")]
-    public SingleObjectModel CloseTask(string activityUID, string taskUID,
-                                       [FromBody] object body) {
+    [Route("v1/project-management/activities/{activityUID}/tasks/{taskUID}/complete")]
+    public SingleObjectModel CompleteTask(string activityUID, string taskUID,
+                                          [FromBody] object body) {
       try {
         base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
@@ -81,7 +81,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
 
-        task.Close(bodyAsJson);
+        task.Complete(bodyAsJson);
 
         return new SingleObjectModel(this.Request, task.ToResponse(),
                                      typeof(Activity).FullName);
