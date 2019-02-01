@@ -92,6 +92,26 @@ namespace Empiria.ProjectManagement.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v1/project-management/activities/{activityUID}/tasks/{taskUID}/reactivate")]
+    public SingleObjectModel ReactivateActivity(string activityUID, string taskUID) {
+      try {
+        var task = Task.Parse(taskUID);
+
+        Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
+
+        task.Reactivate();
+
+        return new SingleObjectModel(this.Request, task.ToResponse(),
+                                     typeof(Activity).FullName);
+
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     [HttpPut, HttpPatch]
     [Route("v1/project-management/activities/{activityUID}/tasks/{taskUID}")]
     public SingleObjectModel UpdateTask(string activityUID, string taskUID,

@@ -265,6 +265,10 @@ namespace Empiria.ProjectManagement {
       this.Load(data);
 
       this.ActualEndDate = data.Get("endDate", this.ActualEndDate);
+      if (this.ActualEndDate == ExecutionServer.DateMaxValue) {
+        this.ActualEndDate = DateTime.Today;
+      }
+
       this.ActualStartDate = this.ActualStartDate == ExecutionServer.DateMaxValue
                             ? this.ActualEndDate : this.ActualStartDate;
 
@@ -276,8 +280,8 @@ namespace Empiria.ProjectManagement {
 
 
     internal void Delete() {
-      Assertion.Assert(this.Status == ActivityStatus.Pending,
-                       "Deletion is only possible to project items in pending status.");
+      Assertion.Assert(this.Status != ActivityStatus.Completed,
+                       "Deletion is only possible for project items with statuses distinct than completed.");
 
       this.Status = ActivityStatus.Deleted;
 
@@ -354,6 +358,19 @@ namespace Empiria.ProjectManagement {
 
     protected override void OnSave() {
       throw Assertion.AssertNoReachThisCode();
+    }
+
+
+    public virtual void Reactivate() {
+      Assertion.Assert(this.Status != ActivityStatus.Active,
+                      "Reactivation is only possible for project items with statuses distinct than active.");
+
+      this.ActualEndDate = ExecutionServer.DateMaxValue;
+
+      this.Stage = ItemStage.InProcess;
+      this.Status = ActivityStatus.Active;
+
+      this.Save();
     }
 
 

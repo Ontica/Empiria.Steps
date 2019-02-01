@@ -90,6 +90,25 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/reactivate")]
+    public SingleObjectModel ReactivateActivity(string projectUID, string activityUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+
+        activity.Reactivate();
+
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/copyTo/{targetProjectUID}")]
     public SingleObjectModel CopyActivity(string projectUID, string activityUID,
                                           string targetProjectUID, [FromBody] object body) {
