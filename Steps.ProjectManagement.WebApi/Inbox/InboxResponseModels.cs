@@ -22,9 +22,9 @@ namespace Empiria.ProjectManagement.WebApi {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var item in list) {
-        if (item is Activity && ((Activity) item).Responsible.Id != -1) {
+        if (item is Activity) {
           array.Add(((Activity) item).ToInboxResponse());
-        } else if (item is Task && ((Task) item).Responsible.Id != -1) {
+        } else if (item is Task) {
           array.Add(((Task) item).ToInboxResponse());
         }
       }
@@ -43,16 +43,16 @@ namespace Empiria.ProjectManagement.WebApi {
         },
         title = activity.Name,
         from = new {
-          uid = "ksdjfh374",
-          name = "Abelardo García"
+          uid = activity.AssignedBy.UID,
+          name = activity.AssignedBy.Alias
         },
         to = new {
           uid = activity.Responsible.UID,
-          name = activity.Responsible.Nickname
+          name = activity.Responsible.Alias
         },
         description = activity.Notes,
-        received = DateTime.Parse("2017-10-" + EmpiriaMath.GetRandom(01, 31)),
-        status = "Active",
+        received = activity.AssignedDate,
+        status = activity.Status,
         extensionData = new {
           deadline = activity.Deadline,
           plannedEndDate = activity.PlannedEndDate,
@@ -74,16 +74,16 @@ namespace Empiria.ProjectManagement.WebApi {
         },
         title = task.Name,
         from = new {
-          uid = "ksdjfh374",
-          name = "Abelardo García"
+          uid = task.AssignedBy.UID,
+          name = task.AssignedBy.Alias
         },
         to = new {
           uid = task.Responsible.UID,
-          name = task.Responsible.Nickname
+          name = task.Responsible.Alias
         },
         description = task.Notes,
-        received = DateTime.Parse("2017-10-" + EmpiriaMath.GetRandom(01, 31)),
-        status = "Active",
+        received = task.AssignedDate,
+        status = task.Status,
         extensionData = new {
           deadline = task.Deadline,
           plannedEndDate = task.PlannedEndDate,

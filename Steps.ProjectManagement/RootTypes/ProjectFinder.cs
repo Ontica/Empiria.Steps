@@ -66,7 +66,7 @@ namespace Empiria.ProjectManagement {
 
           var list1 = from item in list
                       where ((Activity) item).Responsible.Id != -1
-                      orderby ((Activity) item).Responsible.Nickname, item.Deadline, item.Name
+                      orderby ((Activity) item).Responsible.Alias, item.Deadline, item.Name
                       select item;
 
           var list2 = from item in list
