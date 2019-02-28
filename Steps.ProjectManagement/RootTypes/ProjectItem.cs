@@ -195,7 +195,7 @@ namespace Empiria.ProjectManagement {
 
     public string WarnType {
       get {
-        return this.ExtensionData.Get("warnType", "DefaultConfig");
+        return this.ExtensionData.Get("warnType", "Default");
       }
     }
 
@@ -347,12 +347,12 @@ namespace Empiria.ProjectManagement {
         this.ActualEndDate = data.Get("actualEndDate", ExecutionServer.DateMaxValue);
       }
 
-    //  if (data.HasValue("warnDays")) {
-        this.ExtensionData.Set("warnDays", data.Get<int>("warnDays", 0));
-  //    }
- //     if (data.HasValue("warnType")) {
-        this.ExtensionData.Set("warnType", data.Get<string>("warnType", "DefaultConfig"));
-  //    }
+      if (data.HasValue("warnDays")) {
+        this.ExtensionData.Set("warnDays", data.Get<int>("warnDays"));
+      }
+      if (data.HasValue("warnType")) {
+        this.ExtensionData.Set("warnType", data.Get<string>("warnType"));
+      }
     }
 
 
@@ -363,7 +363,7 @@ namespace Empiria.ProjectManagement {
 
     public virtual void Reactivate() {
       Assertion.Assert(this.Status != ActivityStatus.Active,
-                      "Reactivation is only possible for project items with statuses distinct than active.");
+                      "Reactivation is only possible when status is distinct than active.");
 
       this.ActualEndDate = ExecutionServer.DateMaxValue;
 
