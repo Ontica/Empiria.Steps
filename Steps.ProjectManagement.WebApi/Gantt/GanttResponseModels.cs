@@ -39,7 +39,6 @@ namespace Empiria.ProjectManagement.WebApi {
         duration = CalculateGanttItemDurationInDays(projectItem),
         position = projectItem.Position,
         level = projectItem.Level,
-        ragStatus = projectItem.RagStatus,
         parent = projectItem.Parent.IsEmptyInstance ? 0 : projectItem.Parent.Id
       };
     }

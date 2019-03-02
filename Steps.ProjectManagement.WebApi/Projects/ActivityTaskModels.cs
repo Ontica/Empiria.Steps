@@ -60,7 +60,6 @@ namespace Empiria.ProjectManagement.WebApi {
         tags = task.Tags.Items,
         position = task.Position,
         level = task.Level,
-        ragStatus = task.RagStatus,
         stage = task.Stage,
         status = task.Status,
         responsible = task.Responsible.ToShortResponse(),

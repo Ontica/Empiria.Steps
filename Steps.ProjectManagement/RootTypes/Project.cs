@@ -106,12 +106,6 @@ using Empiria.ProjectManagement.Resources;
     } = TagsCollection.Empty;
 
 
-    [DataField("RagStatus", Default = RAGStatus.NoColor)]
-    public RAGStatus RagStatus {
-      get;
-      private set;
-    }
-
 
     [DataField("ExtData")]
     protected internal JsonObject ExtensionData {

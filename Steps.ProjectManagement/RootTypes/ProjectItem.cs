@@ -128,13 +128,6 @@ namespace Empiria.ProjectManagement {
     } = Resource.Empty;
 
 
-    [DataField("RagStatus", Default = RAGStatus.NoColor)]
-    public RAGStatus RagStatus {
-      get;
-      private set;
-    }
-
-
     protected internal JsonObject ExtensionData {
       get;
       private set;
@@ -308,7 +301,6 @@ namespace Empiria.ProjectManagement {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
-      this.RagStatus = data.Get("ragStatus", this.RagStatus);
 
       var tags = data.GetList<string>("tags", false);
       if (tags != null && tags.Count != 0) {

@@ -47,7 +47,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
         position = activity.Position,
         level = activity.Level,
-        ragStatus = activity.RagStatus,
         stage = activity.Stage,
         status = activity.Status,
 
@@ -86,7 +85,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
         position = summary.Position,
         level = summary.Level,
-        ragStatus = summary.RagStatus,
         stage = summary.Stage,
         status = summary.Status
       };

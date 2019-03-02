@@ -56,7 +56,6 @@ namespace Empiria.ProjectManagement.WebApi {
         extensionData = new {
           deadline = activity.Deadline,
           plannedEndDate = activity.PlannedEndDate,
-          ragStatus = activity.RagStatus,
           tags = activity.Tags.Items,
           stage = activity.Stage
         },
@@ -87,7 +86,6 @@ namespace Empiria.ProjectManagement.WebApi {
         extensionData = new {
           deadline = task.Deadline,
           plannedEndDate = task.PlannedEndDate,
-          ragStatus = task.RagStatus,
           tags = task.Tags.Items,
           stage = task.Stage
         },
