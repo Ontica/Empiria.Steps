@@ -63,9 +63,7 @@ namespace Empiria.ProjectManagement {
       var dependencies = this.GetModelDependencies(activityModel);
 
       foreach (var dependency in dependencies) {
-
         this.CreateBranchFromTemplate(dependency);
-
       }
 
       // ToDo: Change this by a recursive strategy
@@ -127,10 +125,8 @@ namespace Empiria.ProjectManagement {
 
       term = AdjustTermOnDueOnCondtion(template, term);
 
-
       switch (template.DueOnTermUnit) {
         case "BusinessDays":
-
           EmpiriaCalendar calendar = GetCalendar(template);
 
           if (term >= 0) {
@@ -158,12 +154,10 @@ namespace Empiria.ProjectManagement {
     }
 
 
-
     private void CreateBranchFromTemplate(Activity activityModel) {
       var modelBranch = activityModel.GetBranch();
 
       foreach (var modelItem in modelBranch) {
-
         var json = new JsonObject();
 
         json.Add("name", modelItem.Name);
@@ -181,12 +175,9 @@ namespace Empiria.ProjectManagement {
           } else {
             activity.SetAndSaveParent(this.createdActivities[0]);
           }
-
         }
-
         this.createdActivities.Add(activity);
       }
-
     }
 
 
@@ -222,7 +213,7 @@ namespace Empiria.ProjectManagement {
           continue;
         }
 
-        var template = Activity.Parse(activity.TemplateId).Template;
+        var template = activity.GetTemplate().Template;
 
         if (template.DueOnControllerId == -1) {
           continue;

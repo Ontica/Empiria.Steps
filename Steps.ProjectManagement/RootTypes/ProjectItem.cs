@@ -115,9 +115,18 @@ namespace Empiria.ProjectManagement {
 
 
     [DataField("Theme")]
+    internal string _theme = String.Empty;
+
     public string Theme {
-      get;
-      private set;
+      get {
+        if (_theme.Length == 0 && this.HasTemplate) {
+          return this.GetTemplate().Theme;
+        }
+        return _theme;
+      }
+      private set {
+        _theme = value;
+      }
     }
 
 
@@ -249,6 +258,13 @@ namespace Empiria.ProjectManagement {
     } = -1;
 
 
+    public bool HasTemplate {
+      get {
+        return this.TemplateId > 0;
+      }
+    }
+
+
     #endregion Public properties
 
     #region Private methods
@@ -291,6 +307,15 @@ namespace Empiria.ProjectManagement {
 
     public FixedList<ProjectItem> GetBranch() {
       return this.Project.GetBranch(this);
+    }
+
+
+    public Activity GetTemplate() {
+      if (this.HasTemplate) {
+        return Activity.Parse(this.TemplateId);
+      } else {
+        return Activity.Empty;
+      }
     }
 
 

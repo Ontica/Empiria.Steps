@@ -36,6 +36,7 @@ namespace Empiria.ProjectManagement.WebApi {
         uid = activity.UID,
         type = "ObjectType.ProjectItem.ActivityTemplate",
         name = activity.Name,
+        theme = activity.Theme,
         notes = activity.Notes,
 
         activityType = template.ActivityType,

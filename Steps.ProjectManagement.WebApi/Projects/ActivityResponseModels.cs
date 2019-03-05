@@ -55,8 +55,8 @@ namespace Empiria.ProjectManagement.WebApi {
         responsible = activity.Responsible.ToShortResponse(),
         assignedDate = activity.AssignedDate,
         assignedBy = activity.AssignedBy.ToShortResponse(),
-        template = activity.TemplateId > 0 ?
-                        Activity.Parse(activity.TemplateId).ToActivityTemplateResponse() : new object()
+        template = activity.HasTemplate ?
+                        activity.GetTemplate().ToActivityTemplateResponse() : new object()
       };
     }
 
