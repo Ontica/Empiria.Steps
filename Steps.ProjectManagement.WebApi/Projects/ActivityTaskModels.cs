@@ -57,7 +57,9 @@ namespace Empiria.ProjectManagement.WebApi {
         warnDays = task.WarnDays,
         warnType = task.WarnType,
 
+        theme = task.Theme,
         tags = task.Tags.Items,
+
         position = task.Position,
         level = task.Level,
         stage = task.Stage,

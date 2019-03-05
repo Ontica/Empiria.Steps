@@ -44,13 +44,14 @@ namespace Empiria.ProjectManagement.WebApi {
         warnDays = activity.WarnDays,
         warnType = activity.WarnType,
 
+        theme = activity.Theme,
+        tags = activity.Tags.Items,
 
         position = activity.Position,
         level = activity.Level,
         stage = activity.Stage,
         status = activity.Status,
 
-        tags = activity.Tags.Items,
         responsible = activity.Responsible.ToShortResponse(),
         assignedDate = activity.AssignedDate,
         assignedBy = activity.AssignedBy.ToShortResponse(),
@@ -82,6 +83,9 @@ namespace Empiria.ProjectManagement.WebApi {
         plannedEndDate = summary.PlannedEndDate,
         actualStartDate = summary.ActualStartDate,
         actualEndDate = summary.ActualEndDate,
+
+        theme = summary.Theme,
+        tags = summary.Tags.Items,
 
         position = summary.Position,
         level = summary.Level,

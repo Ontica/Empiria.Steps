@@ -114,6 +114,13 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    [DataField("Theme")]
+    public string Theme {
+      get;
+      private set;
+    }
+
+
     [DataField("Tags")]
     public TagsCollection Tags {
       get;
@@ -136,7 +143,7 @@ namespace Empiria.ProjectManagement {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Name, this.Tags.ToString());
+        return EmpiriaString.BuildKeywords(this.Name, this.Theme, this.Tags.ToString(), this.Project.Name);
       }
     }
 
@@ -290,9 +297,11 @@ namespace Empiria.ProjectManagement {
     protected virtual void Load(ProjectItem data) {
       this.Name = data.Name;
       this.Notes = data.Notes;
+      this.Theme = data.Theme;
 
       this.Tags = data.Tags;
       this.ExtensionData = JsonObject.Parse(data.ExtensionData.ToString());
+
       this.Resource = data.Resource;
       this.TemplateId = data.TemplateId;
     }
@@ -301,6 +310,7 @@ namespace Empiria.ProjectManagement {
     protected virtual void Load(JsonObject data) {
       this.Name = data.GetClean("name", this.Name);
       this.Notes = data.GetClean("notes", this.Notes);
+      this.Theme = data.GetClean("theme", this.Theme);
 
       var tags = data.GetList<string>("tags", false);
       if (tags != null && tags.Count != 0) {
@@ -342,6 +352,7 @@ namespace Empiria.ProjectManagement {
       if (data.HasValue("warnDays")) {
         this.ExtensionData.Set("warnDays", data.Get<int>("warnDays"));
       }
+
       if (data.HasValue("warnType")) {
         this.ExtensionData.Set("warnType", data.Get<string>("warnType"));
       }

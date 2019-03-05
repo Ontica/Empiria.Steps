@@ -37,6 +37,10 @@ namespace Empiria.ProjectManagement.WebApi {
         text = projectItem.Name,
         start_date = CalculateGanttItemStartDate(projectItem).ToString("yyyy-MM-dd HH:mm"),
         duration = CalculateGanttItemDurationInDays(projectItem),
+
+        theme  = projectItem.Theme,
+        tags = projectItem.Tags.Items,
+
         position = projectItem.Position,
         level = projectItem.Level,
         parent = projectItem.Parent.IsEmptyInstance ? 0 : projectItem.Parent.Id

@@ -51,12 +51,13 @@ namespace Empiria.ProjectManagement.WebApi {
           name = activity.Responsible.Alias
         },
         description = activity.Notes,
+        theme = activity.Theme,
+        tags = activity.Tags.Items,
         received = activity.AssignedDate,
         status = activity.Status,
         extensionData = new {
           deadline = activity.Deadline,
           plannedEndDate = activity.PlannedEndDate,
-          tags = activity.Tags.Items,
           stage = activity.Stage
         },
       };
@@ -81,12 +82,13 @@ namespace Empiria.ProjectManagement.WebApi {
           name = task.Responsible.Alias
         },
         description = task.Notes,
+        theme = task.Theme,
+        tags = task.Tags.Items,
         received = task.AssignedDate,
         status = task.Status,
         extensionData = new {
           deadline = task.Deadline,
           plannedEndDate = task.PlannedEndDate,
-          tags = task.Tags.Items,
           stage = task.Stage
         },
       };
