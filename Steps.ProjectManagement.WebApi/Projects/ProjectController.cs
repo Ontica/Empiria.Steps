@@ -82,6 +82,19 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpGet]
+    [Route("v1/project-management/themes")]
+    public CollectionModel GetProjectManagementThemes() {
+      try {
+        var list = Project.ThemesList;
+
+        return new CollectionModel(this.Request, list);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/as-tree")]
     public CollectionModel GetProjectActivitiesAsTree([FromUri] string projectUID) {
       try {

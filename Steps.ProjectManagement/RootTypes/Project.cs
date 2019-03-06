@@ -77,6 +77,14 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
+    static public FixedList<string> ThemesList {
+      get {
+        var list = GeneralList.Parse("ProjectManagement.Themes.List");
+
+        return list.GetItems<string>();
+      }
+    }
+
     protected override void OnInitialize() {
       itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));
     }
