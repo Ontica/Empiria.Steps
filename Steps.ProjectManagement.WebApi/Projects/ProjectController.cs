@@ -83,7 +83,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/themes")]
-    public CollectionModel GetProjectManagementThemes() {
+    public CollectionModel GetProjectThemes() {
       try {
         var list = Project.ThemesList;
 
@@ -93,6 +93,7 @@ namespace Empiria.ProjectManagement.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/as-tree")]

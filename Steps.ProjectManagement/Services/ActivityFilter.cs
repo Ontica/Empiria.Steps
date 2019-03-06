@@ -1,8 +1,8 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.ProjectManagement.dll                    Pattern : DTO                                 *
-*  Type     : ActivityFilter                                   License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Application services                  *
+*  Assembly : Empiria.ProjectManagement.dll                Pattern   : DTO                                   *
+*  Type     : ActivityFilter                               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Holds fields used to filter project activities.                                                *
 *                                                                                                            *
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 
-namespace Empiria.ProjectManagement {
+namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Holds fields used to filter project activities.</summary>
   public class ActivityFilter {
@@ -113,6 +113,7 @@ namespace Empiria.ProjectManagement {
       return String.Empty;
     }
 
+
     public string GetTagsSqlFilter() {
       if (this.Tag.Length == 1) {
         return $"([Tags] LIKE '%''{this.Tag[0]}''%')";
@@ -172,4 +173,4 @@ namespace Empiria.ProjectManagement {
 
   }  // ActivityFilter
 
-}  // namespace Empiria.ProjectManagement
+}  // namespace Empiria.ProjectManagement.Services

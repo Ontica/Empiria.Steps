@@ -1,6 +1,6 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Project Management                           Component : Domain services                       *
+*  Module   : Project Management                           Component : Application services                  *
 *  Assembly : Empiria.ProjectManagement.dll                Pattern   : Service Provider                      *
 *  Type     : ActivityCreator                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -14,10 +14,10 @@ using System.Linq;
 using Empiria.DataTypes;
 using Empiria.Json;
 
-namespace Empiria.ProjectManagement {
+namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Creates project activities based on project model rules.</summary>
-  public class ActivityCreator {
+  internal class ActivityCreator {
 
     #region Fields
 
@@ -252,4 +252,4 @@ namespace Empiria.ProjectManagement {
 
   }  // class ActivityCreator
 
-}  // namespace Empiria.ProjectManagement
+}  // namespace Empiria.ProjectManagement.Services

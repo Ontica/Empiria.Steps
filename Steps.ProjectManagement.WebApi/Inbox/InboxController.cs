@@ -12,6 +12,8 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
+using Empiria.ProjectManagement.Services;
+
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Web services used to interact with task inboxes.</summary>
@@ -22,16 +24,13 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpGet]
     [Route("v1/inboxes/my-inbox")]
     public CollectionModel GetMyInbox([FromUri] ActivityFilter filter = null,
-                                      [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
+                                      [FromUri] ActivityOrderBy orderBy = ActivityOrderBy.Default) {
       try {
-
         if (filter == null) {
           filter = new ActivityFilter();
         }
 
-        var finder = new ProjectFinder(filter);
-
-        FixedList<ProjectItem> activities = finder.GetActivitiesList(orderBy);
+        FixedList<ProjectItem> activities = DataRetrievalServices.GetWorkOnActivities(filter, orderBy);
 
         return new CollectionModel(this.Request, activities.ToInboxResponse(),
                                    typeof(ProjectItem).FullName);
@@ -45,16 +44,13 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpGet]
     [Route("v1/project-management/projects/as-work-list")]
     public CollectionModel GetProjectActivitiesAsWorklist([FromUri] ActivityFilter filter = null,
-                                                          [FromUri] ActivityOrder orderBy = ActivityOrder.Default) {
+                                                          [FromUri] ActivityOrderBy orderBy = ActivityOrderBy.Default) {
       try {
-
         if (filter == null) {
           filter = new ActivityFilter();
         }
 
-        var finder = new ProjectFinder(filter);
-
-        FixedList<ProjectItem> activities = finder.GetActivitiesList(orderBy);
+        FixedList<ProjectItem> activities = DataRetrievalServices.GetWorkOnActivities(filter, orderBy);
 
         return new CollectionModel(this.Request, activities.ToResponse(),
                                    typeof(ProjectItem).FullName);

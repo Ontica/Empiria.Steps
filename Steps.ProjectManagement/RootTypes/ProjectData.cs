@@ -18,12 +18,14 @@ namespace Empiria.ProjectManagement {
   /// <summary>Project data read and write methods.</summary>
   static internal class ProjectData {
 
+
     static internal List<Project> GetProjects(Contact ownerOrManager) {
       string filter = $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
                       $"AND Status <> 'X' AND ExtData NOT LIKE '%template%'";
 
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
+
 
     static internal List<Project> GetTemplates(Contact ownerOrManager) {
       string filter = $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
@@ -49,18 +51,11 @@ namespace Empiria.ProjectManagement {
       }
 
       return events.ToFixedList();
-
     }
 
     #region Project structure methods
 
-    static internal List<ProjectItem> GetProjectActivities(Project project,
-                                                           ActivityFilter filter = null,
-                                                           ActivityOrder orderBy = ActivityOrder.Default) {
-
-      if (filter == null) {
-        filter = new ActivityFilter();
-      }
+    static internal List<ProjectItem> GetProjectActivities(Project project) {
       string sql = $"SELECT * FROM PMProjectObjects " +
                    $"WHERE ProjectObjectTypeId <> {ProjectItemType.TaskType.Id} AND " +
                    $"BaseProjectId = {project.Id} AND Status <> 'X' " +
@@ -68,7 +63,7 @@ namespace Empiria.ProjectManagement {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<ProjectItem>(x));
+      return DataReader.GetList<ProjectItem>(op);
     }
 
 
@@ -81,7 +76,7 @@ namespace Empiria.ProjectManagement {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<ProjectItem>(x));
+      return DataReader.GetList<ProjectItem>(op);
     }
 
     #endregion Project structure methods
@@ -94,9 +89,9 @@ namespace Empiria.ProjectManagement {
       list[0] = Contact.Parse(2);
       list[1] = Contact.Parse(4);
       list[2] = Contact.Parse(8);
-      list[3] = Contact.Parse(9);
-      list[4] = Contact.Parse(10);
-      list[5] = Contact.Parse(11);
+      list[3] = Contact.Parse(10);
+      list[4] = Contact.Parse(11);
+      list[5] = Contact.Parse(12);
 
       return new FixedList<Contact>(list);
     }
@@ -104,37 +99,34 @@ namespace Empiria.ProjectManagement {
 
     static internal FixedList<Contact> GetProjectResponsibles(Project project) {
       string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (61, 62, 63, 64, 65) " +
-                   $"ORDER BY Nickname";
+                   $"WHERE ContactId IN (2, 4, 8, 10, 11, 12) " +
+                   $"ORDER BY Nickname, ShortName";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
-                       .ToFixedList();
+      return DataReader.GetFixedList<Contact>(op);
     }
 
 
     static internal FixedList<Contact> GetProjectRequesters(Project project) {
       string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (65, 66, 67, 68) " +
+                   $"WHERE ContactId IN (2, 4, 8, 10, 11, 12) " +
                    $"ORDER BY Nickname";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
-                       .ToFixedList();
+      return DataReader.GetFixedList<Contact>(op);
     }
 
 
     static internal FixedList<Contact> GetProjectTaskManagers(Project project) {
       string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (67, 69, 70) " +
+                   $"WHERE ContactId IN (2, 4, 8, 10, 11, 12) " +
                    $"ORDER BY Nickname";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Contact>(x))
-                       .ToFixedList();
+      return DataReader.GetFixedList<Contact>(op);
     }
 
     #endregion Project contacts methods
@@ -145,7 +137,7 @@ namespace Empiria.ProjectManagement {
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.GetEmpiriaType().Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
-                o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline, (char) o.RagStatus,
+                o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline,
                 o.Tags.ToString(), o.Keywords, o.Position, -1,
                 o.Resource.Id, o.Owner.Id,
                 o.Responsible.Id, ExecutionServer.DateMaxValue, -1,

@@ -1,18 +1,18 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Enumeration                         *
-*  Type     : ActivityOrder                                    License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Application services                  *
+*  Assembly : Empiria.ProjectManagement.dll                Pattern   : Enumeration                           *
+*  Type     : ActivityOrderBy                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Enumerates activity ordering options.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.ProjectManagement {
+namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Enumerates activity ordering options.</summary>
-  public enum ActivityOrder {
+  public enum ActivityOrderBy {
 
     Default = 'U',
 
@@ -24,6 +24,6 @@ namespace Empiria.ProjectManagement {
 
     ActivityName = 'N',
 
-  }  // enum ActivityOrder
+  }  // enum ActivityOrderBy
 
-}  // namespace Empiria.ProjectManagement
+}  // namespace Empiria.ProjectManagement.Services

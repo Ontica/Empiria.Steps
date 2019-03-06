@@ -1,8 +1,8 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Steps                                    System  : Project Management System           *
-*  Assembly : Empiria.ProjectManagement.dll                    Pattern : Finder                              *
-*  Type     : ProjectFinder                                    License : Please read LICENSE.txt file        *
+*  Module   : Project Management                           Component : Application services                  *
+*  Assembly : Empiria.ProjectManagement.dll                Pattern   : Finder                                *
+*  Type     : ProjectFinder                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Performs search operations over projects, activities, and other project items.                 *
 *                                                                                                            *
@@ -13,10 +13,10 @@ using System.Linq;
 
 using Empiria.Data;
 
-namespace Empiria.ProjectManagement {
+namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Performs search operations over projects, activities, and other project items.</summary>
-  public class ProjectFinder {
+  internal class ProjectFinder {
 
     #region Constructors and parsers
 
@@ -39,7 +39,7 @@ namespace Empiria.ProjectManagement {
 
     #region Public methods
 
-    public FixedList<ProjectItem> GetActivitiesList(ActivityOrder orderBy = ActivityOrder.Default) {
+    public FixedList<ProjectItem> GetWorkOnActivities(ActivityOrderBy orderBy = ActivityOrderBy.Default) {
       var list = ProjectData.GetNoSummaryActivities(this.FilterAsSql());
 
       list = this.ApplyNoSqlFilter(list);
@@ -52,9 +52,9 @@ namespace Empiria.ProjectManagement {
 
     #region Private methods
 
-    private List<ProjectItem> ApplySort(List<ProjectItem> list, ActivityOrder orderBy) {
+    private List<ProjectItem> ApplySort(List<ProjectItem> list, ActivityOrderBy orderBy) {
       switch (orderBy) {
-        case ActivityOrder.Deadline:
+        case ActivityOrderBy.Deadline:
 
           return (from item in list
                   orderby item.Deadline, item.Name
@@ -62,7 +62,7 @@ namespace Empiria.ProjectManagement {
                   .ToList();
 
 
-        case ActivityOrder.Responsible:
+        case ActivityOrderBy.Responsible:
 
           var list1 = from item in list
                       where ((Activity) item).Responsible.Id != -1
@@ -77,7 +77,7 @@ namespace Empiria.ProjectManagement {
           return list1.Concat(list2).ToList();
 
 
-        case ActivityOrder.PlannedEndDate:
+        case ActivityOrderBy.PlannedEndDate:
 
           return (from item in list
                   orderby item.PlannedEndDate, item.Name
@@ -85,7 +85,7 @@ namespace Empiria.ProjectManagement {
                   .ToList();
 
 
-        case ActivityOrder.ActivityName:
+        case ActivityOrderBy.ActivityName:
 
           return (from item in list
                   orderby item.Name
@@ -93,7 +93,7 @@ namespace Empiria.ProjectManagement {
                   .ToList();
 
 
-        case ActivityOrder.Default:
+        case ActivityOrderBy.Default:
         default:
 
           return (from item in list
@@ -118,4 +118,4 @@ namespace Empiria.ProjectManagement {
 
   } // class ProjectFinder
 
-} // namespace Empiria.ProjectManagement
+} // namespace Empiria.ProjectManagement.Services

@@ -13,6 +13,8 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
+using Empiria.ProjectManagement.Services;
+
 using Empiria.ProjectManagement.WebApi;
 
 namespace Empiria.ProjectManagement.Templates.WebApi {
@@ -44,9 +46,9 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
         var project = Project.Parse(projectTemplateUID);
 
-        var fullActivitiesList = project.GetItems();
+        var activityModels = project.GetItems();
 
-        return new CollectionModel(this.Request, fullActivitiesList.ToActivityTemplateResponse(),
+        return new CollectionModel(this.Request, activityModels.ToActivityTemplateResponse(),
                                    typeof(ProjectItem).FullName);
 
       } catch (Exception e) {
@@ -76,24 +78,23 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/create-from-activity-template")]
-    public SingleObjectModel CreateFromActivityTemplate(string projectUID,
-                                                       [FromBody] object body) {
+    public CollectionModel CreateFromActivityTemplate(string projectUID,
+                                                      [FromBody] object body) {
       try {
         base.RequireBody(body);
 
         var bodyAsJson = JsonObject.Parse(body);
 
-        var eventModel = bodyAsJson.Get<Activity>("activityTemplateUID");
+        var activityModel = bodyAsJson.Get<Activity>("activityTemplateUID");
         var eventDate = bodyAsJson.Get<DateTime>("eventDate", DateTime.Today);
 
         var project = Project.Parse(projectUID);
 
-        var handler = new ActivityCreator(project);
+        FixedList<ProjectItem> createdActivities =
+                       ModelingServices.CreateActivitiesFromModel(activityModel, project, eventDate);
 
-        handler.CreateFromEvent(eventModel, eventDate);
 
-        return new SingleObjectModel(this.Request, eventModel.ToResponse(),
-                                     typeof(Activity).FullName);
+        return new CollectionModel(this.Request, createdActivities.ToResponse());
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
