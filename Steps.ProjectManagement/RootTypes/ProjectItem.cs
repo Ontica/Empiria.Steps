@@ -89,6 +89,7 @@ namespace Empiria.ProjectManagement {
       this.ExtensionData = JsonObject.Parse((string) row["ExtData"]);
     }
 
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -280,13 +281,7 @@ namespace Empiria.ProjectManagement {
       this.AssertIsValid(data);
       this.Load(data);
 
-      this.ActualEndDate = data.Get("endDate", this.ActualEndDate);
-      if (this.ActualEndDate == ExecutionServer.DateMaxValue) {
-        this.ActualEndDate = DateTime.Today;
-      }
-
-      this.ActualStartDate = this.ActualStartDate == ExecutionServer.DateMaxValue
-                            ? this.ActualEndDate : this.ActualStartDate;
+      this.ActualEndDate = data.Get("actualEndDate", DateTime.Today);
 
       this.Stage = ItemStage.Done;
       this.Status = ActivityStatus.Completed;
@@ -368,10 +363,6 @@ namespace Empiria.ProjectManagement {
 
       if (data.Contains("actualStartDate")) {
         this.ActualStartDate = data.Get("actualStartDate", ExecutionServer.DateMaxValue);
-      }
-
-      if (data.Contains("actualEndDate")) {
-        this.ActualEndDate = data.Get("actualEndDate", ExecutionServer.DateMaxValue);
       }
 
       if (data.HasValue("warnDays")) {
