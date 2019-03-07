@@ -275,13 +275,11 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    public virtual void Complete(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+    public virtual void Complete(DateTime actualEndDate) {
+      Assertion.Assert(this.Status != ActivityStatus.Completed,
+                       "This activity is already marked as completed.");
 
-      this.AssertIsValid(data);
-      this.Load(data);
-
-      this.ActualEndDate = data.Get("actualEndDate", DateTime.Today);
+      this.ActualEndDate = actualEndDate;
 
       this.Stage = ItemStage.Done;
       this.Status = ActivityStatus.Completed;

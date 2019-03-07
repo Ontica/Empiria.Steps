@@ -13,6 +13,8 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
+using Empiria.ProjectManagement.Services;
+
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Public API to retrieve and set project activities.</summary>
@@ -78,10 +80,13 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Activity activity = project.GetActivity(activityUID);
 
-        activity.Complete(bodyAsJson);
+        DateTime completedDate = bodyAsJson.Get<DateTime>("actualEndDate", DateTime.Today);
 
-        return new SingleObjectModel(this.Request, activity.ToResponse(),
-                                     typeof(Activity).FullName);
+        activity.Update(bodyAsJson);
+
+        ProjectUpdater.Complete(activity, completedDate);
+
+        return new SingleObjectModel(this.Request, activity.ToResponse());
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -97,7 +102,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Activity activity = project.GetActivity(activityUID);
 
-        activity.Reactivate();
+        ProjectUpdater.Reactivate(activity);
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(Activity).FullName);

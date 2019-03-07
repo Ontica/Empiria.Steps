@@ -13,6 +13,8 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
+using Empiria.ProjectManagement.Services;
+
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Public API to retrieve and control activities tasks (checklists).</summary>
@@ -81,7 +83,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
 
-        task.Complete(bodyAsJson);
+        DateTime completedDate = bodyAsJson.Get<DateTime>("actualEndDate", DateTime.Today);
+
+        task.Update(bodyAsJson);
+        ProjectUpdater.Complete(task, completedDate);
 
         return new SingleObjectModel(this.Request, task.ToResponse(),
                                      typeof(Activity).FullName);
@@ -100,7 +105,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
 
-        task.Reactivate();
+        ProjectUpdater.Reactivate(task);
 
         return new SingleObjectModel(this.Request, task.ToResponse(),
                                      typeof(Activity).FullName);

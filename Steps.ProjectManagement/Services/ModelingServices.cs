@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Project Management                           Component : Application services                  *
 *  Assembly : Empiria.ProjectManagement.dll                Pattern   : Service provider                      *
-*  Type     : ModelingServices                            License   : Please read LICENSE.txt file          *
+*  Type     : ModelingServices                             License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Provides project management services using project templating rules.                           *
 *                                                                                                            *
@@ -14,6 +14,7 @@ namespace Empiria.ProjectManagement.Services {
   /// <summary>Provides project management services using project templating rules.</summary>
   static public class ModelingServices {
 
+    #region Services
 
     static public FixedList<ProjectItem> CreateActivitiesFromModel(Activity activityModel,
                                                                    Project project,
@@ -28,6 +29,26 @@ namespace Empiria.ProjectManagement.Services {
       return project.GetItems();
     }
 
+
+    static public WhatIfResult WhatIfCompleted(ProjectItem projectItem, DateTime completedDate) {
+      Assertion.AssertObject(projectItem, "projectItem");
+
+      var source = new ProjectItemStateChange(projectItem, ProjectItemOperation.Complete);
+      source.ActualEndDate = completedDate;
+
+      return new WhatIfResult(source);
+    }
+
+
+    static public WhatIfResult WhatIfReactivated(ProjectItem projectItem) {
+      Assertion.AssertObject(projectItem, "projectItem");
+
+      var source = new ProjectItemStateChange(projectItem, ProjectItemOperation.Reactivate);
+
+      return new WhatIfResult(source);
+    }
+
+    #endregion Services
 
   }  // class ModelingServices
 
