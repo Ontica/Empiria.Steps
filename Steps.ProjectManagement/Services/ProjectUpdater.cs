@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Json;
+
 namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Provides project management activity's state update services</summary>
@@ -27,6 +29,24 @@ namespace Empiria.ProjectManagement.Services {
       }
 
       StoreChanges(result);
+    }
+
+
+    static public FixedList<ProjectItem> CreateActivitiesFromModel(Activity activityModel,
+                                                                   Project project,
+                                                                   DateTime eventDate) {
+      Assertion.AssertObject(activityModel, "activityModel");
+      Assertion.AssertObject(project, "project");
+
+      WhatIfResult result = ModelingServices.WhatIfCreatedFromEvent(activityModel, project, eventDate);
+
+      if (result.HasErrors) {
+        throw result.GetException();
+      }
+
+      StoreChanges(result);
+
+      return project.GetItems();
     }
 
 
@@ -50,18 +70,55 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static private void StoreChanges(WhatIfResult result) {
-      foreach (var change in result.StateChanges) {
-        switch (change.Operation) {
+      foreach (var stateChange in result.StateChanges) {
+
+        switch (stateChange.Operation) {
+
           case ProjectItemOperation.Complete:
-            change.ProjectItem.Complete(change.ActualEndDate);
+            stateChange.ProjectItem.Complete(stateChange.ActualEndDate);
             break;
+
+          case ProjectItemOperation.CreateFromTemplate:
+            stateChange.ProjectItem = CreateFromTemplate(stateChange);
+            break;
+
           case ProjectItemOperation.Reactivate:
-            change.ProjectItem.Reactivate();
+            stateChange.ProjectItem.Reactivate();
             break;
-        }
+
+          default:
+            throw Assertion.AssertNoReachThisCode($"Unrecognized WhatIfResult operation {stateChange.Operation}");
+
+        }  // switch
+
       }  // foreach
+
     }
 
+
+    static private Activity CreateFromTemplate(ProjectItemStateChange stateChange) {
+      Assertion.AssertObject(stateChange, "stateChange");
+      Assertion.AssertObject(stateChange.Project, "stateChange.Project");
+      Assertion.AssertObject(stateChange.Template, "stateChange.Template");
+
+      var json = new JsonObject();
+
+      json.Add("name", stateChange.Template.Name);
+      json.Add("notes", stateChange.Template.Notes);
+
+      json.Add("deadline", stateChange.Deadline);
+      json.Add("plannedEndDate", stateChange.PlannedEndDate);
+
+      json.Add("templateId", stateChange.Template.Id);
+
+      Activity activity = stateChange.Project.AddActivity(json);
+
+      if (stateChange.Parent != null && !stateChange.Parent.ProjectItem.IsEmptyInstance) {
+        activity.SetAndSaveParent(stateChange.Parent.ProjectItem);
+      }
+
+      return activity;
+    }
 
     #endregion Private methods
 

@@ -30,10 +30,9 @@ namespace Empiria.ProjectManagement.Services {
     #region Constructors and parsers
 
 
-    internal WhatIfResult(ProjectItemStateChange source) {
+    internal WhatIfResult(ProjectItem source, ProjectItemOperation sourceOperation) {
       this.Source = source;
-
-      this.AddStateChange(this.Source);
+      this.SourceOperation = sourceOperation;
     }
 
 
@@ -43,7 +42,12 @@ namespace Empiria.ProjectManagement.Services {
     #region Properties
 
 
-    public ProjectItemStateChange Source {
+    public ProjectItem Source {
+      get;
+    }
+
+
+    public ProjectItemOperation SourceOperation {
       get;
     }
 

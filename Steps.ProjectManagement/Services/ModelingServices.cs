@@ -16,36 +16,44 @@ namespace Empiria.ProjectManagement.Services {
 
     #region Services
 
-    static public FixedList<ProjectItem> CreateActivitiesFromModel(Activity activityModel,
-                                                                   Project project,
-                                                                   DateTime eventDate) {
+
+    static public WhatIfResult WhatIfCreatedFromEvent(Activity activityModel,
+                                                      Project project,
+                                                      DateTime eventDate) {
       Assertion.AssertObject(activityModel, "activityModel");
       Assertion.AssertObject(project, "project");
 
       var handler = new ActivityCreator(project);
 
-      handler.CreateFromEvent(activityModel, eventDate);
-
-      return project.GetItems();
+      return handler.CreateFromEvent(activityModel, eventDate);
     }
 
 
     static public WhatIfResult WhatIfCompleted(ProjectItem projectItem, DateTime completedDate) {
       Assertion.AssertObject(projectItem, "projectItem");
 
-      var source = new ProjectItemStateChange(projectItem, ProjectItemOperation.Complete);
-      source.ActualEndDate = completedDate;
+      var whatIfResult = new WhatIfResult(projectItem, ProjectItemOperation.Complete);
 
-      return new WhatIfResult(source);
+      var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.Complete);
+
+      stateChange.ActualEndDate = completedDate;
+
+      whatIfResult.AddStateChange(stateChange);
+
+      return whatIfResult;
     }
 
 
     static public WhatIfResult WhatIfReactivated(ProjectItem projectItem) {
       Assertion.AssertObject(projectItem, "projectItem");
 
-      var source = new ProjectItemStateChange(projectItem, ProjectItemOperation.Reactivate);
+      var whatIfResult = new WhatIfResult(projectItem, ProjectItemOperation.Reactivate);
 
-      return new WhatIfResult(source);
+      var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.Reactivate);
+
+      whatIfResult.AddStateChange(stateChange);
+
+      return whatIfResult;
     }
 
     #endregion Services

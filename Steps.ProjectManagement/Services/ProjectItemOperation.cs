@@ -14,6 +14,8 @@ namespace Empiria.ProjectManagement.Services {
   /// <summary>List of operations that can be performed on a ProjectItem.</summary>
   public enum ProjectItemOperation {
 
+    CreateFromTemplate,
+
     Complete,
 
     Reactivate

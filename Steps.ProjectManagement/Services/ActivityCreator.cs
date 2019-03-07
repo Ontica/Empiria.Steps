@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.DataTypes;
-using Empiria.Json;
 
 namespace Empiria.ProjectManagement.Services {
 
@@ -23,7 +22,8 @@ namespace Empiria.ProjectManagement.Services {
 
     private Project targetProject;
 
-    private List<Activity> createdActivities = new List<Activity>();
+    // private List<Activity> createdActivities = new List<Activity>();
+    private WhatIfResult whatIfResult = null;
 
     #endregion Fields
 
@@ -44,21 +44,21 @@ namespace Empiria.ProjectManagement.Services {
     #region Public methods
 
 
-    public void CreateFromEvent(Activity activityModel, DateTime eventDate) {
+    public WhatIfResult CreateFromEvent(Activity activityModel, DateTime eventDate) {
       Assertion.AssertObject(activityModel, "activityModel");
 
-      this.createdActivities = new List<Activity>();
+      // Create root
+      this.whatIfResult = new WhatIfResult(activityModel, ProjectItemOperation.CreateFromTemplate);
 
       this.CreateBranchFromTemplate(activityModel);
 
-      // Set root dates
-      var json = new JsonObject();
+      // Set root dates;
 
-      json.Add("deadline", eventDate);
-      json.Add("plannedEndDate", eventDate);
+      var stateChange = this.whatIfResult.StateChanges[0];
 
-      this.createdActivities[0].Update(json);
-
+      stateChange.Deadline = eventDate;
+      stateChange.PlannedEndDate = eventDate;
+      stateChange.Project = this.targetProject;
       // Append any other external dependencies of the activity model tree
       var dependencies = this.GetModelDependencies(activityModel);
 
@@ -71,6 +71,7 @@ namespace Empiria.ProjectManagement.Services {
         this.RecalculateDates();
       }
 
+      return this.whatIfResult;
     }
 
 
@@ -127,7 +128,7 @@ namespace Empiria.ProjectManagement.Services {
 
       switch (template.DueOnTermUnit) {
         case "BusinessDays":
-          EmpiriaCalendar calendar = GetCalendar(template);
+          EmpiriaCalendar calendar = GetCalendarFor(template);
 
           if (term >= 0) {
             return calendar.AddWorkingDays(baseDate, term);
@@ -158,30 +159,28 @@ namespace Empiria.ProjectManagement.Services {
       var modelBranch = activityModel.GetBranch();
 
       foreach (var modelItem in modelBranch) {
-        var json = new JsonObject();
 
-        json.Add("name", modelItem.Name);
-        json.Add("notes", modelItem.Notes);
+        var stateChange = new ProjectItemStateChange(modelItem, ProjectItemOperation.CreateFromTemplate);
 
-        json.Add("templateId", modelItem.Id);
+        stateChange.Project = this.targetProject;
 
-        var activity = this.targetProject.AddActivity(json);
-
-        if (this.createdActivities.Count != 0) {
-          var parent = this.createdActivities.Find(x => x.TemplateId == modelItem.Parent.Id);
+        if (this.whatIfResult.StateChanges.Count != 0) {
+          var parent = this.whatIfResult.StateChanges.Find(x => x.Template.Id == modelItem.Parent.Id);
 
           if (parent != null) {
-            activity.SetAndSaveParent(parent);
+            stateChange.Parent = parent;
           } else {
-            activity.SetAndSaveParent(this.createdActivities[0]);
+            stateChange.Parent = this.whatIfResult.StateChanges[0];
           }
-        }
-        this.createdActivities.Add(activity);
-      }
+        }  // if
+        this.whatIfResult.AddStateChange(stateChange);
+
+      }  // foreach
+
     }
 
 
-    private EmpiriaCalendar GetCalendar(ActivityModel template) {
+    private EmpiriaCalendar GetCalendarFor(ActivityModel template) {
       if (template.EntityId != -1) {
         var org = Contacts.Organization.Parse(template.EntityId);
 
@@ -200,26 +199,26 @@ namespace Empiria.ProjectManagement.Services {
                                                    .ToList();
 
       return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
-                                       !this.createdActivities.Exists(y => y.TemplateId == x.Id))
+                                       !this.whatIfResult.StateChanges.Exists(y => y.Template.Id == x.Id))
                          .ToFixedList();
     }
 
 
     private void RecalculateDates() {
 
-      foreach (var activity in this.createdActivities) {
+      foreach (var stateChange in this.whatIfResult.StateChanges) {
 
-        if (activity.Deadline != ExecutionServer.DateMaxValue) {
+        if (stateChange.Deadline != ExecutionServer.DateMaxValue) {
           continue;
         }
 
-        var template = activity.GetTemplate().Template;
+        var template = ((Activity) stateChange.Template).Template;
 
         if (template.DueOnControllerId == -1) {
           continue;
         }
 
-        var controller = targetProject.GetItems().Find(x => x.TemplateId == template.DueOnControllerId);
+        var controller = this.whatIfResult.StateChanges.Find(x => x.Template.Id == template.DueOnControllerId);
 
 
         if (controller == null) {
@@ -230,18 +229,11 @@ namespace Empiria.ProjectManagement.Services {
           continue;
         }
 
-
         DateTime? deadline = CalculateNewDeadline(template, controller.Deadline);
 
-        if (!deadline.HasValue) {
-          continue;
+        if (deadline.HasValue) {
+          stateChange.Deadline = deadline.Value;
         }
-
-        var json = new JsonObject();
-
-        json.Add("deadline", deadline.Value);
-
-        activity.Update(json);
 
       }
 
@@ -249,6 +241,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     #endregion Private methods
+
 
   }  // class ActivityCreator
 

@@ -20,8 +20,15 @@ namespace Empiria.ProjectManagement.Services {
 
 
     internal ProjectItemStateChange(ProjectItem item, ProjectItemOperation operation) {
-      this.ProjectItem = item;
       this.Operation = operation;
+
+      if (this.Operation == ProjectItemOperation.CreateFromTemplate) {
+        this.ProjectItem = ProjectItem.Empty;
+        this.Template = item;
+      } else {
+        this.ProjectItem = item;
+        this.Template = ProjectItem.Empty;
+      }
     }
 
 
@@ -30,7 +37,19 @@ namespace Empiria.ProjectManagement.Services {
     #region Properties
 
 
+    public Project Project {
+      get;
+      internal set;
+    }
+
+
     public ProjectItem ProjectItem {
+      get;
+      internal set;
+    }
+
+
+    public ProjectItem Template {
       get;
     }
 
@@ -43,22 +62,28 @@ namespace Empiria.ProjectManagement.Services {
     public DateTime ActualStartDate {
       get;
       internal set;
-    }
+    } = ExecutionServer.DateMaxValue;
 
 
     public DateTime ActualEndDate {
       get;
       internal set;
-    }
+    } = ExecutionServer.DateMaxValue;
 
 
     public DateTime PlannedEndDate {
       get;
       internal set;
-    }
+    } = ExecutionServer.DateMaxValue;
 
 
     public DateTime Deadline {
+      get;
+      internal set;
+    } = ExecutionServer.DateMaxValue;
+
+
+    public ProjectItemStateChange Parent {
       get;
       internal set;
     }

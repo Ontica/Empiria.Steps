@@ -91,7 +91,7 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
         var project = Project.Parse(projectUID);
 
         FixedList<ProjectItem> createdActivities =
-                       ModelingServices.CreateActivitiesFromModel(activityModel, project, eventDate);
+                       ProjectUpdater.CreateActivitiesFromModel(activityModel, project, eventDate);
 
 
         return new CollectionModel(this.Request, createdActivities.ToResponse());
