@@ -58,7 +58,7 @@ namespace Empiria.ProjectManagement.WebApi {
         operation = stateChange.Operation,
         uid = stateChange.UID,
         position = position,
-        parentUID = stateChange.Parent != null ? stateChange.Parent.UID : new object(),
+        parentUID = stateChange.Parent != null ? stateChange.Parent.UID : String.Empty,
         level = stateChange.ItemLevel,
 
         name = createFromTemplate ? template.Name : activity.Name,
@@ -66,9 +66,9 @@ namespace Empiria.ProjectManagement.WebApi {
         notes = createFromTemplate ? template.Notes : activity.Name,
 
         deadline = stateChange.Deadline,
+        plannedEndDate = stateChange.PlannedEndDate,
         actualStartDate = stateChange.ActualStartDate,
         actualEndDate = stateChange.ActualEndDate,
-        plannedEndDate = stateChange.PlannedEndDate,
 
         activityUID = !createFromTemplate ? activity.UID : String.Empty,
         projectUID = createFromTemplate ? stateChange.Project.UID : activity.Project.UID,

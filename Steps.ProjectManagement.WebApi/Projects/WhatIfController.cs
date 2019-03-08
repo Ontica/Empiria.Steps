@@ -22,10 +22,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Get methods
 
-    [HttpGet]
+    [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/what-if-completed")]
-    public SingleObjectModel CompleteActivity(string projectUID, string activityUID,
-                                              [FromBody] object body) {
+    public SingleObjectModel WhatIfCompleted(string projectUID, string activityUID,
+                                             [FromBody] object body) {
       try {
         base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
@@ -34,7 +34,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Activity activity = project.GetActivity(activityUID);
 
-        DateTime completedDate = bodyAsJson.Get<DateTime>("actualEndDate", DateTime.Today);
+        DateTime completedDate = bodyAsJson.Get<DateTime>("completedDate", DateTime.Today);
 
         WhatIfResult result = ModelingServices.WhatIfCompleted(activity, completedDate);
 
@@ -47,10 +47,10 @@ namespace Empiria.ProjectManagement.WebApi {
     }
 
 
-    [HttpGet]
+    [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/what-if-created-from-event")]
-    public SingleObjectModel CreateFromActivityTemplate(string projectUID,
-                                                       [FromBody] object body) {
+    public SingleObjectModel WhatIfCreatedFromEvent(string projectUID,
+                                                   [FromBody] object body) {
       try {
         base.RequireBody(body);
 
@@ -74,7 +74,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/what-if-reactivated")]
-    public SingleObjectModel ReactivateActivity(string projectUID, string activityUID) {
+    public SingleObjectModel WhatIfReactivated(string projectUID, string activityUID) {
       try {
         var project = Project.Parse(projectUID);
 
