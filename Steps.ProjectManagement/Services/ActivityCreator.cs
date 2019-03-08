@@ -57,7 +57,6 @@ namespace Empiria.ProjectManagement.Services {
       var stateChange = this.whatIfResult.StateChanges[0];
 
       stateChange.Deadline = eventDate;
-      stateChange.PlannedEndDate = eventDate;
       stateChange.Project = this.targetProject;
       // Append any other external dependencies of the activity model tree
       var dependencies = this.GetModelDependencies(activityModel);
@@ -234,8 +233,7 @@ namespace Empiria.ProjectManagement.Services {
         if (deadline.HasValue) {
           stateChange.Deadline = deadline.Value;
         }
-
-      }
+      }  // foreach
 
     }
 
