@@ -16,58 +16,34 @@ namespace Empiria.ProjectManagement.WebApi {
   /// <summary>Response static methods for project entities.</summary>
   static internal class ProjectResponseModels {
 
-    #region Collection responses
+    #region Response methods
+
 
     static internal ICollection ToResponse(this IList<Project> list) {
       ArrayList array = new ArrayList(list.Count);
 
       foreach (var project in list) {
-        var item = new {
-          uid = project.UID,
-          name = project.Name,
-          notes = project.Notes,
-          ownerUID = project.Owner.UID,
-          managerUID = project.Responsible.UID,
-          status = project.Status
-        };
-        array.Add(item);
+        var itemResponse = project.ToResponse();
+
+        array.Add(itemResponse);
       }
+
       return array;
     }
 
-
-    static internal ICollection ToResponse(this IList<ProjectItem> list) {
-      ArrayList array = new ArrayList(list.Count);
-
-      foreach (var item in list) {
-        if (item is Activity) {
-          array.Add(((Activity) item).ToResponse());
-
-        } else if (item is Summary) {
-          array.Add(((Summary) item).ToResponse());
-
-        }
-      }
-      return array;
-    }
-
-
-    #endregion Collection responses
-
-    #region Entities responses
 
     static internal object ToResponse(this Project project) {
       return new {
         uid = project.UID,
         name = project.Name,
         notes = project.Notes,
-        ownerUID = project.Owner.UID,
-        managerUID = project.Responsible.UID,
         status = project.Status
       };
     }
 
-    #endregion Entities responses
+
+    #endregion Response methods
+
 
   }  // class ProjectResponseModels
 

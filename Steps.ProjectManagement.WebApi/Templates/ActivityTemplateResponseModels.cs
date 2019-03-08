@@ -34,7 +34,7 @@ namespace Empiria.ProjectManagement.WebApi {
       return new {
         id = activity.Id,
         uid = activity.UID,
-        type = "ObjectType.ProjectItem.ActivityTemplate",
+        type = ActivityTemplateController.ACTIVITY_TEMPLATE_TYPE_NAME,
         name = activity.Name,
         theme = activity.Theme,
         notes = activity.Notes,

@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 using Empiria.Contacts;
 
@@ -17,6 +19,34 @@ namespace Empiria.ProjectManagement.WebApi {
   static internal class ActivityResponseModels {
 
     #region Response methods
+
+
+    static internal ICollection ToResponse(this IList<ProjectItem> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var item in list) {
+        var itemResponse = item.ToResponse();
+
+        array.Add(itemResponse);
+      }
+      return array;
+    }
+
+
+    static internal object ToResponse(this ProjectItem projectItem) {
+      if (projectItem is Activity) {
+        return ((Activity) projectItem).ToResponse();
+
+      } else if (projectItem is Summary) {
+        return ((Summary) projectItem).ToResponse();
+
+      } else {
+        throw Assertion.AssertNoReachThisCode($"Unhandled ToResponse() type for " +
+                                              $"{projectItem.GetType().FullName}.");
+
+      }
+    }
+
 
     static internal object ToResponse(this Activity activity) {
       return new {
@@ -94,7 +124,9 @@ namespace Empiria.ProjectManagement.WebApi {
       };
     }
 
+
     #endregion Response methods
+
 
   }  // class ActivityResponseModels
 

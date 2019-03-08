@@ -20,7 +20,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Fields
 
-    private const string ACTIVITY_TEMPLATE_TYPE_NAME = "ObjectType.ProjectItem.ActivityTemplate";
+    internal const string ACTIVITY_TEMPLATE_TYPE_NAME = "ObjectType.ProjectItem.ActivityTemplate";
 
     #endregion Fields
 
