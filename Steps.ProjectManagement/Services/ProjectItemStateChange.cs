@@ -25,9 +25,11 @@ namespace Empiria.ProjectManagement.Services {
       if (this.Operation == ProjectItemOperation.CreateFromTemplate) {
         this.ProjectItem = ProjectItem.Empty;
         this.Template = item;
+        this.Project = Project.Empty;
       } else {
         this.ProjectItem = item;
         this.Template = ProjectItem.Empty;
+        this.Project = item.Project;
       }
     }
 
@@ -35,6 +37,11 @@ namespace Empiria.ProjectManagement.Services {
     #endregion Constructors and parsers
 
     #region Properties
+
+
+    public string UID {
+      get;
+    } = Guid.NewGuid().ToString();
 
 
     public Project Project {
@@ -92,6 +99,17 @@ namespace Empiria.ProjectManagement.Services {
     public ActivityStatus Status {
       get;
       internal set;
+    }
+
+
+    public int ItemLevel {
+      get {
+        if (this.Parent != null) {
+          return this.Parent.ItemLevel + 1;
+        } else {
+          return 1;
+        }
+      }
     }
 
 
