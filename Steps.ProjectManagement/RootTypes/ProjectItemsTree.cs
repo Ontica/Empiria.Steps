@@ -224,6 +224,7 @@ namespace Empiria.ProjectManagement {
     #region Private methods
 
     private void ChangeParent(ProjectItem item, ProjectItem newParent) {
+      int currentItemIndex = this.ItemsList.IndexOf(item);
       var branchToMove = this.GetBranch(item);
 
       Assertion.Assert(!branchToMove.Contains(newParent),
@@ -234,7 +235,17 @@ namespace Empiria.ProjectManagement {
         ItemsList.Remove(branchItem);
       }
 
-      int insertionIndex = this.ItemsList.IndexOf(newParent) + 1;
+      var lastParentChild = this.TryGetLastChildOf(newParent);
+      int insertionIndex = 0;
+
+      if (newParent.Equals(item.Parent.Parent)) {
+        insertionIndex = currentItemIndex;
+      } else if (lastParentChild != null) {
+        insertionIndex = this.ItemsList.IndexOf(lastParentChild) + 1;
+      } else {
+        insertionIndex = this.ItemsList.IndexOf(newParent) + 1;
+      }
+
 
       foreach (var branchItem in branchToMove) {
         ItemsList.Insert(insertionIndex, branchItem);
