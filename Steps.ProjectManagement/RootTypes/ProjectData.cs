@@ -19,6 +19,16 @@ namespace Empiria.ProjectManagement {
   static internal class ProjectData {
 
 
+    static internal FixedList<ProjectItem> GetAllActivities() {
+      string sql = $"SELECT * FROM PMProjectObjects " +
+                   $"WHERE ProjectObjectTypeId <> 1203 AND Status <> 'X' AND " +
+                   $"BaseProjectId NOT IN (SELECT ProjectObjectId FROM PMProjectObjects WHERE Status = 'X' OR ExtData LIKE '%template%')";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetList<ProjectItem>(op).ToFixedList();
+    }
+
     static internal List<Project> GetProjects(Contact ownerOrManager) {
       string filter = $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
                       $"AND Status <> 'X' AND ExtData NOT LIKE '%template%'";
@@ -79,19 +89,22 @@ namespace Empiria.ProjectManagement {
       return DataReader.GetList<ProjectItem>(op);
     }
 
+
     #endregion Project structure methods
 
     #region Project contacts methods
 
     static internal FixedList<Contact> GetProjectInvolvedContacts(Project project) {
-      var list = new Contact[6];
+      var list = new Contact[8];
 
       list[0] = Contact.Parse(2);
       list[1] = Contact.Parse(4);
-      list[2] = Contact.Parse(8);
-      list[3] = Contact.Parse(10);
-      list[4] = Contact.Parse(11);
-      list[5] = Contact.Parse(12);
+      list[2] = Contact.Parse(5);
+      list[3] = Contact.Parse(6);
+      list[4] = Contact.Parse(7);
+      list[5] = Contact.Parse(8);
+      list[6] = Contact.Parse(10);
+      list[7] = Contact.Parse(12);
 
       return new FixedList<Contact>(list);
     }
@@ -99,7 +112,7 @@ namespace Empiria.ProjectManagement {
 
     static internal FixedList<Contact> GetProjectResponsibles(Project project) {
       string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (2, 4, 8, 10, 11, 12) " +
+                   $"WHERE ContactId IN (2, 4, 5, 6, 7, 8, 10, 12) " +
                    $"ORDER BY Nickname, ShortName";
 
       var op = DataOperation.Parse(sql);
@@ -109,24 +122,12 @@ namespace Empiria.ProjectManagement {
 
 
     static internal FixedList<Contact> GetProjectRequesters(Project project) {
-      string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (2, 4, 8, 10, 11, 12) " +
-                   $"ORDER BY Nickname";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<Contact>(op);
+      return GetProjectResponsibles(project);
     }
 
 
     static internal FixedList<Contact> GetProjectTaskManagers(Project project) {
-      string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (2, 4, 8, 10, 11, 12) " +
-                   $"ORDER BY Nickname";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<Contact>(op);
+      return GetProjectResponsibles(project);
     }
 
     #endregion Project contacts methods

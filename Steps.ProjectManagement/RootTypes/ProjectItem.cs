@@ -78,6 +78,10 @@ namespace Empiria.ProjectManagement {
       }
     }
 
+    static public FixedList<ProjectItem> GetList() {
+      return ProjectData.GetAllActivities();
+    }
+
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       if (!this.IsEmptyInstance) {

@@ -23,6 +23,21 @@ namespace Empiria.ProjectManagement.WebApi {
     #region Get methods
 
     [HttpGet]
+    [Route("v1/project-management/activities/all-activities")]
+    public CollectionModel GetAllProjectsActivities() {
+      try {
+        FixedList<ProjectItem> list = ProjectItem.GetList();
+
+        return new CollectionModel(this.Request, list.ToResponse(),
+                                   typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/project-management/activities/{activityUIDOrId}")]
     public SingleObjectModel GetProjectActivity(string activityUIDOrId) {
       try {
@@ -98,6 +113,7 @@ namespace Empiria.ProjectManagement.WebApi {
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/reactivate")]
     public SingleObjectModel ReactivateActivity(string projectUID, string activityUID) {
       try {
+
         var project = Project.Parse(projectUID);
 
         Activity activity = project.GetActivity(activityUID);
@@ -116,9 +132,8 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/copyTo/{targetProjectUID}")]
     public SingleObjectModel CopyActivity(string projectUID, string activityUID,
-                                          string targetProjectUID, [FromBody] object body) {
+                                          string targetProjectUID, [FromBody] object body = null) {
       try {
-        base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
 
         var project = Project.Parse(projectUID);
@@ -140,11 +155,10 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/moveTo/{targetProjectUID}")]
     public SingleObjectModel MoveActivityToProject(string projectUID, string activityUID,
-                                                   string targetProjectUID, [FromBody] object body) {
+                                                   string targetProjectUID, [FromBody] object body = null) {
       try {
         Assertion.Assert(projectUID != targetProjectUID, "Source and target projects must be different.");
 
-        base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
 
         var project = Project.Parse(projectUID);

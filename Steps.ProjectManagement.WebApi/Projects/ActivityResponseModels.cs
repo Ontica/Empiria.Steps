@@ -40,6 +40,9 @@ namespace Empiria.ProjectManagement.WebApi {
       } else if (projectItem is Summary) {
         return ((Summary) projectItem).ToResponse();
 
+      } else if (projectItem is Task) {
+        return ((Task) projectItem).ToResponse();
+
       } else {
         throw Assertion.AssertNoReachThisCode($"Unhandled ToResponse() type for " +
                                               $"{projectItem.GetType().FullName}.");
@@ -55,6 +58,7 @@ namespace Empiria.ProjectManagement.WebApi {
         type = activity.ProjectObjectType.Name,
         name = activity.Name,
         notes = activity.Notes,
+
         project = new {
           uid = activity.Project.UID,
           name = activity.Project.Name,
@@ -98,6 +102,7 @@ namespace Empiria.ProjectManagement.WebApi {
         type = summary.ProjectObjectType.Name,
         name = summary.Name,
         notes = summary.Notes,
+
         project = new {
           uid = summary.Project.UID,
           name = summary.Project.Name,
@@ -114,13 +119,21 @@ namespace Empiria.ProjectManagement.WebApi {
         actualStartDate = summary.ActualStartDate,
         actualEndDate = summary.ActualEndDate,
 
+        warnDays = summary.WarnDays,
+        warnType = summary.WarnType,
+
         theme = summary.Theme,
         tags = summary.Tags.Items,
 
         position = summary.Position,
         level = summary.Level,
         stage = summary.Stage,
-        status = summary.Status
+        status = summary.Status,
+
+        responsible = Contact.Empty.ToShortResponse(),
+        assignedDate = "",
+        assignedBy = Contact.Empty.ToShortResponse(),
+        template = new object()
       };
     }
 

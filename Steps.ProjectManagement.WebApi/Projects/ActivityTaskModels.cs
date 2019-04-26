@@ -39,13 +39,22 @@ namespace Empiria.ProjectManagement.WebApi {
         type = task.ProjectObjectType.Name,
         name = task.Name,
         notes = task.Notes,
-        activity = new {
-          uid = task.Activity.UID,
-          name = task.Activity.Name,
-        },
+
         project = new {
           uid = task.Project.UID,
           name = task.Project.Name,
+        },
+
+        parent = new {
+          uid = task.Activity.UID,
+          name = task.Activity.Name,
+          type = task.Activity.ProjectObjectType.Name,
+        },
+
+        activity = new {
+          uid = task.Activity.UID,
+          name = task.Activity.Name,
+          type = task.Activity.ProjectObjectType.Name,
         },
 
         estimatedDuration = task.EstimatedDuration.ToJson(),
@@ -64,9 +73,11 @@ namespace Empiria.ProjectManagement.WebApi {
         level = task.Level,
         stage = task.Stage,
         status = task.Status,
+
         responsible = task.Responsible.ToShortResponse(),
         assignedDate = task.AssignedDate,
         assignedBy = task.AssignedBy.ToShortResponse(),
+        template = new object()
       };
     }
 
