@@ -30,17 +30,14 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpPost]
     [Route("v1/project-management/project-templates/{projectTemplateUID}/activities/{activityTemplateUID}/copyTo/{targetProjectTemplateUID}")]
     public SingleObjectModel CopyActivityTemplate(string projectTemplateUID, string activityTemplateUID,
-                                                  string targetProjectTemplateUID, [FromBody] object body) {
+                                                  string targetProjectTemplateUID) {
       try {
-        base.RequireBody(body);
-        var bodyAsJson = JsonObject.Parse(body);
-
         var project = Project.Parse(projectTemplateUID);
         var targetProject = Project.Parse(targetProjectTemplateUID);
 
         Activity activity = project.GetActivity(activityTemplateUID);
 
-        var copy = targetProject.CopyActivity(activity, bodyAsJson);
+        var copy = targetProject.CopyActivity(activity);
 
         return new SingleObjectModel(this.Request, copy.ToActivityTemplateResponse(),
                                      ACTIVITY_TEMPLATE_TYPE_NAME);
@@ -93,19 +90,16 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpPost]
     [Route("v1/project-management/project-templates/{projectTemplateUID}/activities/{activityTemplateUID}/moveTo/{targetProjectTemplateUID}")]
     public SingleObjectModel MoveActivityTemplateToProject(string projectTemplateUID, string activityTemplateUID,
-                                                           string targetProjectTemplateUID, [FromBody] object body) {
+                                                           string targetProjectTemplateUID) {
       try {
         Assertion.Assert(projectTemplateUID != targetProjectTemplateUID, "Source and target projects must be different.");
-
-        base.RequireBody(body);
-        var bodyAsJson = JsonObject.Parse(body);
 
         var project = Project.Parse(projectTemplateUID);
         var targetProject = Project.Parse(targetProjectTemplateUID);
 
         Activity activity = project.GetActivity(activityTemplateUID);
 
-        activity = targetProject.MoveActivity(activity, bodyAsJson);
+        activity = targetProject.MoveActivity(activity);
 
         return new SingleObjectModel(this.Request, activity.ToActivityTemplateResponse(),
                                      ACTIVITY_TEMPLATE_TYPE_NAME);

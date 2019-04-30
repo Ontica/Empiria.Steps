@@ -132,16 +132,14 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/copyTo/{targetProjectUID}")]
     public SingleObjectModel CopyActivity(string projectUID, string activityUID,
-                                          string targetProjectUID, [FromBody] object body = null) {
+                                          string targetProjectUID) {
       try {
-        var bodyAsJson = JsonObject.Parse(body);
-
         var project = Project.Parse(projectUID);
         var targetProject = Project.Parse(targetProjectUID);
 
         Activity activity = project.GetActivity(activityUID);
 
-        var copy = targetProject.CopyActivity(activity, bodyAsJson);
+        var copy = targetProject.CopyActivity(activity);
 
         return new SingleObjectModel(this.Request, copy.ToResponse(),
                                      typeof(Activity).FullName);
@@ -155,18 +153,16 @@ namespace Empiria.ProjectManagement.WebApi {
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/moveTo/{targetProjectUID}")]
     public SingleObjectModel MoveActivityToProject(string projectUID, string activityUID,
-                                                   string targetProjectUID, [FromBody] object body = null) {
+                                                   string targetProjectUID) {
       try {
         Assertion.Assert(projectUID != targetProjectUID, "Source and target projects must be different.");
-
-        var bodyAsJson = JsonObject.Parse(body);
 
         var project = Project.Parse(projectUID);
         var targetProject = Project.Parse(targetProjectUID);
 
         Activity activity = project.GetActivity(activityUID);
 
-        activity = targetProject.MoveActivity(activity, bodyAsJson);
+        activity = targetProject.MoveActivity(activity);
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(Activity).FullName);

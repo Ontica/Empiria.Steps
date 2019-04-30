@@ -81,9 +81,14 @@ using Empiria.ProjectManagement.Resources;
       get {
         var list = GeneralList.Parse("ProjectManagement.Themes.List");
 
-        return list.GetItems<string>();
+        FixedList<string> items = list.GetItems<string>();
+
+        items.Sort((x, y) => x.CompareTo(y));
+
+        return items;
       }
     }
+
 
     protected override void OnInitialize() {
       itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));
@@ -266,7 +271,7 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
-    public Activity CopyActivity(Activity activity, JsonObject bodyAsJson) {
+    public Activity CopyActivity(Activity activity) {
       Assertion.AssertObject(activity, "activity");
 
       lock (__treeLock) {
@@ -310,7 +315,7 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
-    public Activity MoveActivity(Activity activity, JsonObject options = null) {
+    public Activity MoveActivity(Activity activity) {
       Assertion.AssertObject(activity, "activity");
 
       lock (__treeLock) {
