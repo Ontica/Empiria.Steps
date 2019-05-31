@@ -28,11 +28,11 @@ namespace Empiria.ProjectManagement {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected internal Task(Activity activity, JsonObject data) :
-                            base(ProjectItemType.TaskType, activity.Project, data) {
+    protected internal Task(ProjectItem projectItem, JsonObject data) :
+                            base(ProjectItemType.TaskType, projectItem.Project, data) {
       this.AssertIsValid(data);
 
-      base.SetParent(activity);
+      base.SetParent(projectItem);
 
       this.Load(data);
     }
@@ -55,10 +55,10 @@ namespace Empiria.ProjectManagement {
 
     #region Properties
 
-    public Activity Activity {
+    public ProjectItem Activity {
       get {
         return base.Parent.IsEmptyInstance ?
-                          Activity.Empty : (Activity) base.Parent;
+                          ProjectItem.Empty : base.Parent;
       }
     }
 

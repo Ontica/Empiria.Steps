@@ -26,13 +26,12 @@ namespace Empiria.ProjectManagement.WebApi {
     [Route("v1/project-management/activities/{activityUID}/tasks")]
     public CollectionModel GetTasks(string activityUID) {
       try {
-        Activity activity = ParseActivityWithUID(activityUID);
-
+        ProjectItem activity = ParseActivityWithUID(activityUID);
 
         if (EmpiriaString.IsInteger(activityUID)) {
-          activity = Activity.Parse(int.Parse(activityUID));
+          activity = ProjectItem.Parse(int.Parse(activityUID));
         } else {
-          activity = Activity.Parse(activityUID);
+          activity = ProjectItem.Parse(activityUID);
         }
 
         return new CollectionModel(this.Request, activity.Tasks.ToResponse(),
@@ -56,7 +55,7 @@ namespace Empiria.ProjectManagement.WebApi {
         base.RequireBody(body);
         var bodyAsJson = JsonObject.Parse(body);
 
-        Activity activity = ParseActivityWithUID(activityUID);
+        ProjectItem activity = ParseActivityWithUID(activityUID);
 
         Task task = activity.AddTask(bodyAsJson);
 
@@ -145,11 +144,11 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Private methods
 
-    private Activity ParseActivityWithUID(string activityUID) {
+    private ProjectItem ParseActivityWithUID(string activityUID) {
       if (EmpiriaString.IsInteger(activityUID)) {
-        return Activity.Parse(int.Parse(activityUID));
+        return ProjectItem.Parse(int.Parse(activityUID));
       } else {
-        return Activity.Parse(activityUID);
+        return ProjectItem.Parse(activityUID);
       }
     }
 

@@ -114,27 +114,8 @@ namespace Empiria.ProjectManagement {
 
     #endregion Properties
 
-    #region Activity structure
-
-    public FixedList<Task> Tasks {
-      get {
-        return ProjectItemData.GetActivityTasks(this)
-                              .ToFixedList();
-      }
-    }
-
-
-    #endregion Activity structure
 
     #region Public methods
-
-
-    public Task AddTask(JsonObject data) {
-      Assertion.AssertObject(data, "data");
-
-      return new Task(this, data);
-    }
-
 
     public void Assign(JsonObject data) {
       if (!data.Contains("responsibleUID")) {

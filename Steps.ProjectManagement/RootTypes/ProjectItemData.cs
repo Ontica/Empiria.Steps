@@ -19,10 +19,10 @@ namespace Empiria.ProjectManagement {
 
     #region Read methods
 
-    static internal List<Task> GetActivityTasks(Activity activity) {
+    static internal List<Task> GetTasks(ProjectItem projectItem) {
       string sql = $"SELECT * FROM PMProjectObjects " +
                    $"WHERE ProjectObjectTypeId = {ProjectItemType.TaskType.Id} AND " +
-                   $"ParentId = {activity.Id} AND Status <> 'X' " +
+                   $"ParentId = {projectItem.Id} AND Status <> 'X' " +
                    "ORDER BY ItemPosition";
 
 

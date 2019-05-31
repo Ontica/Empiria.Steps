@@ -95,7 +95,7 @@ namespace Empiria.ProjectManagement {
     #region Project contacts methods
 
     static internal FixedList<Contact> GetProjectInvolvedContacts(Project project) {
-      var list = new Contact[8];
+      var list = new Contact[10];
 
       list[0] = Contact.Parse(2);
       list[1] = Contact.Parse(4);
@@ -105,6 +105,8 @@ namespace Empiria.ProjectManagement {
       list[5] = Contact.Parse(8);
       list[6] = Contact.Parse(10);
       list[7] = Contact.Parse(12);
+      list[8] = Contact.Parse(13);
+      list[9] = Contact.Parse(14);
 
       return new FixedList<Contact>(list);
     }
@@ -112,7 +114,7 @@ namespace Empiria.ProjectManagement {
 
     static internal FixedList<Contact> GetProjectResponsibles(Project project) {
       string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (2, 4, 5, 6, 7, 8, 10, 12) " +
+                   $"WHERE ContactId IN (2, 4, 5, 6, 7, 8, 10, 12, 13, 14) " +
                    $"ORDER BY Nickname, ShortName";
 
       var op = DataOperation.Parse(sql);

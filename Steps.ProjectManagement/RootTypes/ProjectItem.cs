@@ -270,9 +270,23 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    public FixedList<Task> Tasks {
+      get {
+        return ProjectItemData.GetTasks(this)
+                              .ToFixedList();
+      }
+    }
+
     #endregion Public properties
 
-    #region Private methods
+    #region Methods
+
+    public Task AddTask(JsonObject data) {
+      Assertion.AssertObject(data, "data");
+
+      return new Task(this, data);
+    }
+
 
     protected virtual void AssertIsValid(JsonObject data) {
       Assertion.AssertObject(data, "data");
@@ -334,7 +348,7 @@ namespace Empiria.ProjectManagement {
       this.Notes = data.GetClean("notes", this.Notes);
       this.Theme = data.GetClean("theme", this.Theme);
 
-      var tags = data.GetList<string>("tags", false);
+      var tags = data.GetList<string>("tags", required: false);
       if (tags != null && tags.Count != 0) {
         this.Tags = TagsCollection.Parse(tags);
       }
@@ -444,8 +458,8 @@ namespace Empiria.ProjectManagement {
       this.Save();
     }
 
-    #endregion Private methods
+    #endregion Methods
 
-    } // class ProjectItem
+  } // class ProjectItem
 
 } // namespace Empiria.ProjectManagement
