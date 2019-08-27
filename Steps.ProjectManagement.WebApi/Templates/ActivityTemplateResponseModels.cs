@@ -48,6 +48,7 @@ namespace Empiria.ProjectManagement.WebApi {
         dueOnTermUnit = template.DueOnTermUnit,
         dueOnCondition = template.DueOnCondition,
         dueOnController = template.DueOnControllerId,
+        dueOnRuleAppliesForAllContracts = template.DueOnRuleAppliesForAllContracts,
 
         duration = template.Duration,
         durationUnit = template.DurationUnit,

@@ -35,6 +35,8 @@ namespace Empiria.ProjectManagement {
       o.DueOnTermUnit = data.Get<string>("dueOnTermUnit", o.DueOnTermUnit);
       o.DueOnCondition = data.Get<string>("dueOnCondition", o.DueOnCondition);
       o.DueOnControllerId = data.Get<int>("dueOnController", o.DueOnControllerId);
+      o.DueOnRuleAppliesForAllContracts =
+                  data.Get<string>("dueOnRuleAppliesForAllContracts", o.DueOnRuleAppliesForAllContracts);
 
       o.Duration = data.Get<string>("duration", o.Duration);
       o.DurationUnit = data.Get<string>("durationUnit", o.DurationUnit);
@@ -115,6 +117,13 @@ namespace Empiria.ProjectManagement {
       get;
       private set;
     } = -1;
+
+
+    [DataField("DueOnRuleAppliesForAllContracts")]
+    public string DueOnRuleAppliesForAllContracts {
+      get;
+      private set;
+    } = String.Empty;
 
 
     [DataField("Duration")]
