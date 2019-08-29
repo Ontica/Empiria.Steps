@@ -412,15 +412,33 @@ namespace Empiria.ProjectManagement {
     internal void SetParent(ProjectItem parent) {
       Assertion.AssertObject(parent, "parent");
       Assertion.Assert(!parent.Equals(this),
-                      "A project item can't be parent of itself.");
+             "A project item can't be parent of itself.");
+      Assertion.Assert(parent.Position < this.Position,
+             $"Wrong operation 0: Parent position can not be below of this project item position.");
 
       this.Parent = parent;
     }
 
+
+    internal void SetParentAndPosition(ProjectItem parent, int position) {
+      Assertion.AssertObject(parent, "parent");
+      Assertion.Assert(!parent.Equals(this),
+                       "A project item can't be parent of itself.");
+      Assertion.Assert(position >= 0, "position can not be negative.");
+
+      this.Parent = parent;
+      this.Position = position;
+
+      this.Save();
+    }
+
+
     public void SetAndSaveParent(ProjectItem parent) {
       Assertion.AssertObject(parent, "parent");
       Assertion.Assert(!parent.Equals(this),
-                      "A project item can't be parent of itself.");
+              "A project item can't be parent of itself.");
+      Assertion.Assert(parent.Position < this.Position,
+             $"Wrong operation 1: Parent position can not be below of this project item position.");
 
       this.Parent = parent;
 
@@ -430,7 +448,8 @@ namespace Empiria.ProjectManagement {
 
     internal void SetPosition(int position) {
       Assertion.Assert(position > 0, "position must be greater than zero.");
-
+      Assertion.Assert(this.Parent.Position < position,
+            $"Wrong operation 2: Parent position can not be below of this project item position.");
       this.Position = position;
     }
 

@@ -113,12 +113,14 @@ namespace Empiria.ProjectManagement.Services {
 
       Activity activity = stateChange.Project.AddActivity(json);
 
-      if (stateChange.Parent != null && !stateChange.Parent.ProjectItem.IsEmptyInstance) {
+      if (stateChange.Parent != null &&
+         !stateChange.Parent.ProjectItem.IsEmptyInstance) {
         activity.SetAndSaveParent(stateChange.Parent.ProjectItem);
       }
 
       return activity;
     }
+
 
     #endregion Private methods
 

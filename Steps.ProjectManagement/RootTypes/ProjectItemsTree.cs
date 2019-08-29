@@ -19,7 +19,7 @@ namespace Empiria.ProjectManagement {
 
     #region Fields
 
-    private List<ProjectItem> itemsList = null;
+    private readonly List<ProjectItem> itemsList = null;
 
     #endregion Fields
 
@@ -268,7 +268,7 @@ namespace Empiria.ProjectManagement {
 
       int insertionIndex = Math.Min(newPosition - 1, this.ItemsList.Count);
 
-      // Get the insertion before item point
+      // Get the insertion point before item position
       ProjectItem insertBeforeItem = insertionIndex < this.ItemsList.Count ? this.ItemsList[insertionIndex] : null;
 
       // Then remove the whole branch an reinsert it in the new position
@@ -279,6 +279,10 @@ namespace Empiria.ProjectManagement {
       // Recalculate the new insertion index
       insertionIndex = insertBeforeItem != null ? this.ItemsList.IndexOf(insertBeforeItem) : this.ItemsList.Count;
 
+      var newParent = insertBeforeItem != null ? insertBeforeItem.Parent : ProjectItem.Empty;
+
+      item.SetParentAndPosition(newParent, insertionIndex);
+
       foreach (var branchItem in branchToMove) {
         ItemsList.Insert(insertionIndex, branchItem);
 
@@ -286,13 +290,6 @@ namespace Empiria.ProjectManagement {
       }
 
       this.RefreshPositions();
-
-      // Then change item's parent
-      if (insertBeforeItem != null) {
-        item.SetParent(insertBeforeItem.Parent);
-      } else {
-        item.SetParent(ProjectItem.Empty);
-      }
     }
 
 
