@@ -328,7 +328,7 @@ namespace Empiria.ProjectManagement {
         var item = this.ItemsList[i];
 
         if (item.Position != (i + 1)) {
-          item.SetPosition(i + 1);
+          item.SetPosition(i + 1, false);
 
           ProjectItemData.UpdatePosition(item);
         }
