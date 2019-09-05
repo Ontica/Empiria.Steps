@@ -18,6 +18,8 @@ namespace Empiria.ProjectManagement {
   /// <summary>Project data read and write methods.</summary>
   static internal class ProjectData {
 
+    static private readonly string AssigneeList = ConfigurationData.GetString("Assignee.List");
+
 
     static internal FixedList<ProjectItem> GetAllActivities() {
       string sql = $"SELECT * FROM PMProjectObjects " +
@@ -95,26 +97,19 @@ namespace Empiria.ProjectManagement {
     #region Project contacts methods
 
     static internal FixedList<Contact> GetProjectInvolvedContacts(Project project) {
-      var list = new Contact[10];
+      string[] stringList = AssigneeList.Split(',');
 
-      list[0] = Contact.Parse(2);
-      list[1] = Contact.Parse(4);
-      list[2] = Contact.Parse(5);
-      list[3] = Contact.Parse(6);
-      list[4] = Contact.Parse(7);
-      list[5] = Contact.Parse(8);
-      list[6] = Contact.Parse(10);
-      list[7] = Contact.Parse(12);
-      list[8] = Contact.Parse(13);
-      list[9] = Contact.Parse(14);
+      var list = new Contact[stringList.Length];
 
+      for (int i = 0; i < stringList.Length; i++) {
+        list[i] = Contact.Parse(int.Parse(stringList[i]));
+      }
       return new FixedList<Contact>(list);
     }
 
-
-    static internal FixedList<Contact> GetProjectResponsibles(Project project) {
+    static internal FixedList<Contact> GetProjectAssignees(Project project) {
       string sql = $"SELECT * FROM Contacts " +
-                   $"WHERE ContactId IN (2, 4, 5, 6, 7, 8, 10, 12, 13, 14) " +
+                   $"WHERE ContactId IN ({AssigneeList})" +
                    $"ORDER BY Nickname, ShortName";
 
       var op = DataOperation.Parse(sql);
@@ -124,12 +119,12 @@ namespace Empiria.ProjectManagement {
 
 
     static internal FixedList<Contact> GetProjectRequesters(Project project) {
-      return GetProjectResponsibles(project);
+      return GetProjectAssignees(project);
     }
 
 
     static internal FixedList<Contact> GetProjectTaskManagers(Project project) {
-      return GetProjectResponsibles(project);
+      return GetProjectAssignees(project);
     }
 
     #endregion Project contacts methods

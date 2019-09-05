@@ -77,6 +77,11 @@
       "type": "Security",
       "key": "LKey",
       "value": "{{SECURITY-LKEY}}"
+    },
+    {
+      "type": "ProjectManagement",
+      "key": "Assignee.List",
+      "value": "{{ASSIGNEE-LIST}}"
     }
   ]
 }
