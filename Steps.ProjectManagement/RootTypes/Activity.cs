@@ -150,11 +150,8 @@ namespace Empiria.ProjectManagement {
     public override void Update(JsonObject data) {
       this.Load(data);
 
-      this.Project.UpdateItemParentAndPosition(this, data);
-
       this.Save();
     }
-
 
     #endregion Public methods
 

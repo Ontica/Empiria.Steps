@@ -61,6 +61,7 @@ using Empiria.ProjectManagement.Resources;
       return list.ToFixedList();
     }
 
+
     static public FixedList<Project> GetTemplatesList(string filter = "") {
       var ownerOrManager = Contact.Parse(51);
 
@@ -234,7 +235,7 @@ using Empiria.ProjectManagement.Resources;
 
     public FixedList<Contact> Responsibles {
       get {
-        return ProjectData.GetProjectResponsibles(this);
+        return ProjectData.GetProjectAssignees(this);
       }
     }
 
@@ -324,6 +325,25 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
+    public ProjectItem ChangeParent(ProjectItem activity, ProjectItem newParent) {
+      Assertion.AssertObject(activity, "activity");
+      Assertion.AssertObject(newParent, "newParent");
+
+      lock (__treeLock) {
+        return this.Items.ChangeParent(activity, newParent);
+      }
+    }
+
+
+    public ProjectItem ChangePosition(ProjectItem activity, int newPosition) {
+      Assertion.AssertObject(activity, "activity");
+
+      lock (__treeLock) {
+        return this.Items.ChangePosition(activity, newPosition);
+      }
+    }
+
+
     internal void RemoveBranch(Activity root) {
       Assertion.AssertObject(root, "root");
 
@@ -333,29 +353,15 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
-    internal void UpdateItemParentAndPosition(ProjectItem projectItem, JsonObject data) {
-      Assertion.AssertObject(projectItem, "projectItem");
-      Assertion.AssertObject(data, "data");
-
-      lock (__treeLock) {
-        this.Items.UpdateItemParentAndPosition(projectItem, data);
-      }
-    }
-
     #endregion Project items
 
     #region Public methods
+
 
     protected override void OnSave() {
       ProjectData.WriteProject(this);
     }
 
-
-    internal void Refresh() {
-      itemsTree.Value.RefreshPositions();
-
-      itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));
-    }
 
     #endregion Public methods
 

@@ -27,6 +27,49 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Update methods
 
+
+    [HttpPost]
+    [Route("v1/project-management/project-templates/{projectTemplateUID}/activities/{activityTemplateUID}/change-parent/{newParentUID}")]
+    public SingleObjectModel ChangeParent(string projectTemplateUID, string activityTemplateUID,
+                                          string newParentUID) {
+      try {
+        var project = Project.Parse(projectTemplateUID);
+
+        ProjectItem activity = project.GetActivity(activityTemplateUID);
+        ProjectItem newParent = project.GetActivity(newParentUID);
+
+        activity = project.ChangeParent(activity, newParent);
+
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/project-management/project-templates/{projectTemplateUID}/activities/{activityTemplateUID}/change-position/{newPosition}")]
+    public SingleObjectModel ChangePosition(string projectTemplateUID, string activityTemplateUID,
+                                            int newPosition) {
+      try {
+
+        var project = Project.Parse(projectTemplateUID);
+
+        ProjectItem activity = project.GetActivity(activityTemplateUID);
+
+        activity = project.ChangePosition(activity, newPosition);
+
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     [HttpPost]
     [Route("v1/project-management/project-templates/{projectTemplateUID}/activities/{activityTemplateUID}/copyTo/{targetProjectTemplateUID}")]
     public SingleObjectModel CopyActivityTemplate(string projectTemplateUID, string activityTemplateUID,

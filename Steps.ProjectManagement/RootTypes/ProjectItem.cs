@@ -414,7 +414,7 @@ namespace Empiria.ProjectManagement {
       Assertion.Assert(!parent.Equals(this),
              "A project item can't be parent of itself.");
       Assertion.Assert(parent.Position < this.Position,
-             $"Wrong operation 0: Parent position can not be below of this project item position.");
+             $"Wrong operation 0: Parent position {parent.Position} {parent.Name} can not be below of this project item  position {this.Position} {this.Name}.");
 
       this.Parent = parent;
     }

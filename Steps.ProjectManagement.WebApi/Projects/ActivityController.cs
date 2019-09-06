@@ -84,6 +84,47 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/change-parent/{newParentUID}")]
+    public SingleObjectModel ChangeParent(string projectUID, string activityUID,
+                                          string newParentUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        ProjectItem activity = project.GetActivity(activityUID);
+        ProjectItem newParent = project.GetActivity(newParentUID);
+
+        activity = project.ChangeParent(activity, newParent);
+
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/change-position/{newPosition}")]
+    public SingleObjectModel ChangePosition(string projectUID, string activityUID,
+                                            int newPosition) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        ProjectItem activity = project.GetActivity(activityUID);
+
+        activity = project.ChangePosition(activity, newPosition);
+
+        return new SingleObjectModel(this.Request, activity.ToResponse(),
+                                     typeof(Activity).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/complete")]
     public SingleObjectModel CompleteActivity(string projectUID, string activityUID,
                                               [FromBody] object body) {

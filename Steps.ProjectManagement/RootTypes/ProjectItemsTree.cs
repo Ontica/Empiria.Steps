@@ -19,7 +19,7 @@ namespace Empiria.ProjectManagement {
 
     #region Fields
 
-    private readonly List<ProjectItem> itemsList = null;
+    private List<ProjectItem> itemsList = null;
 
     #endregion Fields
 
@@ -28,7 +28,7 @@ namespace Empiria.ProjectManagement {
     private ProjectItemsTree(Project project) {
       this.Project = project;
 
-      itemsList = ProjectData.GetProjectActivities(project);
+      itemsList = ProjectData.GetProjectActivities(this.Project);
     }
 
 
@@ -77,7 +77,7 @@ namespace Empiria.ProjectManagement {
       UpdateItemParentAndPosition(activity, data);
       activity.Save();
 
-      return activity;
+      return (Activity) this.ItemsList.Find(x => x.UID == activity.UID);
     }
 
 
@@ -115,7 +115,7 @@ namespace Empiria.ProjectManagement {
     internal void DeleteActivity(Activity activity) {
       Assertion.AssertObject(activity, "activity");
 
-      Assertion.Assert(this.ItemsList.Contains(activity),
+      Assertion.Assert(this.ItemsList.Exists(x => x.UID == activity.UID),
                       $"Activity '{activity.Name}' doesn't belong to this project.");
 
       Assertion.Assert(this.IsLeaf(activity),
@@ -162,7 +162,7 @@ namespace Empiria.ProjectManagement {
 
       sourceProject.RemoveBranch(activity);
 
-      return activity;
+      return (Activity) this.ItemsList.Find(x => x.UID == activity.UID);
     }
 
 
@@ -223,7 +223,10 @@ namespace Empiria.ProjectManagement {
 
     #region Private methods
 
-    private void ChangeParent(ProjectItem item, ProjectItem newParent) {
+
+    internal ProjectItem ChangeParent(ProjectItem item, ProjectItem newParent) {
+      EmpiriaLog.Debug($"ChangeParent of {item.Name} to new parent {newParent.Name}");
+
       int currentItemIndex = this.ItemsList.IndexOf(item);
       var branchToMove = this.GetBranch(item);
 
@@ -231,35 +234,16 @@ namespace Empiria.ProjectManagement {
                        $"Can't change the parent of '{item.Name}' because it is a branch " +
                        $"and '{newParent.Name}' is one of its children.");
 
-      foreach (var branchItem in branchToMove) {
-        ItemsList.Remove(branchItem);
-      }
-
-      var lastParentChild = this.TryGetLastChildOf(newParent);
-      int insertionIndex = 0;
-
-      if (newParent.Equals(item.Parent.Parent)) {
-        insertionIndex = currentItemIndex;
-      } else if (lastParentChild != null) {
-        insertionIndex = this.ItemsList.IndexOf(lastParentChild) + 1;
-      } else {
-        insertionIndex = this.ItemsList.IndexOf(newParent) + 1;
-      }
-
-
-      foreach (var branchItem in branchToMove) {
-        ItemsList.Insert(insertionIndex, branchItem);
-
-        insertionIndex++;
-      }
-
-      this.RefreshPositions();
-
       item.SetParent(newParent);
+      item.Save();
+
+      return item;
     }
 
 
-    private void ChangePosition(ProjectItem item, int newPosition) {
+    internal ProjectItem ChangePosition(ProjectItem item, int newPosition) {
+      EmpiriaLog.Debug($"ChangePosition of {item.Name} in position {item.Position} to new position {newPosition}");
+
       var branchToMove = this.GetBranch(item);
 
       Assertion.Assert(newPosition < branchToMove[0].Position ||
@@ -290,6 +274,8 @@ namespace Empiria.ProjectManagement {
       }
 
       this.RefreshPositions();
+
+      return item;
     }
 
 
@@ -311,6 +297,7 @@ namespace Empiria.ProjectManagement {
       }
       return branch.ToFixedList();
     }
+
 
     private FixedList<ProjectItem> GetChildren(ProjectItem item) {
       return this.ItemsList.FindAll((x) => x.Parent.Equals(item))
@@ -352,7 +339,7 @@ namespace Empiria.ProjectManagement {
         return ProjectItem.Empty;
       }
 
-      Assertion.Assert(this.ItemsList.Contains(parent),
+      Assertion.Assert(this.ItemsList.Exists(x => x.UID == parent.UID),
                        new ValidationException("UnrecognizedActivityParent",
                                                $"Invalid activity parent '{parent.Name}' for project '{this.Project.Name}'."));
       return parent;
