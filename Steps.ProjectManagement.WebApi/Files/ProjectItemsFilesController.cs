@@ -107,7 +107,9 @@ namespace Empiria.ProjectManagement.WebApi {
       try {
         var projectItem = ProjectItem.Parse(projectItemUID);
 
-        var posting = Posting.Parse(fileUID);
+        FixedList<Posting> list = PostingList.GetPostings(projectItem, "ProjectItem.MediaFile");
+
+        var posting = list.Find(x => x.PostedItemUID == fileUID);
 
         Assertion.Assert(posting.NodeObjectUID == projectItem.UID,
             $"ProjectItem {projectItem.Name} does not have the file {posting.PostedItemUID}.");
