@@ -31,6 +31,12 @@ namespace Empiria.ProjectManagement.WebApi {
     static internal object ToActivityTemplateResponse(this Activity activity) {
       var template = activity.Template;
 
+      string dueOnControllerName = "";
+
+      if (template.DueOnControllerId > 0) {
+        dueOnControllerName = Activity.Parse(template.DueOnControllerId).Name;
+      }
+
       return new {
         id = activity.Id,
         uid = activity.UID,
@@ -48,6 +54,7 @@ namespace Empiria.ProjectManagement.WebApi {
         dueOnTermUnit = template.DueOnTermUnit,
         dueOnCondition = template.DueOnCondition,
         dueOnController = template.DueOnControllerId,
+        dueOnControllerName,
         dueOnRuleAppliesForAllContracts = template.DueOnRuleAppliesForAllContracts,
 
         duration = template.Duration,
