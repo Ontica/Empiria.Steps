@@ -66,7 +66,7 @@ namespace Empiria.ProjectManagement.Services {
       }
 
       // ToDo: Change this by a recursive strategy
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < 10; i++) {
         this.RecalculateDates();
       }
 
