@@ -131,7 +131,11 @@ namespace Empiria.ProjectManagement {
         this.AssignedDate = ExecutionServer.DateMaxValue;
         this.AssignedBy = Contact.Empty;
       }
+    }
 
+
+    public ActivityEditionRules GetRules() {
+      return new ActivityEditionRules(this);
     }
 
 
