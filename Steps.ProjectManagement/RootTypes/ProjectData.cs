@@ -18,12 +18,12 @@ namespace Empiria.ProjectManagement {
   /// <summary>Project data read and write methods.</summary>
   static internal class ProjectData {
 
-    static private readonly string AssigneeList = ConfigurationData.GetString("Assignee.List");
-
 
     static internal FixedList<ProjectItem> GetAllActivities() {
+      string projectList = UserProjectSecurity.GetUserProjectList();
+
       string sql = $"SELECT * FROM PMProjectObjects " +
-                   $"WHERE ProjectObjectTypeId <> 1203 AND Status <> 'X' AND " +
+                   $"WHERE BaseProjectId IN ({projectList}) AND ProjectObjectTypeId <> 1203 AND Status <> 'X' AND " +
                    $"BaseProjectId NOT IN (SELECT ProjectObjectId FROM PMProjectObjects WHERE Status = 'X' OR ExtData LIKE '%template%')";
 
       var op = DataOperation.Parse(sql);
@@ -31,24 +31,25 @@ namespace Empiria.ProjectManagement {
       return DataReader.GetList<ProjectItem>(op).ToFixedList();
     }
 
-    static internal List<Project> GetProjects(Contact ownerOrManager) {
-      string filter = $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
+    static internal List<Project> GetProjects() {
+      string projectList = UserProjectSecurity.GetUserProjectList();
+
+      string filter = $"ProjectObjectId IN ({projectList}) " +
                       $"AND Status <> 'X' AND ExtData NOT LIKE '%template%'";
 
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
 
 
-    static internal List<Project> GetTemplates(Contact ownerOrManager) {
-      string filter = $"(OwnerId = {ownerOrManager.Id} OR ResponsibleId = {ownerOrManager.Id}) " +
-                      $"AND Status <> 'X' AND ExtData LIKE '%template%'";
+    static internal List<Project> GetTemplates() {
+      string filter = $"Status <> 'X' AND ExtData LIKE '%template%'";
 
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
 
 
-    static internal FixedList<ProjectItem> GetEvents(Contact ownerOrManager) {
-      var templateProjects = GetTemplates(ownerOrManager);
+    static internal FixedList<ProjectItem> GetEvents() {
+      var templateProjects = GetTemplates();
 
       var events = new List<ProjectItem>();
 
@@ -57,10 +58,12 @@ namespace Empiria.ProjectManagement {
 
         items = items.FindAll(x => x is Activity);
         items = items.FindAll(x => ((Activity) x).Template.ActivityType == "Event" ||
-                                   (((Activity) x).Template.ActivityType == "Milestone"));
+                                   (((Activity) x).Template.ActivityType == "Subprocess"));
 
         events.AddRange(items);
       }
+
+      events.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return events.ToFixedList();
     }
@@ -97,7 +100,7 @@ namespace Empiria.ProjectManagement {
     #region Project contacts methods
 
     static internal FixedList<Contact> GetProjectInvolvedContacts(Project project) {
-      string[] stringList = AssigneeList.Split(',');
+      string[] stringList = UserProjectSecurity.GetUserAssigneeList().Split(',');
 
       var list = new Contact[stringList.Length];
 
@@ -107,7 +110,10 @@ namespace Empiria.ProjectManagement {
       return new FixedList<Contact>(list);
     }
 
+
     static internal FixedList<Contact> GetProjectAssignees(Project project) {
+      string AssigneeList = UserProjectSecurity.GetUserAssigneeList();
+
       string sql = $"SELECT * FROM Contacts " +
                    $"WHERE ContactId IN ({AssigneeList})" +
                    $"ORDER BY Nickname, ShortName";
@@ -146,6 +152,8 @@ namespace Empiria.ProjectManagement {
 
     #endregion Write methods
 
+
   }  // class ProjectData
+
 
 }  // namespace Empiria.ProjectManagement

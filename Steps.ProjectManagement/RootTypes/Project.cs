@@ -54,27 +54,23 @@ using Empiria.ProjectManagement.Resources;
 
 
     static public FixedList<Project> GetList(string filter = "") {
-      var ownerOrManager = Contact.Parse(51);
-
-      var list = ProjectData.GetProjects(ownerOrManager);
+      var list = ProjectData.GetProjects();
 
       return list.ToFixedList();
     }
 
 
     static public FixedList<Project> GetTemplatesList(string filter = "") {
-      var ownerOrManager = Contact.Parse(51);
+      var list = ProjectData.GetTemplates();
 
-      var list = ProjectData.GetTemplates(ownerOrManager);
+      list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();
     }
 
 
     static public FixedList<ProjectItem> GetEventsList(string filter = "") {
-      var ownerOrManager = Contact.Parse(51);
-
-      return ProjectData.GetEvents(ownerOrManager);
+      return ProjectData.GetEvents();
     }
 
 

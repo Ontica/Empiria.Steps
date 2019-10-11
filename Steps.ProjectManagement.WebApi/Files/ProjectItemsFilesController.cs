@@ -31,6 +31,10 @@ namespace Empiria.ProjectManagement.WebApi {
       try {
         FixedList<Posting> list = PostingList.GetPostings("ProjectItem.MediaFile");
 
+        var projects = UserProjectSecurity.GetUserProjectFixedList();
+
+        list = list.FindAll(x => projects.Exists(y => y.Id == x.GetNodeObjectItem<ProjectItem>().Project.Id));
+
         return new CollectionModel(this.Request, list.ToProjectItemFileResponse(),
                                   typeof(MediaFile).FullName);
 
