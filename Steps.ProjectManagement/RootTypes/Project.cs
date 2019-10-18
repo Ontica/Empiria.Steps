@@ -217,11 +217,11 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
-    [DataField("ResourceId")]
-    public Resource Resource {
+    [DataField("Resource")]
+    public string Resource {
       get;
       private set;
-    } = Resource.Empty;
+    } = "";
 
 
     #endregion Public properties

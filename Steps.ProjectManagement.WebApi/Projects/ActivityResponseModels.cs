@@ -79,6 +79,8 @@ namespace Empiria.ProjectManagement.WebApi {
         warnType = activity.WarnType,
 
         theme = activity.Theme,
+        resource = activity.Resource,
+
         tags = activity.Tags.Items,
 
         position = activity.Position,
@@ -126,6 +128,8 @@ namespace Empiria.ProjectManagement.WebApi {
         warnType = summary.WarnType,
 
         theme = summary.Theme,
+        resource = summary.Resource,
+
         tags = summary.Tags.Items,
 
         position = summary.Position,

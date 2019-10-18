@@ -12,7 +12,6 @@ using Empiria.Collections;
 using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
-using Empiria.ProjectManagement.Resources;
 using Empiria.StateEnums;
 
 namespace Empiria.ProjectManagement {
@@ -142,11 +141,11 @@ namespace Empiria.ProjectManagement {
     } = TagsCollection.Empty;
 
 
-    [DataField("ResourceId")]
-    public Resource Resource {
+    [DataField("Resource")]
+    public string Resource {
       get;
       private set;
-    } = Resource.Empty;
+    } = "Contrato";
 
 
     protected internal JsonObject ExtensionData {
@@ -357,7 +356,7 @@ namespace Empiria.ProjectManagement {
         this.ExtensionData.Set("config", data.Slice("config"));
       }
 
-      this.Resource = data.Get<Resource>("resourceUID", this.Resource);
+      this.Resource = data.Get<string>("resource", this.Resource);
 
       this.TemplateId = data.Get<int>("templateId", this.TemplateId);
     }

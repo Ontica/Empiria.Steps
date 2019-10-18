@@ -143,7 +143,7 @@ namespace Empiria.ProjectManagement {
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline,
                 o.Tags.ToString(), o.Keywords, o.Position, -1,
-                o.Resource.Id, o.Owner.Id,
+                o.Resource, o.Owner.Id,
                 o.Responsible.Id, ExecutionServer.DateMaxValue, -1,
                 -1, o.Parent.Id, 'U', (char) o.Status);
 
