@@ -11,8 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Empiria.DataTypes;
-
 namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Creates project activities based on project model rules.</summary>
@@ -22,7 +20,6 @@ namespace Empiria.ProjectManagement.Services {
 
     private Project targetProject;
 
-    // private List<Activity> createdActivities = new List<Activity>();
     private WhatIfResult whatIfResult = null;
 
     #endregion Fields
@@ -80,80 +77,6 @@ namespace Empiria.ProjectManagement.Services {
     #region Private methods
 
 
-    private int AdjustTermOnDueOnCondtion(ActivityModel template, int term) {
-      switch (template.DueOnCondition) {
-        case "Before":
-          return -1 * term;
-
-        case "BeforeStart":
-          return -1 * term;
-
-        case "AfterStart":
-          return term;
-
-        case "During":
-          return term;
-
-        case "BeforeFinish":
-          return -1 * term;
-
-        case "AfterFinish":
-          return term;
-
-        case "After":
-          return term;
-
-        case "From":
-          return term;
-
-        default:
-          return term;
-
-      } // switch
-
-    }
-
-
-    private DateTime? CalculateNewDeadline(ActivityModel template, DateTime baseDate) {
-      var dueOnTerm = template.DueOnTerm;
-
-      if (String.IsNullOrWhiteSpace(dueOnTerm)) {
-        return null;
-      }
-
-      var term = int.Parse(dueOnTerm);
-
-      term = AdjustTermOnDueOnCondtion(template, term);
-
-      switch (template.DueOnTermUnit) {
-        case "BusinessDays":
-          EmpiriaCalendar calendar = GetCalendarFor(template);
-
-          if (term >= 0) {
-            return calendar.AddWorkingDays(baseDate, term);
-          } else {
-            return calendar.SubstractWorkingDays(baseDate, -1 * term);
-          }
-
-        case "CalendarDays":
-          return baseDate.AddDays(term);
-
-        case "Hours":
-          return baseDate.AddHours(term);
-
-        case "Months":
-          return baseDate.AddMonths(term);
-
-        case "Years":
-          return baseDate.AddYears(term);
-
-        default:
-          return null;
-      }
-
-    }
-
-
     private void CreateBranchFromTemplate(Activity activityModel) {
       var modelBranch = activityModel.GetBranch();
 
@@ -176,17 +99,6 @@ namespace Empiria.ProjectManagement.Services {
 
       }  // foreach
 
-    }
-
-
-    private EmpiriaCalendar GetCalendarFor(ActivityModel template) {
-      if (template.EntityId != -1) {
-        var org = Contacts.Organization.Parse(template.EntityId);
-
-        return EmpiriaCalendar.Parse(org.Nickname);
-      } else {
-        return EmpiriaCalendar.Default;
-      }
     }
 
 
@@ -228,7 +140,7 @@ namespace Empiria.ProjectManagement.Services {
           continue;
         }
 
-        DateTime? deadline = CalculateNewDeadline(template, controller.Deadline);
+        DateTime? deadline = UtilityMethods.CalculateNewDeadline(template, controller.Deadline);
 
         if (deadline.HasValue) {
           stateChange.Deadline = deadline.Value;

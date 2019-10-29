@@ -43,7 +43,6 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
     [Route("v1/project-management/project-templates/{projectTemplateUID}/as-tree")]
     public CollectionModel GetProjectTemplateAsTree([FromUri] string projectTemplateUID) {
       try {
-
         var project = Project.Parse(projectTemplateUID);
 
         var activityModels = project.GetItems();

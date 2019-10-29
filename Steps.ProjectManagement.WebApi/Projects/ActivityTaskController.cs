@@ -85,7 +85,7 @@ namespace Empiria.ProjectManagement.WebApi {
         DateTime completedDate = bodyAsJson.Get<DateTime>("actualEndDate", DateTime.Today);
 
         task.Update(bodyAsJson);
-        ProjectUpdater.Complete(task, completedDate);
+        //ProjectUpdater.Complete(task, completedDate);
 
         return new SingleObjectModel(this.Request, task.ToResponse(),
                                      typeof(Activity).FullName);

@@ -45,7 +45,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
         if (EmpiriaString.IsInteger(activityUIDOrId)) {
           projectItem = Activity.Parse(int.Parse(activityUIDOrId));
-
         } else {
           projectItem = Activity.Parse(activityUIDOrId);
         }
@@ -61,6 +60,7 @@ namespace Empiria.ProjectManagement.WebApi {
     #endregion Get methods
 
     #region Update methods
+
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities")]

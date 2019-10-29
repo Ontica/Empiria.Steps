@@ -82,6 +82,13 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
+    internal void AddStateChanges(IList<ProjectItemStateChange> stateChangesList) {
+      foreach (var stateChange in stateChangesList) {
+        this.stateChanges.Add(stateChange);
+      }
+    }
+
+
     public Exception GetException() {
       return new Exception("This is the exception in WhatIfResult");
     }

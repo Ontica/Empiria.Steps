@@ -18,7 +18,9 @@ namespace Empiria.ProjectManagement.Services {
 
     Complete,
 
-    Reactivate
+    Reactivate,
+
+    UpdateDeadline
 
   }  // enum ProjectItemOperation
 

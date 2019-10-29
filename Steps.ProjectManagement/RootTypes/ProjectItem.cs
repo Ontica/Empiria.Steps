@@ -305,6 +305,13 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    public void SetDeadline(DateTime deadline) {
+      this.Deadline = deadline;
+
+      this.Save();
+    }
+
+
     internal void Delete() {
       Assertion.Assert(this.Status != ActivityStatus.Completed,
                        "Deletion is only possible for project items with statuses distinct than completed.");
