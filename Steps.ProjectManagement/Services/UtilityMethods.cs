@@ -108,6 +108,19 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
+    internal static DateTime GetNextMonthDate(DateTime fromDate, int monthDay) {
+      DateTime date = fromDate.AddMonths(1);
+
+      return new DateTime(date.Year, date.Month, monthDay);
+    }
+
+    internal static DateTime GetNextYearDate(DateTime fromDate, int month, int monthDay) {
+      DateTime date = fromDate.AddYears(1);
+
+      return new DateTime(date.Year, month, monthDay);
+    }
+
+
     #endregion Private methods
 
   }  // class UtilityMethods

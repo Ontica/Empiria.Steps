@@ -67,6 +67,8 @@ namespace Empiria.ProjectManagement.Services {
         this.RecalculateDates();
       }
 
+      this.CalculatePeriodicDates(eventDate);
+
       return this.whatIfResult;
     }
 
@@ -75,6 +77,43 @@ namespace Empiria.ProjectManagement.Services {
 
 
     #region Private methods
+
+
+    private void CalculatePeriodicDates(DateTime eventDate) {
+
+      foreach (var stateChange in this.whatIfResult.StateChanges) {
+
+        if (stateChange.Deadline != ExecutionServer.DateMaxValue) {
+          continue;
+        }
+
+        var template = ((Activity) stateChange.Template).Template;
+
+        if (template.ExecutionMode != "Periodic") {
+          continue;
+        }
+
+        if (stateChange.Template.Id == 101792 || stateChange.Template.Id == 101794 || stateChange.Template.Id == 108276 || stateChange.Template.Id == 108277) {
+          stateChange.Deadline = UtilityMethods.GetNextMonthDate(eventDate, 17);
+        } else if (stateChange.Template.Id == 101800) {
+          stateChange.Deadline = UtilityMethods.GetNextMonthDate(eventDate, 10);
+        } else if (stateChange.Template.Id == 101791) {
+          stateChange.Deadline = UtilityMethods.GetNextYearDate(eventDate, 9, 30);
+        } else if (stateChange.Template.Id == 101801) {
+          stateChange.Deadline = UtilityMethods.GetNextYearDate(eventDate, 7, 31);
+        } else if (stateChange.Template.Id == 101790) {
+          stateChange.Deadline = UtilityMethods.GetNextYearDate(eventDate, 2, 15);
+        } else if (stateChange.Template.Id == 107608 || stateChange.Template.Id == 104954 ||
+                   stateChange.Template.Id == 103716 || stateChange.Template.Id == 107612) {
+          stateChange.Deadline = UtilityMethods.GetNextYearDate(eventDate, 3, 31);
+        } else if (stateChange.Template.Id == 102700) {
+          stateChange.Deadline = UtilityMethods.GetNextYearDate(eventDate, 4, 30);
+
+        }
+
+      }  // foreach
+
+    }
 
 
     private void CreateBranchFromTemplate(Activity activityModel) {
