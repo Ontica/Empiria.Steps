@@ -24,7 +24,7 @@ namespace Empiria.ProjectManagement {
 
       string sql = $"SELECT * FROM PMProjectObjects " +
                    $"WHERE BaseProjectId IN ({projectList}) AND ProjectObjectTypeId <> 1203 AND Status <> 'X' AND " +
-                   $"BaseProjectId NOT IN (SELECT ProjectObjectId FROM PMProjectObjects WHERE Status = 'X' OR ExtData LIKE '%template%')";
+                   $"BaseProjectId NOT IN (SELECT ProjectObjectId FROM PMProjectObjects WHERE Status = 'X' OR ExtData LIKE '%isTemplate%')";
 
       var op = DataOperation.Parse(sql);
 
@@ -35,21 +35,33 @@ namespace Empiria.ProjectManagement {
       string projectList = UserProjectSecurity.GetUserProjectList();
 
       string filter = $"ProjectObjectId IN ({projectList}) " +
-                      $"AND Status <> 'X' AND ExtData NOT LIKE '%template%'";
+                      $"AND Status <> 'X' AND ExtData NOT LIKE '%isTemplate%'";
 
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
 
 
     static internal List<Project> GetTemplates() {
-      string filter = $"Status <> 'X' AND ExtData LIKE '%template%'";
+      string filter = $"Status <> 'X' AND ExtData LIKE '%isTemplate%'";
 
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
 
 
-    static internal FixedList<ProjectItem> GetEvents() {
-      var templateProjects = GetTemplates();
+    static internal List<Project> GetTemplates(Project forProject) {
+      if (forProject.TemplatesList.Length == 0) {
+        return new List<Project>();
+      }
+
+      string filter = $"Status <> 'X' AND ExtData LIKE '%isTemplate%' AND " +
+                      $"ProjectObjectId IN (${forProject.TemplatesList})";
+
+      return BaseObject.GetList<Project>(filter, "ItemPosition");
+    }
+
+
+    static internal FixedList<ProjectItem> GetEvents(Project forProject, string filter = "") {
+      var templateProjects = GetTemplates(forProject);
 
       var events = new List<ProjectItem>();
 

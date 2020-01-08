@@ -69,11 +69,6 @@ using Empiria.ProjectManagement.Resources;
     }
 
 
-    static public FixedList<ProjectItem> GetEventsList(string filter = "") {
-      return ProjectData.GetEvents();
-    }
-
-
     static public FixedList<string> ThemesList {
       get {
         var list = GeneralList.Parse("ProjectManagement.Themes.List");
@@ -121,6 +116,13 @@ using Empiria.ProjectManagement.Resources;
     protected internal JsonObject ExtensionData {
       get;
       private set;
+    }
+
+
+    internal string TemplatesList {
+      get {
+        return this.ExtensionData.Get("templatesList", String.Empty);
+      }
     }
 
 
@@ -352,6 +354,11 @@ using Empiria.ProjectManagement.Resources;
     #endregion Project items
 
     #region Public methods
+
+
+    public FixedList<ProjectItem> GetEventsList(string filter = "") {
+      return ProjectData.GetEvents(this, filter);
+    }
 
 
     protected override void OnSave() {

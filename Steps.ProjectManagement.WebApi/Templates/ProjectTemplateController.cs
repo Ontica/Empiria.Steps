@@ -58,10 +58,12 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
 
     [HttpGet]
-    [Route("v1/project-management/project-templates/start-events")]
-    public CollectionModel GetStartEventsList() {
+    [Route("v1/project-management/project-templates/start-events/{projectUID}")]
+    public CollectionModel GetStartEventsList([FromUri] string projectUID) {
       try {
-        var list = Project.GetEventsList();
+        var project = Project.Parse(projectUID);
+
+        var list = project.GetEventsList();
 
         return new CollectionModel(this.Request, list.ToActivityTemplateResponse(),
                                    typeof(ProjectItem).FullName);
