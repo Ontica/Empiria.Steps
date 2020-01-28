@@ -17,6 +17,9 @@ namespace Empiria.ProjectManagement {
   /// <summary>Project items data read and write methods.</summary>
   static internal class ProjectItemData {
 
+    static private string ProcessID = String.Empty;
+
+
     #region Read methods
 
     static internal List<Task> GetTasks(ProjectItem projectItem) {
@@ -29,6 +32,14 @@ namespace Empiria.ProjectManagement {
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetList(op, (x) => BaseObject.ParseList<Task>(x));
+    }
+
+    internal static void ResetProcessID() {
+      ProcessID = Guid.NewGuid().ToString().ToLower();
+    }
+
+    internal static void ClearProcessID() {
+      ProcessID = String.Empty;
     }
 
 
@@ -52,7 +63,7 @@ namespace Empiria.ProjectManagement {
                 o._theme, o.Tags.ToString(), o.Keywords, o.Position,
                 o.TemplateId, o.Resource, o.Project.Owner.Id,
                 o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
-                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
+                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status, ProcessID);
 
       DataWriter.Execute(op);
     }
@@ -66,7 +77,7 @@ namespace Empiria.ProjectManagement {
                 o._theme, o.Tags.ToString(), o.Keywords, o.Position,
                 o.TemplateId, o.Resource, o.Project.Owner.Id,
                 -1, ExecutionServer.DateMaxValue, -1,
-                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status);
+                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status, ProcessID);
 
       DataWriter.Execute(op);
     }
@@ -80,7 +91,7 @@ namespace Empiria.ProjectManagement {
                 o._theme, o.Tags.ToString(), o.Keywords, o.Position,
                 o.TemplateId, o.Resource, o.Project.Owner.Id,
                 o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
-                o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status);
+                o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status, ProcessID);
 
       DataWriter.Execute(op);
     }

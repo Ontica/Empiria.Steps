@@ -157,7 +157,7 @@ namespace Empiria.ProjectManagement {
                 o.Tags.ToString(), o.Keywords, o.Position, -1,
                 o.Resource, o.Owner.Id,
                 o.Responsible.Id, ExecutionServer.DateMaxValue, -1,
-                -1, o.Parent.Id, 'U', (char) o.Status);
+                -1, o.Parent.Id, 'U', (char) o.Status, String.Empty);
 
       DataWriter.Execute(op);
     }

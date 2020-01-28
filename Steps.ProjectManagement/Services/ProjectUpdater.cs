@@ -44,7 +44,11 @@ namespace Empiria.ProjectManagement.Services {
         throw result.GetException();
       }
 
+      ProjectItemData.ResetProcessID();
+
       StoreChanges(result);
+
+      ProjectItemData.ClearProcessID();
 
       return project.GetItems();
     }
