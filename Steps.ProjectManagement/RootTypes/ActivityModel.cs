@@ -23,7 +23,7 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    static internal ActivityModel Parse(JsonObject data) {
+    static internal ActivityModel Parse(JsonObject data, string periodicRuleData) {
       var o = new ActivityModel();
 
       o.ActivityType = data.Get<string>("activityType", o.ActivityType);
@@ -47,6 +47,16 @@ namespace Empiria.ProjectManagement {
 
       o.ContractClause = data.Get<string>("contractClause", o.ContractClause);
       o.LegalBasis = data.Get<string>("legalBasis", o.LegalBasis);
+
+
+      if (String.IsNullOrEmpty(periodicRuleData)) {
+        o.PeriodicRule = PeriodicRuleData.Empty;
+
+      } else {
+        var json = JsonObject.Parse(periodicRuleData);
+
+        o.PeriodicRule = PeriodicRuleData.Parse(json);
+      }
 
       return o;
     }
@@ -145,6 +155,12 @@ namespace Empiria.ProjectManagement {
       get;
       private set;
     } = String.Empty;
+
+
+    public PeriodicRuleData PeriodicRule {
+      get;
+      private set;
+    }
 
 
     [DataField("Entity")]

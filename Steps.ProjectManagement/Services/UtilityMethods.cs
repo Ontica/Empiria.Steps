@@ -54,9 +54,31 @@ namespace Empiria.ProjectManagement.Services {
         default:
           return null;
       }
-
     }
 
+
+    static internal DateTime CalculatePeriodicDate(ActivityModel template, DateTime eventDate) {
+      var periodicRule = template.PeriodicRule;
+
+      switch (periodicRule.RuleType) {
+        case "Daily":
+          return eventDate.AddDays(1);
+
+        case "OncePerYear-OnFixedDate":
+          return GetNextYearDate(eventDate, periodicRule.Month, periodicRule.Day);
+
+        case "Monthly-OnFixedDay":
+          return GetNextMonthDate(eventDate, periodicRule.Day);
+
+        case "Monthly-BusinessDays":
+          var calendar = GetCalendarFor(template);
+
+          return UtilityMethods.GetNextMonthBusinessDate(calendar, eventDate, periodicRule.Day);
+
+        default:
+          return ExecutionServer.DateMaxValue;
+      }
+    }
 
     #endregion Internal methods
 
@@ -108,13 +130,25 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    internal static DateTime GetNextMonthDate(DateTime fromDate, int monthDay) {
+    static private DateTime GetNextMonthBusinessDate(EmpiriaCalendar calendar,
+                                                     DateTime fromDate, int businessDays) {
+      DateTime date = new DateTime(fromDate.Year, fromDate.Month,
+                                   DateTime.DaysInMonth(fromDate.Year, fromDate.Month));
+
+      return calendar.AddWorkingDays(date, businessDays);
+
+
+    }
+
+
+    static private DateTime GetNextMonthDate(DateTime fromDate, int monthDay) {
       DateTime date = fromDate.AddMonths(1);
 
       return new DateTime(date.Year, date.Month, monthDay);
     }
 
-    internal static DateTime GetNextYearDate(DateTime fromDate, int month, int monthDay) {
+
+    static private DateTime GetNextYearDate(DateTime fromDate, int month, int monthDay) {
       DateTime date = fromDate.AddYears(1);
 
       return new DateTime(date.Year, month, monthDay);
