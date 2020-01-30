@@ -112,6 +112,11 @@ namespace Empiria.ProjectManagement.Services {
       }
     }
 
+    public ProjectItem Replaces {
+      get;
+      internal set;
+    }
+
 
     #endregion Properties
 

@@ -19,7 +19,7 @@ namespace Empiria.ProjectManagement.Services {
     #region Services
 
 
-    static public void Complete(ProjectItem projectItem, DateTime completedDate) {
+    static public FixedList<ProjectItem> Complete(ProjectItem projectItem, DateTime completedDate) {
       Assertion.AssertObject(projectItem, "projectItem");
 
       WhatIfResult result = ModelingServices.WhatIfCompleted(projectItem, completedDate);
@@ -29,6 +29,11 @@ namespace Empiria.ProjectManagement.Services {
       }
 
       StoreChanges(result);
+
+      projectItem.Project.Refresh();
+
+
+      return projectItem.Project.GetItems();
     }
 
 
@@ -121,7 +126,10 @@ namespace Empiria.ProjectManagement.Services {
 
       Activity activity = stateChange.Project.AddActivity(json);
 
-      if (stateChange.Parent != null &&
+      if (stateChange.Replaces != null) {
+        activity.SetParentAndPosition(stateChange.Replaces.Parent, stateChange.Replaces.Position);
+
+      } else if (stateChange.Parent != null &&
          !stateChange.Parent.ProjectItem.IsEmptyInstance) {
         activity.SetAndSaveParent(stateChange.Parent.ProjectItem);
       }

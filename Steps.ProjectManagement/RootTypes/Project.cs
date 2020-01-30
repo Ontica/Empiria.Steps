@@ -15,9 +15,8 @@ using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.StateEnums;
 
-using Empiria.ProjectManagement.Resources;
 
-  namespace Empiria.ProjectManagement {
+namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project as a tree of activities.</summary>
   public class Project : BaseObject {
@@ -363,6 +362,15 @@ using Empiria.ProjectManagement.Resources;
 
     protected override void OnSave() {
       ProjectData.WriteProject(this);
+    }
+
+
+    public void Refresh() {
+      //if (itemsTree.IsValueCreated) {
+
+      //}
+      itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));
+      itemsTree.Value.RefreshPositions();
     }
 
 

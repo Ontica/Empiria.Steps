@@ -52,6 +52,24 @@ namespace Empiria.ProjectManagement.Services {
       // Update related
       UpdateRelatedProjectItemsDeadlines(projectItem, completedDate);
 
+      // Create next periodic
+      if (projectItem.TemplateId != 0) {
+        var template = projectItem.GetTemplate().Template;
+
+        if (template.ExecutionMode == "Periodic" && !template.PeriodicRule.IsEmptyInstance) {
+
+          var newPeriodic = new ProjectItemStateChange(projectItem.GetTemplate(), ProjectItemOperation.CreateFromTemplate);
+
+          newPeriodic.Project = projectItem.Project;
+
+          newPeriodic.Replaces = projectItem;
+
+          newPeriodic.Deadline = UtilityMethods.CalculatePeriodicDate(template, projectItem.Deadline);
+
+          whatIfResult.AddStateChange(newPeriodic);
+        }
+      }
+
       return this.whatIfResult;
     }
 
@@ -63,7 +81,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     private void AddUpdateDeadlineStateChange(ProjectItem projectItem,
-                                          DateTime updatedDeadline) {
+                                              DateTime updatedDeadline) {
       var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.UpdateDeadline);
 
       stateChange.Deadline = updatedDeadline;
