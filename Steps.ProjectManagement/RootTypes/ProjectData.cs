@@ -31,20 +31,24 @@ namespace Empiria.ProjectManagement {
       return DataReader.GetList<ProjectItem>(op).ToFixedList();
     }
 
+
     static internal List<Project> GetProjects() {
       string projectList = UserProjectSecurity.GetUserProjectList();
 
       string filter = $"ProjectObjectId IN ({projectList}) " +
                       $"AND Status <> 'X' AND ExtData NOT LIKE '%isTemplate%'";
 
-      return BaseObject.GetList<Project>(filter, "ItemPosition");
+      return BaseObject.GetList<Project>(filter, "ItemPosition, Name");
     }
 
 
     static internal List<Project> GetTemplates() {
-      string filter = $"Status <> 'X' AND ExtData LIKE '%isTemplate%'";
+      string templatesList = UserProjectSecurity.GetUserTemplateList();
 
-      return BaseObject.GetList<Project>(filter, "ItemPosition");
+      string filter = $"ProjectObjectId IN ({templatesList}) " +
+                      $"AND Status <> 'X' AND ExtData LIKE '%isTemplate%'";
+
+      return BaseObject.GetList<Project>(filter, "ItemPosition, Name");
     }
 
 
@@ -53,8 +57,8 @@ namespace Empiria.ProjectManagement {
         return new List<Project>();
       }
 
-      string filter = $"Status <> 'X' AND ExtData LIKE '%isTemplate%' AND " +
-                      $"ProjectObjectId IN (${forProject.TemplatesList})";
+      string filter = $"ProjectObjectId IN (${forProject.TemplatesList}) " +
+                      $"AND Status <> 'X' AND ExtData LIKE '%isTemplate%'";
 
       return BaseObject.GetList<Project>(filter, "ItemPosition");
     }
@@ -81,6 +85,7 @@ namespace Empiria.ProjectManagement {
     }
 
     #region Project structure methods
+
 
     static internal List<ProjectItem> GetProjectActivities(Project project) {
       string sql = $"SELECT * FROM PMProjectObjects " +

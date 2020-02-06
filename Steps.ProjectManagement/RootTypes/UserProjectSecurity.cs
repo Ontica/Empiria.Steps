@@ -37,7 +37,14 @@ namespace Empiria.ProjectManagement {
     static public string GetUserProjectList() {
       Organization organization = GetUserOrganization();
 
-      return organization.ExtendedData.Get<string>("projectList");
+      return organization.ExtendedData.Get<string>("projectList", "-9999");
+    }
+
+
+    static public string GetUserTemplateList() {
+      Organization organization = GetUserOrganization();
+
+      return organization.ExtendedData.Get("templateList", "-9999");
     }
 
 
