@@ -100,13 +100,6 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    [DataField("PeriodicRuleData")]
-    private string _periodicRuleData {
-      get;
-      set;
-    } = String.Empty;
-
-
     public ActivityModel Template {
       get {
         var json = this.ConfigurationJson;
@@ -114,7 +107,7 @@ namespace Empiria.ProjectManagement {
         if (json.IsEmptyInstance) {
           return ActivityModel.Empty;
         } else {
-          return ActivityModel.Parse(json, _periodicRuleData);
+          return ActivityModel.Parse(json);
         }
       }
     }

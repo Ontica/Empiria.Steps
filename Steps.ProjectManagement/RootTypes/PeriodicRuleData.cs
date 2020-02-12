@@ -24,13 +24,8 @@ namespace Empiria.ProjectManagement {
       var o = new PeriodicRuleData();
 
       o.RuleType = data.Get<string>("ruleType");
-
-      if (data.Contains("dueDate")) {
-        o.Day = data.Get<int>("dueDate/day", o.Day);
-        o.Month = data.Get<int>("dueDate/month", o.Month);
-      } else {
-        o.Day = data.Get<int>("day", o.Day);
-      }
+      o.Month = data.Get<int>("month", o.Month);
+      o.Day = data.Get<int>("day", o.Day);
 
       return o;
     }
@@ -74,7 +69,8 @@ namespace Empiria.ProjectManagement {
     public string RuleType {
       get;
       private set;
-    }
+    } = String.Empty;
+
 
     #endregion Fields
 

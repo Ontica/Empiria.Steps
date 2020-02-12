@@ -59,6 +59,8 @@ namespace Empiria.ProjectManagement.WebApi {
 
         duration = template.Duration,
         durationUnit = template.DurationUnit,
+
+        periodicityRule = ToPeriodicityRule(template.PeriodicRule),
         periodicity = template.Periodicity,
 
         entity = template.EntityId,
@@ -80,6 +82,18 @@ namespace Empiria.ProjectManagement.WebApi {
         level = activity.Level,
         stage = activity.Stage,
         status = activity.Status
+      };
+    }
+
+    private static object ToPeriodicityRule(PeriodicRuleData periodicRule) {
+      if (periodicRule.IsEmptyInstance) {
+        return null;
+      }
+
+      return new {
+        ruleType = periodicRule.RuleType,
+        month = periodicRule.Month,
+        day = periodicRule.Day
       };
     }
 
