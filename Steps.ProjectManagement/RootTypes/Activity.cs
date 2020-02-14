@@ -93,13 +93,6 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    public JsonObject ConfigurationJson {
-      get {
-        return this.ExtensionData.Slice("config", false);
-      }
-    }
-
-
     public ActivityModel Template {
       get {
         var json = this.ConfigurationJson;
@@ -111,6 +104,14 @@ namespace Empiria.ProjectManagement {
         }
       }
     }
+
+
+    private JsonObject ConfigurationJson {
+      get {
+        return this.ExtensionData.Slice("config", false);
+      }
+    }
+
 
     #endregion Properties
 
@@ -159,6 +160,6 @@ namespace Empiria.ProjectManagement {
 
     #endregion Public methods
 
-    } // class Activity
+  } // class Activity
 
 } // namespace Empiria.ProjectManagement

@@ -66,6 +66,8 @@ namespace Empiria.ProjectManagement.WebApi {
         warnDays = task.WarnDays,
         warnType = task.WarnType,
 
+        sendAlertsTo = task.SendAlertsTo.ToShortResponse(),
+
         theme = task.Theme,
         resource = task.Resource,
 

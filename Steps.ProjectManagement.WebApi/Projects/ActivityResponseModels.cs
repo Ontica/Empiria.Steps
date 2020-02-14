@@ -78,6 +78,8 @@ namespace Empiria.ProjectManagement.WebApi {
         warnDays = activity.WarnDays,
         warnType = activity.WarnType,
 
+        sendAlertsTo = activity.SendAlertsTo.ToShortResponse(),
+
         theme = activity.Theme,
         resource = activity.Resource,
 
@@ -126,6 +128,8 @@ namespace Empiria.ProjectManagement.WebApi {
 
         warnDays = summary.WarnDays,
         warnType = summary.WarnType,
+
+        sendAlertsTo = summary.SendAlertsTo.ToShortResponse(),
 
         theme = summary.Theme,
         resource = summary.Resource,

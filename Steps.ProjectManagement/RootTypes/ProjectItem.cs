@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
+using Empiria.Contacts;
 using Empiria.Collections;
 using Empiria.DataTypes;
 using Empiria.Json;
@@ -239,6 +241,27 @@ namespace Empiria.ProjectManagement {
       get;
       protected set;
     } = ExecutionServer.DateMaxValue;
+
+
+
+    public FixedList<Contact> SendAlertsTo {
+      get {
+        var list = this.ExtensionData.GetList<Contact>("sendAlertsTo", false);
+
+        return list.ToFixedList();
+      }
+      set {
+        Assertion.AssertObject(value, "value");
+
+        var idsArray = value.ConvertAll<int>((x) => x.Id);
+
+        if (idsArray == null || idsArray.Count == 0) {
+          this.ExtensionData.Remove("sendAlertsTo");
+        } else {
+          this.ExtensionData.Set("sendAlertsTo", idsArray);
+        }
+      }
+    }
 
 
     [DataField("Status", Default = ActivityStatus.Pending)]
