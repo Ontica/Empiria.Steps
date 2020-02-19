@@ -93,7 +93,7 @@ namespace Empiria.ProjectManagement.WebApi {
         ProjectItem activity = project.GetActivity(activityUID);
         ProjectItem newParent = project.GetActivity(newParentUID);
 
-        activity = project.ChangeParent(activity, newParent);
+        activity = project.ChangeParentKeepingPosition(activity, newParent);
 
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(Activity).FullName);

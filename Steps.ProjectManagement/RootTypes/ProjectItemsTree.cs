@@ -118,13 +118,13 @@ namespace Empiria.ProjectManagement {
       Assertion.Assert(this.ItemsList.Exists(x => x.UID == activity.UID),
                       $"Activity '{activity.Name}' doesn't belong to this project.");
 
-      Assertion.Assert(this.IsLeaf(activity),
-                      $"Activity '{activity.Name}' can't be deleted because has children.");
 
-      activity.Delete();
+      var branch = activity.GetBranch();
 
-      this.ItemsList.Remove(activity);
-
+      foreach (var item in branch) {
+        item.Delete();
+        this.ItemsList.Remove(item);
+      }
       this.RefreshPositions();
     }
 
@@ -201,7 +201,7 @@ namespace Empiria.ProjectManagement {
         return;
 
       } else if (parentFromJson != null && positionFromJson == null) {
-        this.ChangeParent(item, parentFromJson);
+        this.ChangeParentKeepingPosition(item, parentFromJson);
 
         return;
 
@@ -219,13 +219,41 @@ namespace Empiria.ProjectManagement {
 
     }
 
-    #endregion Public methods
 
-    #region Private methods
-
-
-    internal ProjectItem ChangeParent(ProjectItem item, ProjectItem newParent) {
+    internal ProjectItem ChangeParentAndPosition(ProjectItem item, ProjectItem newParent, int newPosition) {
       EmpiriaLog.Debug($"ChangeParent of {item.Name} to new parent {newParent.Name}");
+
+      int currentItemIndex = this.ItemsList.IndexOf(item);
+      var branchToMove = this.GetBranch(item);
+
+      Assertion.Assert(!branchToMove.Contains(newParent),
+                       $"Can't change the parent of '{item.Name}' because it is a branch " +
+                       $"and '{newParent.Name}' is one of its children.");
+
+      // Then remove the whole branch an reinsert it in the new position
+      foreach (var branchItem in branchToMove) {
+        ItemsList.Remove(branchItem);
+      }
+
+      item.SetParentAndPosition(newParent, newPosition);
+
+      int insertionIndex = newPosition - 1;      // insertionIndex is zero-based
+      foreach (var branchItem in branchToMove) {
+        ItemsList.Insert(insertionIndex, branchItem);
+
+        insertionIndex++;
+      }
+
+      this.RefreshPositions();
+
+      EmpiriaLog.Info($"ChangeParent of {item.UID} to {newParent.UID} at position {newParent.Position + 1}.");
+
+      return item;
+    }
+
+
+    internal ProjectItem ChangeParentKeepingPosition(ProjectItem item, ProjectItem newParent) {
+      EmpiriaLog.Debug($"ChangeParent of {item.Name} to new parent {newParent.Name} keeping current position.");
 
       int currentItemIndex = this.ItemsList.IndexOf(item);
       var branchToMove = this.GetBranch(item);
@@ -279,6 +307,7 @@ namespace Empiria.ProjectManagement {
     }
 
 
+
     internal FixedList<ProjectItem> GetBranch(ProjectItem root) {
       var branch = new List<ProjectItem>();
 
@@ -299,14 +328,60 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    private FixedList<ProjectItem> GetChildren(ProjectItem item) {
-      return this.ItemsList.FindAll((x) => x.Parent.Equals(item))
-                           .ToFixedList();
+    internal ProjectItem GetBranchLastItem(ProjectItem root) {
+      var branch = this.GetBranch(root);
+
+      return branch[branch.Count - 1];
     }
 
 
-    private bool IsLeaf(ProjectItem item) {
-      return (this.GetChildren(item).Count == 0);
+    internal ProjectItem MoveToInsertionPoint(ProjectItem itemToMove, TreeItemInsertionRule insertionRule,
+                                              ProjectItem insertionPoint = null, int exactPosition = -1) {
+      switch (insertionRule) {
+
+        case TreeItemInsertionRule.AsSiblingBeforeInsertionPoint:
+          this.ChangeParentAndPosition(itemToMove, newParent: insertionPoint.Parent,
+                                       newPosition: insertionPoint.Position);
+          return itemToMove;
+
+
+        case TreeItemInsertionRule.AsSiblingAfterInsertionPoint:
+          int branchLastItemPosition = GetBranchLastItem(insertionPoint).Position;
+
+          this.ChangeParentAndPosition(itemToMove, newParent: insertionPoint.Parent,
+                                       newPosition: branchLastItemPosition + 1);
+          return itemToMove;
+
+
+        case TreeItemInsertionRule.AsChildAsFirstNode:
+          this.ChangeParentAndPosition(itemToMove, newParent: insertionPoint,
+                                       newPosition: insertionPoint.Position + 1);
+
+          return itemToMove;
+
+
+        case TreeItemInsertionRule.AsChildAsLastNode:
+          branchLastItemPosition = GetBranchLastItem(insertionPoint).Position;
+
+          this.ChangeParentAndPosition(itemToMove, newParent: insertionPoint,
+                                       newPosition: branchLastItemPosition + 1);
+
+          return itemToMove;
+
+
+        case TreeItemInsertionRule.AsTreeRootAtStart:
+          this.ChangePosition(itemToMove, 1);
+
+          return itemToMove;
+
+
+        case TreeItemInsertionRule.AsTreeRootAtEnd:
+          return itemToMove;
+
+
+        default:
+          throw Assertion.AssertNoReachThisCode($"Unrecognized insertion rule '{insertionRule.ToString()}'.");
+      }
     }
 
 
@@ -320,6 +395,23 @@ namespace Empiria.ProjectManagement {
           ProjectItemData.UpdatePosition(item);
         }
       }  // for
+    }
+
+
+    #endregion Public methods
+
+
+    #region Private methods
+
+
+    private FixedList<ProjectItem> GetChildren(ProjectItem item) {
+      return this.ItemsList.FindAll(x => x.Parent.Equals(item))
+                           .ToFixedList();
+    }
+
+
+    private bool IsLeaf(ProjectItem item) {
+      return (this.GetChildren(item).Count == 0);
     }
 
 
@@ -360,7 +452,7 @@ namespace Empiria.ProjectManagement {
       return position;
     }
 
-    #endregion Public methods
+    #endregion Private methods
 
   } // class ProjectItemsTree
 

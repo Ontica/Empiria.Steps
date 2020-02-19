@@ -88,12 +88,15 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
         var activityModel = bodyAsJson.Get<Activity>("activityTemplateUID");
         var eventDate = bodyAsJson.Get<DateTime>("eventDate", DateTime.Today);
+        var insertionPoint = bodyAsJson.Get<ProjectItem>("insertionPointUID", ProjectItem.Empty);
+        var insertionRule  = bodyAsJson.Get<TreeItemInsertionRule>("insertionPosition",
+                                                                   TreeItemInsertionRule.AsTreeRootAtEnd);
 
         var project = Project.Parse(projectUID);
 
         FixedList<ProjectItem> createdActivities =
-                       ProjectUpdater.CreateActivitiesFromModel(activityModel, project, eventDate);
-
+                       ProjectUpdater.CreateActivitiesFromModel(activityModel, project, eventDate,
+                                                                insertionPoint, insertionRule);
 
         return new CollectionModel(this.Request, createdActivities.ToResponse());
 

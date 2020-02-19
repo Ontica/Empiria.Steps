@@ -11,7 +11,9 @@ using System;
 
 using Empiria.Json;
 
+
 namespace Empiria.ProjectManagement.Services {
+
 
   /// <summary>Provides project management activity's state update services</summary>
   static public class ProjectUpdater {
@@ -39,9 +41,12 @@ namespace Empiria.ProjectManagement.Services {
 
     static public FixedList<ProjectItem> CreateActivitiesFromModel(Activity activityModel,
                                                                    Project project,
-                                                                   DateTime eventDate) {
+                                                                   DateTime eventDate,
+                                                                   ProjectItem insertionPoint,
+                                                                   TreeItemInsertionRule insertionRule) {
       Assertion.AssertObject(activityModel, "activityModel");
       Assertion.AssertObject(project, "project");
+      Assertion.AssertObject(insertionPoint, "insertionPoint");
 
       WhatIfResult result = ModelingServices.WhatIfCreatedFromEvent(activityModel, project, eventDate);
 
@@ -55,6 +60,16 @@ namespace Empiria.ProjectManagement.Services {
 
       ProjectItemData.ClearProcessID();
 
+      if (result.StateChanges.Count > 0) {
+
+        if (!insertionPoint.IsEmptyInstance && insertionRule != TreeItemInsertionRule.AsTreeRootAtEnd) {
+          project.MoveTo(result.StateChanges[0].ProjectItem, insertionRule, insertionPoint);
+
+        } else if (insertionPoint.IsEmptyInstance && (insertionRule == TreeItemInsertionRule.AsTreeRootAtStart ||
+                                                      insertionRule == TreeItemInsertionRule.AsTreeRootAtEnd)) {
+          project.MoveTo(result.StateChanges[0].ProjectItem, insertionRule, insertionPoint);
+        }
+      }
       return project.GetItems();
     }
 
@@ -76,6 +91,33 @@ namespace Empiria.ProjectManagement.Services {
 
 
     #region Private methods
+
+    static private Activity CreateFromTemplate(ProjectItemStateChange stateChange) {
+      Assertion.AssertObject(stateChange, "stateChange");
+      Assertion.AssertObject(stateChange.Project, "stateChange.Project");
+      Assertion.AssertObject(stateChange.Template, "stateChange.Template");
+
+      var json = new JsonObject();
+
+      json.Add("name", stateChange.Template.Name);
+      json.Add("notes", stateChange.Template.Notes);
+
+      json.Add("deadline", stateChange.Deadline);
+      json.Add("plannedEndDate", stateChange.PlannedEndDate);
+
+      json.Add("templateId", stateChange.Template.Id);
+
+      Activity activity = stateChange.Project.AddActivity(json);
+
+      if (stateChange.Replaces != null) {
+        activity.SetParentAndPosition(stateChange.Replaces.Parent, stateChange.Replaces.Position);
+
+      } else if (stateChange.Parent != null && !stateChange.Parent.ProjectItem.IsEmptyInstance) {
+        activity.SetAndSaveParent(stateChange.Parent.ProjectItem);
+      }
+
+      return activity;
+    }
 
 
     static private void StoreChanges(WhatIfResult result) {
@@ -106,35 +148,6 @@ namespace Empiria.ProjectManagement.Services {
 
       }  // foreach
 
-    }
-
-
-    static private Activity CreateFromTemplate(ProjectItemStateChange stateChange) {
-      Assertion.AssertObject(stateChange, "stateChange");
-      Assertion.AssertObject(stateChange.Project, "stateChange.Project");
-      Assertion.AssertObject(stateChange.Template, "stateChange.Template");
-
-      var json = new JsonObject();
-
-      json.Add("name", stateChange.Template.Name);
-      json.Add("notes", stateChange.Template.Notes);
-
-      json.Add("deadline", stateChange.Deadline);
-      json.Add("plannedEndDate", stateChange.PlannedEndDate);
-
-      json.Add("templateId", stateChange.Template.Id);
-
-      Activity activity = stateChange.Project.AddActivity(json);
-
-      if (stateChange.Replaces != null) {
-        activity.SetParentAndPosition(stateChange.Replaces.Parent, stateChange.Replaces.Position);
-
-      } else if (stateChange.Parent != null &&
-         !stateChange.Parent.ProjectItem.IsEmptyInstance) {
-        activity.SetAndSaveParent(stateChange.Parent.ProjectItem);
-      }
-
-      return activity;
     }
 
 

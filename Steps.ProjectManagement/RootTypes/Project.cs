@@ -322,12 +322,22 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    public ProjectItem ChangeParent(ProjectItem activity, ProjectItem newParent) {
+    public ProjectItem MoveTo(ProjectItem item, TreeItemInsertionRule insertionRule,
+                              ProjectItem insertionPoint = null, int exactPosition = -1) {
+      Assertion.AssertObject(item, "item");
+
+      lock (__treeLock) {
+        return this.Items.MoveToInsertionPoint(item, insertionRule, insertionPoint, exactPosition);
+      }
+    }
+
+
+    public ProjectItem ChangeParentKeepingPosition(ProjectItem activity, ProjectItem newParent) {
       Assertion.AssertObject(activity, "activity");
       Assertion.AssertObject(newParent, "newParent");
 
       lock (__treeLock) {
-        return this.Items.ChangeParent(activity, newParent);
+        return this.Items.ChangeParentKeepingPosition(activity, newParent);
       }
     }
 
