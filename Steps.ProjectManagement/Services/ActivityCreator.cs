@@ -93,7 +93,7 @@ namespace Empiria.ProjectManagement.Services {
           continue;
         }
 
-        stateChange.Deadline = UtilityMethods.CalculatePeriodicDate(template, eventDate);
+        stateChange.Deadline = UtilityMethods.CalculateNextPeriodicDate(template, eventDate);
 
 
       }  // foreach

@@ -22,6 +22,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Get methods
 
+
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/what-if-completed")]
     public SingleObjectModel WhatIfCompleted(string projectUID, string activityUID,
@@ -36,7 +37,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         DateTime completedDate = bodyAsJson.Get<DateTime>("completedDate", DateTime.Today);
 
-        WhatIfResult result = ModelingServices.WhatIfCompleted(activity, completedDate);
+        WhatIfResult result = ModelingServices.WhatIfCompleted(activity, completedDate, true);
 
         return new SingleObjectModel(this.Request, result.ToResponse(),
                                      typeof(WhatIfResult).FullName);

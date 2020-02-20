@@ -16,6 +16,26 @@ namespace Empiria.ProjectManagement.Services {
 
     #region Services
 
+
+    static public WhatIfResult TryGetNextPeriodic(ProjectItem projectItem, DateTime completedDate) {
+      if (projectItem.TemplateId == 0) {
+        return null;
+      }
+
+      var template = projectItem.GetTemplate().Template;
+
+      if (template.ExecutionMode != "Periodic" || template.PeriodicRule.IsEmptyInstance) {
+        return null;
+      }
+
+      var activityCreator = new ActivityCreator(projectItem.Project);
+
+      DateTime newPeriod = UtilityMethods.CalculateNextPeriodicDate(template, projectItem.Deadline);
+
+      return activityCreator.CreateFromEvent(projectItem.GetTemplate(), newPeriod);
+    }
+
+
     static public WhatIfResult WhatIfCreatedFromEvent(Activity activityModel,
                                                       Project project,
                                                       DateTime eventDate) {
@@ -28,12 +48,12 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    static public WhatIfResult WhatIfCompleted(ProjectItem projectItem, DateTime completedDate) {
+    static public WhatIfResult WhatIfCompleted(ProjectItem projectItem, DateTime completedDate, bool addNewPeriodics) {
       Assertion.AssertObject(projectItem, "projectItem");
 
       var updater = new ActivityUpdater();
 
-      return updater.OnComplete(projectItem, completedDate);
+      return updater.OnComplete(projectItem, completedDate, addNewPeriodics);
     }
 
 
@@ -48,6 +68,7 @@ namespace Empiria.ProjectManagement.Services {
 
       return whatIfResult;
     }
+
 
     #endregion Services
 

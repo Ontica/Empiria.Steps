@@ -37,7 +37,7 @@ namespace Empiria.ProjectManagement.Services {
     #region Public methods
 
 
-    public WhatIfResult OnComplete(ProjectItem projectItem, DateTime completedDate) {
+    public WhatIfResult OnComplete(ProjectItem projectItem, DateTime completedDate, bool addNewPeriodics) {
       Assertion.AssertObject(projectItem, "projectItem");
 
       this.whatIfResult = new WhatIfResult(projectItem, ProjectItemOperation.Complete);
@@ -52,21 +52,12 @@ namespace Empiria.ProjectManagement.Services {
       // Update related
       UpdateRelatedProjectItemsDeadlines(projectItem, completedDate);
 
-      // Create next periodic
-      if (projectItem.TemplateId != 0) {
-        var template = projectItem.GetTemplate().Template;
 
-        if (template.ExecutionMode == "Periodic" && !template.PeriodicRule.IsEmptyInstance) {
+      if (addNewPeriodics) {
+        var newPeriodicResult = ModelingServices.TryGetNextPeriodic(projectItem, completedDate);
 
-          var newPeriodic = new ProjectItemStateChange(projectItem.GetTemplate(), ProjectItemOperation.CreateFromTemplate);
-
-          newPeriodic.Project = projectItem.Project;
-
-          newPeriodic.Replaces = projectItem;
-
-          newPeriodic.Deadline = UtilityMethods.CalculatePeriodicDate(template, projectItem.Deadline);
-
-          whatIfResult.AddStateChange(newPeriodic);
+        if (newPeriodicResult != null) {
+          this.whatIfResult.AddStateChanges(newPeriodicResult.StateChanges);
         }
       }
 
@@ -103,10 +94,14 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    private FixedList<ProjectItem> GetProjectDependencies(Activity model) {
+    private FixedList<ProjectItem> GetProjectDependencies(ProjectItem projectItem, Activity model) {
       var project = this.whatIfResult.Source.Project;
 
-      return project.GetItems().FindAll(x => x.TemplateId == model.Id);
+      EmpiriaLog.Trace($"P = {projectItem.ProcessID}, S = {projectItem.SubprocessID}, M = {model.Name}");
+
+      return project.GetItems().FindAll(x => x.TemplateId == model.Id &&
+                                             x.ProcessID == projectItem.ProcessID &&
+                                             x.SubprocessID == projectItem.SubprocessID);
     }
 
 
@@ -122,7 +117,7 @@ namespace Empiria.ProjectManagement.Services {
       List<ProjectItem> list = new List<ProjectItem>();
 
       foreach (var model in modelDependencies) {
-        FixedList<ProjectItem> projectItems = GetProjectDependencies(model);
+        FixedList<ProjectItem> projectItems = GetProjectDependencies(projectItem, model);
 
         list.AddRange(projectItems);
       }

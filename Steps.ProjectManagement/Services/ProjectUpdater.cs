@@ -24,13 +24,20 @@ namespace Empiria.ProjectManagement.Services {
     static public FixedList<ProjectItem> Complete(ProjectItem projectItem, DateTime completedDate) {
       Assertion.AssertObject(projectItem, "projectItem");
 
-      WhatIfResult result = ModelingServices.WhatIfCompleted(projectItem, completedDate);
+      WhatIfResult result = ModelingServices.WhatIfCompleted(projectItem, completedDate, false);
 
       if (result.HasErrors) {
         throw result.GetException();
       }
 
+      if (!String.IsNullOrWhiteSpace(projectItem.ProcessID)) {
+        ProjectItemData.ResetSubprocessID(projectItem.ProcessID);
+      }
+
       StoreChanges(result);
+
+      CreateNextPeriodicIfNecessary(projectItem, completedDate);
+      ProjectItemData.ClearProcessID();
 
       projectItem.Project.Refresh();
 
@@ -117,6 +124,20 @@ namespace Empiria.ProjectManagement.Services {
       }
 
       return activity;
+    }
+
+
+    static private void CreateNextPeriodicIfNecessary(ProjectItem projectItem, DateTime completedDate) {
+      var nextPeriodicResult = ModelingServices.TryGetNextPeriodic(projectItem, completedDate);
+
+      if (nextPeriodicResult == null) {
+        return;
+      }
+
+      StoreChanges(nextPeriodicResult);
+
+      projectItem.Project.MoveTo(nextPeriodicResult.StateChanges[0].ProjectItem,
+                                 TreeItemInsertionRule.AsSiblingAfterInsertionPoint, projectItem);
     }
 
 

@@ -57,7 +57,7 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    static internal DateTime CalculatePeriodicDate(ActivityModel template, DateTime eventDate) {
+    static internal DateTime CalculateNextPeriodicDate(ActivityModel template, DateTime eventDate) {
       var periodicRule = template.PeriodicRule;
 
       switch (periodicRule.RuleType) {
