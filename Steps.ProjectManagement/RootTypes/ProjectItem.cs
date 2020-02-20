@@ -299,6 +299,20 @@ namespace Empiria.ProjectManagement {
       }
     }
 
+
+    [DataField("ProcessUID")]
+    public string ProcessID {
+      get;
+      private set;
+    }
+
+
+    [DataField("SubprocessUID")]
+    public string SubprocessID {
+      get;
+      private set;
+    }
+
     #endregion Public properties
 
     #region Methods
@@ -484,6 +498,12 @@ namespace Empiria.ProjectManagement {
                          $"Wrong operation 2: Parent position {this.Parent.Name} can not be below of this project item position {this.Name}.");
       }
       this.Position = position;
+    }
+
+
+    internal void SetProcess(string processID, string subprocessID) {
+      this.ProcessID = processID;
+      this.SubprocessID = subprocessID;
     }
 
 

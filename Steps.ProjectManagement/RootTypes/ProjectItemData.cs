@@ -18,6 +18,7 @@ namespace Empiria.ProjectManagement {
   static internal class ProjectItemData {
 
     static private string ProcessID = String.Empty;
+    static private string SubProcessID = String.Empty;
 
 
     #region Read methods
@@ -34,14 +35,23 @@ namespace Empiria.ProjectManagement {
       return DataReader.GetList(op, (x) => BaseObject.ParseList<Task>(x));
     }
 
-    internal static void ResetProcessID() {
-      ProcessID = Guid.NewGuid().ToString().ToLower();
-    }
 
     internal static void ClearProcessID() {
       ProcessID = String.Empty;
+      SubProcessID = String.Empty;
     }
 
+
+    internal static void ResetProcessID() {
+      ProcessID = Guid.NewGuid().ToString().ToLower();
+      SubProcessID = String.Empty;
+    }
+
+
+    internal static void ResetSubprocessID(string processID) {
+      ProcessID = processID;
+      SubProcessID = Guid.NewGuid().ToString().ToLower();
+    }
 
     #endregion Read methods
 
@@ -56,20 +66,28 @@ namespace Empiria.ProjectManagement {
 
 
     static internal void WriteActivity(Activity o) {
-      var op = DataOperation.Parse("writePMProjectObject",
+      if (o.IsNew) {
+        o.SetProcess(ProcessID, SubProcessID);
+      }
+
+        var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
                 o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline,
                 o._theme, o.Tags.ToString(), o.Keywords, o.Position,
                 o.TemplateId, o.Resource, o.Project.Owner.Id,
                 o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
-                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status, ProcessID);
+                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status, ProcessID, SubProcessID);
 
       DataWriter.Execute(op);
     }
 
 
     static internal void WriteSummary(Summary o) {
+      if (o.IsNew) {
+        o.SetProcess(ProcessID, SubProcessID);
+      }
+
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
@@ -77,13 +95,17 @@ namespace Empiria.ProjectManagement {
                 o._theme, o.Tags.ToString(), o.Keywords, o.Position,
                 o.TemplateId, o.Resource, o.Project.Owner.Id,
                 -1, ExecutionServer.DateMaxValue, -1,
-                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status, ProcessID);
+                o.Project.Id, o.Parent.Id, (char) o.Stage, (char) o.Status, ProcessID, SubProcessID);
 
       DataWriter.Execute(op);
     }
 
 
     static internal void WriteTask(Task o) {
+      if (o.IsNew) {
+        o.SetProcess(ProcessID, SubProcessID);
+      }
+
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.ProjectObjectType.Id, o.UID, o.Name, o.Notes,
                 o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
@@ -91,7 +113,7 @@ namespace Empiria.ProjectManagement {
                 o._theme, o.Tags.ToString(), o.Keywords, o.Position,
                 o.TemplateId, o.Resource, o.Project.Owner.Id,
                 o.Responsible.Id, o.AssignedDate, o.AssignedBy.Id,
-                o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status, ProcessID);
+                o.Activity.Project.Id, o.Activity.Id, (char) o.Stage, (char) o.Status, ProcessID, SubProcessID);
 
       DataWriter.Execute(op);
     }
