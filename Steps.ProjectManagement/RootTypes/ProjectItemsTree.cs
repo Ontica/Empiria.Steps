@@ -121,6 +121,11 @@ namespace Empiria.ProjectManagement {
 
       var branch = activity.GetBranch();
 
+      if (branch.Contains(x => x.Status == StateEnums.ActivityStatus.Completed)) {
+        Assertion.AssertFail($"Activity {activity.Name} has one or more completed childrens " +
+                             $"and we can not delete them, so it is not possible to delete the whole branch.");
+      }
+
       foreach (var item in branch) {
         item.Delete();
         this.ItemsList.Remove(item);
