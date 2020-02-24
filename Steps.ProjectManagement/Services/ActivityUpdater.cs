@@ -42,10 +42,10 @@ namespace Empiria.ProjectManagement.Services {
 
       this.whatIfResult = new WhatIfResult(projectItem, ProjectItemOperation.Complete);
 
-      // Create root
-      var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.Complete);
-
-      stateChange.ActualEndDate = completedDate;
+      // Add root state change
+      var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.Complete) {
+        ActualEndDate = completedDate
+      };
 
       whatIfResult.AddStateChange(stateChange);
 
@@ -73,10 +73,9 @@ namespace Empiria.ProjectManagement.Services {
 
     private void AddUpdateDeadlineStateChange(ProjectItem projectItem,
                                               DateTime updatedDeadline) {
-      var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.UpdateDeadline);
-
-      stateChange.Deadline = updatedDeadline;
-
+      var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.UpdateDeadline) {
+        Deadline = updatedDeadline
+      };
       whatIfResult.AddStateChange(stateChange);
     }
 
@@ -96,8 +95,6 @@ namespace Empiria.ProjectManagement.Services {
 
     private FixedList<ProjectItem> GetProjectDependencies(ProjectItem projectItem, Activity model) {
       var project = this.whatIfResult.Source.Project;
-
-      EmpiriaLog.Trace($"P = {projectItem.ProcessID}, S = {projectItem.SubprocessID}, M = {model.Name}");
 
       return project.GetItems().FindAll(x => x.TemplateId == model.Id &&
                                              x.ProcessID == projectItem.ProcessID &&

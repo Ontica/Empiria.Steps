@@ -83,9 +83,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     internal void AddStateChanges(IList<ProjectItemStateChange> stateChangesList) {
-      foreach (var stateChange in stateChangesList) {
-        this.stateChanges.Add(stateChange);
-      }
+      this.stateChanges.AddRange(stateChangesList);
     }
 
 
@@ -93,6 +91,15 @@ namespace Empiria.ProjectManagement.Services {
       return new Exception("This is the exception in WhatIfResult");
     }
 
+
+    internal void InsertStateChange(int index, ProjectItemStateChange stateChange) {
+      this.stateChanges.Insert(index, stateChange);
+    }
+
+
+    internal void InsertStateChange(int index, IList<ProjectItemStateChange> stateChangesList) {
+      this.stateChanges.InsertRange(index, stateChangesList);
+    }
 
     #endregion Methods
 

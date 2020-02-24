@@ -340,6 +340,14 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    internal FixedList<ProjectItem> GetInProcessList(ProjectItem projectItem) {
+      List<ProjectItem> list = this.ItemsList.FindAll(x => x.ProcessID == projectItem.ProcessID &&
+                                                           x.SubprocessID == projectItem.SubprocessID);
+
+      return list.ToFixedList();
+    }
+
+
     internal ProjectItem MoveToInsertionPoint(ProjectItem itemToMove, TreeItemInsertionRule insertionRule,
                                               ProjectItem insertionPoint = null, int exactPosition = -1) {
       switch (insertionRule) {
@@ -349,7 +357,6 @@ namespace Empiria.ProjectManagement {
                                        newPosition: insertionPoint.Position);
           return itemToMove;
 
-
         case TreeItemInsertionRule.AsSiblingAfterInsertionPoint:
           int branchLastItemPosition = GetBranchLastItem(insertionPoint).Position;
 
@@ -357,13 +364,11 @@ namespace Empiria.ProjectManagement {
                                        newPosition: branchLastItemPosition + 1);
           return itemToMove;
 
-
         case TreeItemInsertionRule.AsChildAsFirstNode:
           this.ChangeParentAndPosition(itemToMove, newParent: insertionPoint,
                                        newPosition: insertionPoint.Position + 1);
 
           return itemToMove;
-
 
         case TreeItemInsertionRule.AsChildAsLastNode:
           branchLastItemPosition = GetBranchLastItem(insertionPoint).Position;
@@ -373,12 +378,10 @@ namespace Empiria.ProjectManagement {
 
           return itemToMove;
 
-
         case TreeItemInsertionRule.AsTreeRootAtStart:
           this.ChangePosition(itemToMove, 1);
 
           return itemToMove;
-
 
         case TreeItemInsertionRule.AsTreeRootAtEnd:
           return itemToMove;

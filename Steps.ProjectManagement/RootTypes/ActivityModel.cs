@@ -163,6 +163,14 @@ namespace Empiria.ProjectManagement {
     } = PeriodicRuleData.Empty;
 
 
+
+    public bool IsPeriodic {
+      get {
+        return this.ExecutionMode == "Periodic" && !this.PeriodicRule.IsEmptyInstance;
+      }
+    }
+
+
     [DataField("Entity")]
     public int EntityId {
       get;

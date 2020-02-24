@@ -14,17 +14,17 @@ namespace Empiria.ProjectManagement {
   /// <summary>Enumerates the different kinds of insertion rules (or hints) for project tree items.</summary>
   public enum TreeItemInsertionRule {
 
-    AsSiblingBeforeInsertionPoint,
-
-    AsSiblingAfterInsertionPoint,
-
     AsChildAsFirstNode,
 
     AsChildAsLastNode,
 
-    AsTreeRootAtStart,
+    AsSiblingAfterInsertionPoint,
 
-    AsTreeRootAtEnd
+    AsSiblingBeforeInsertionPoint,
+
+    AsTreeRootAtEnd,
+
+    AsTreeRootAtStart
 
   }  // enum TreeItemInsertionRule
 

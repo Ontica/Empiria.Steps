@@ -20,6 +20,20 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Collection responses
 
+
+    static internal ICollection ToResponse(this IList<ProjectProcess> list) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var process in list) {
+        var itemResponse = process.ToResponse();
+
+        array.Add(itemResponse);
+
+      }
+      return array;
+    }
+
+
     static internal ICollection ToResponse(this IList<ProjectItemStateChange> list) {
       ArrayList array = new ArrayList(list.Count);
 
@@ -37,6 +51,16 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Entities responses
 
+
+    static internal object ToResponse(this ProjectProcess process) {
+      return new {
+        uid = process.UniqueID,
+        name = process.Name,
+        startActivity = process.StartActivity.ToResponse()
+      };
+    }
+
+
     static internal object ToResponse(this WhatIfResult result) {
       bool createFromTemplateResult = result.SourceOperation == ProjectItemOperation.CreateFromTemplate;
 
@@ -52,27 +76,34 @@ namespace Empiria.ProjectManagement.WebApi {
 
     static internal object ToResponse(this ProjectItemStateChange stateChange, int position) {
       bool createFromTemplate = stateChange.Operation == ProjectItemOperation.CreateFromTemplate;
+
       var template = createFromTemplate ? ((Activity) stateChange.Template) : Activity.Empty;
+
       var activity = !createFromTemplate ? stateChange.ProjectItem : ProjectItem.Empty;
+
       return new {
         operation = stateChange.Operation,
         uid = stateChange.UID,
-        position = position,
+        position,
         parentUID = stateChange.Parent != null ? stateChange.Parent.UID : String.Empty,
         level = stateChange.ItemLevel,
 
-        name = createFromTemplate ? template.Name : activity.Name,
-        theme = createFromTemplate ? template.Theme : activity.Name,
-        notes = createFromTemplate ? template.Notes : activity.Name,
+        name = createFromTemplate ? template.Name : (stateChange.Name ?? activity.Name),
+        theme = createFromTemplate ? template.Theme : (stateChange.Theme ?? activity.Theme),
+        notes = createFromTemplate ? template.Notes : (stateChange.Notes ?? activity.Notes),
+
+        currentDeadline = !activity.IsEmptyInstance ? activity.Deadline : ExecutionServer.DateMaxValue,
 
         deadline = stateChange.Deadline,
+
         plannedEndDate = stateChange.PlannedEndDate,
         actualStartDate = stateChange.ActualStartDate,
         actualEndDate = stateChange.ActualEndDate,
 
         activityUID = !createFromTemplate ? activity.UID : String.Empty,
         projectUID = createFromTemplate ? stateChange.Project.UID : activity.Project.UID,
-        templateUID = createFromTemplate ? template.UID : String.Empty
+        templateUID = !template.IsEmptyInstance ? template.UID : String.Empty,
+        matchResult = stateChange.ProcessMatchResult.ToString()
       };
     }
 

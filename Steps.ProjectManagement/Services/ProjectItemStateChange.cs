@@ -26,6 +26,10 @@ namespace Empiria.ProjectManagement.Services {
         this.ProjectItem = ProjectItem.Empty;
         this.Template = item;
         this.Project = Project.Empty;
+      } else if (this.Operation == ProjectItemOperation.UpdateProcessChanges) {
+        this.ProjectItem = item;
+        this.Template = item.GetTemplate();
+        this.Project = item.Project;
       } else {
         this.ProjectItem = item;
         this.Template = ProjectItem.Empty;
@@ -66,6 +70,12 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
+    public ProjectItemProcessMatchResult ProcessMatchResult {
+      get;
+      internal set;
+    } = ProjectItemProcessMatchResult.Unknown;
+
+
     public DateTime ActualStartDate {
       get;
       internal set;
@@ -90,7 +100,40 @@ namespace Empiria.ProjectManagement.Services {
     } = ExecutionServer.DateMaxValue;
 
 
+    public int ItemLevel {
+      get {
+        if (this.Operation == ProjectItemOperation.UpdateProcessChanges) {
+          return this.ProjectItem.Level;
+        }
+
+        if (this.Parent != null) {
+          return this.Parent.ItemLevel + 1;
+        } else {
+          return 1;
+        }
+      }
+    }
+
+
+    public string Name {
+      get;
+      internal set;
+    }
+
+
+    public string Notes {
+      get;
+      internal set;
+    }
+
+
     public ProjectItemStateChange Parent {
+      get;
+      internal set;
+    }
+
+
+    public ProjectItem Replaces {
       get;
       internal set;
     }
@@ -102,17 +145,7 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    public int ItemLevel {
-      get {
-        if (this.Parent != null) {
-          return this.Parent.ItemLevel + 1;
-        } else {
-          return 1;
-        }
-      }
-    }
-
-    public ProjectItem Replaces {
+    public string Theme {
       get;
       internal set;
     }

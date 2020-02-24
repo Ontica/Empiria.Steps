@@ -85,6 +85,7 @@ namespace Empiria.ProjectManagement {
       itemsTree = new Lazy<ProjectItemsTree>(() => ProjectItemsTree.Load(this));
     }
 
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -305,6 +306,11 @@ namespace Empiria.ProjectManagement {
       Assertion.AssertObject(root, "root");
 
       return this.Items.GetBranch(root);
+    }
+
+
+    public FixedList<ProjectItem> GetInProcessList(ProjectItem projectItem) {
+      return this.Items.GetInProcessList(projectItem);
     }
 
 

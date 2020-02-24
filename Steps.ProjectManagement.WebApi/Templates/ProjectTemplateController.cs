@@ -89,7 +89,7 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
         var activityModel = bodyAsJson.Get<Activity>("activityTemplateUID");
         var eventDate = bodyAsJson.Get<DateTime>("eventDate", DateTime.Today);
         var insertionPoint = bodyAsJson.Get<ProjectItem>("insertionPointUID", ProjectItem.Empty);
-        var insertionRule  = bodyAsJson.Get<TreeItemInsertionRule>("insertionPosition",
+        var insertionRule = bodyAsJson.Get<TreeItemInsertionRule>("insertionPosition",
                                                                    TreeItemInsertionRule.AsTreeRootAtEnd);
 
         var project = Project.Parse(projectUID);
@@ -105,6 +105,23 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/update-with-last-process-changes")]
+    public CollectionModel UpdateWithLastProcessChanges(string projectUID, string activityUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+
+        FixedList<ProjectItem> activities = ProcessUpdater.UpdatedWithLastProcessChanges(activity);
+
+        return new CollectionModel(this.Request, activities.ToResponse());
+
+      } catch (Exception e) {
+          throw base.CreateHttpException(e);
+      }
+    }
 
     #endregion Update methods
 

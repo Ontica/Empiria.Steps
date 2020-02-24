@@ -32,6 +32,24 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    static internal FixedList<ProjectProcess> GetProjectProcesses(Project forProject) {
+      string projectList = UserProjectSecurity.GetUserProjectList();
+
+      // ToDo: Use a control tag to match the start activity/event, no the first ProjectObjectId
+
+      string sql = "SELECT DISTINCT ProcessUID, SubprocessUID, Min(ProjectObjectId) AS StartActivityId " +
+                   "FROM PMProjectObjects " +
+                  $"WHERE(BaseProjectId = {forProject.Id} AND ProcessUID <> '' AND Status <> 'X') " +
+                   "GROUP BY ProcessUID, SubprocessUID";
+
+      var op = DataOperation.Parse(sql);
+
+      FixedList<ProjectProcess> processes = DataReader.GetPlainObjectFixedList<ProjectProcess>(op);
+
+      return processes;
+    }
+
+
     static internal List<Project> GetProjects() {
       string projectList = UserProjectSecurity.GetUserProjectList();
 
@@ -162,7 +180,7 @@ namespace Empiria.ProjectManagement {
                 o.Tags.ToString(), o.Keywords, o.Position, -1,
                 o.Resource, o.Owner.Id,
                 o.Responsible.Id, ExecutionServer.DateMaxValue, -1,
-                -1, o.Parent.Id, 'U', (char) o.Status, String.Empty);
+                -1, o.Parent.Id, 'U', (char) o.Status, String.Empty, String.Empty);
 
       DataWriter.Execute(op);
     }

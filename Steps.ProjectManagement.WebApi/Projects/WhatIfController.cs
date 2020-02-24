@@ -22,6 +22,22 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region Get methods
 
+    [HttpGet]
+    [Route("v1/project-management/projects/{projectUID}/processes-check-list")]
+    public SingleObjectModel ProcessesCheckList(string projectUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        FixedList<ProjectProcess> result = ModelingServices.ProcessesCheckList(project);
+
+        return new SingleObjectModel(this.Request, result.ToResponse(),
+                                     typeof(WhatIfResult).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/what-if-completed")]
@@ -82,6 +98,25 @@ namespace Empiria.ProjectManagement.WebApi {
         Activity activity = project.GetActivity(activityUID);
 
         WhatIfResult result = ModelingServices.WhatIfReactivated(activity);
+
+        return new SingleObjectModel(this.Request, result.ToResponse(),
+                                     typeof(WhatIfResult).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/what-if-updated-with-last-process-changes")]
+    public SingleObjectModel WhatIfUpdatedWithLastProcessChanges(string projectUID, string activityUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+
+        WhatIfResult result = ModelingServices.WhatIfUpdatedWithLastProcessChanges(activity);
 
         return new SingleObjectModel(this.Request, result.ToResponse(),
                                      typeof(WhatIfResult).FullName);

@@ -15,19 +15,19 @@ Visual Studio 2017 Community Edition.
 
 Empiria Steps includes the following software modules:
 
-1. **Workflow**  
+1. **Workflow**
    Workflow Management System with execution engine and process definition domain services.
 
-2. **Workflow Web Api**  
+2. **Workflow Web Api**
    Http/Json web services interface used to interact with the Workflow domain services.
 
-3. **Project Management**  
+3. **Project Management**
    Project Management System domain services.
 
-4. **Project Management Web Api**  
+4. **Project Management Web Api**
    Http/Json web services interface used to interact with the Project Management System domain services.
 
-5. **Inbox**  
+5. **Inbox**
    Seamless integrated task management solution.
 
 
@@ -38,4 +38,4 @@ This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
 
 # Copyright
 
-Copyright © 2017-2018. La Vía Óntica SC, Ontica LLC and colaborators.
+Copyright © 2017-2020. La Vía Óntica SC, Ontica LLC and colaborators.

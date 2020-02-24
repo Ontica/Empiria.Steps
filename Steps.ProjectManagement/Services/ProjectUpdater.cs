@@ -152,6 +152,7 @@ namespace Empiria.ProjectManagement.Services {
 
           case ProjectItemOperation.UpdateDeadline:
             stateChange.ProjectItem.SetDeadline(stateChange.Deadline);
+            stateChange.ProjectItem.Save();
             break;
 
           case ProjectItemOperation.CreateFromTemplate:

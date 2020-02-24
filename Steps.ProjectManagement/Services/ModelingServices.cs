@@ -17,6 +17,27 @@ namespace Empiria.ProjectManagement.Services {
     #region Services
 
 
+    public static ProjectProcess GetProcess(Project project, string processUniqueID) {
+      Assertion.AssertObject(project, "project");
+      Assertion.AssertObject(processUniqueID, "processUniqueID");
+
+      ProjectProcess process = ProcessesCheckList(project).Find(x => x.UniqueID == processUniqueID);
+
+      return process;
+    }
+
+
+    static public FixedList<ProjectProcess> ProcessesCheckList(Project project) {
+      Assertion.AssertObject(project, "project");
+
+      FixedList<ProjectProcess> list = ProjectProcess.GetList(project);
+
+      list.Sort((x, y) => x.StartActivity.Position.CompareTo(y.StartActivity.Position));
+
+      return list;
+    }
+
+
     static public WhatIfResult TryGetNextPeriodic(ProjectItem projectItem, DateTime completedDate) {
       if (projectItem.TemplateId == 0) {
         return null;
@@ -67,6 +88,15 @@ namespace Empiria.ProjectManagement.Services {
       whatIfResult.AddStateChange(stateChange);
 
       return whatIfResult;
+    }
+
+
+    static public WhatIfResult WhatIfUpdatedWithLastProcessChanges(ProjectItem projectItem) {
+      Assertion.AssertObject(projectItem, "projectItem");
+
+      var updater = new ProcessUpdater(projectItem);
+
+      return updater.OnUpdateProcess();
     }
 
 

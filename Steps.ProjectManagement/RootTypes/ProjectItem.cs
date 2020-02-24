@@ -15,6 +15,7 @@ using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.StateEnums;
+using Empiria.ProjectManagement.Services;
 
 namespace Empiria.ProjectManagement {
 
@@ -40,8 +41,8 @@ namespace Empiria.ProjectManagement {
 
       this.Project = project;
       this.Parent = ProjectItem.Empty;
-
     }
+
 
     protected internal ProjectItem(ProjectItemType type,
                                    Project project,
@@ -79,6 +80,7 @@ namespace Empiria.ProjectManagement {
       }
     }
 
+
     static public FixedList<ProjectItem> GetList() {
       return ProjectData.GetAllActivities();
     }
@@ -98,6 +100,7 @@ namespace Empiria.ProjectManagement {
     #endregion Constructors and parsers
 
     #region Public properties
+
 
     public ProjectItemType ProjectObjectType {
       get {
@@ -313,6 +316,7 @@ namespace Empiria.ProjectManagement {
       private set;
     }
 
+
     #endregion Public properties
 
     #region Methods
@@ -337,13 +341,6 @@ namespace Empiria.ProjectManagement {
 
       this.Stage = ItemStage.Done;
       this.Status = ActivityStatus.Completed;
-
-      this.Save();
-    }
-
-
-    public void SetDeadline(DateTime deadline) {
-      this.Deadline = deadline;
 
       this.Save();
     }
@@ -449,6 +446,24 @@ namespace Empiria.ProjectManagement {
       this.Status = ActivityStatus.Active;
 
       this.Save();
+    }
+
+
+    internal void SetData(ProjectItemStateChange stateChange) {
+      if (stateChange.Name != null) {
+        this.Name = stateChange.Name;
+      }
+      if (stateChange.Notes != null) {
+        this.Notes = stateChange.Notes;
+      }
+      if (stateChange.Theme != null) {
+        this.Theme = stateChange.Theme;
+      }
+    }
+
+
+    internal void SetDeadline(DateTime deadline) {
+      this.Deadline = deadline;
     }
 
 
