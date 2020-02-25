@@ -33,8 +33,6 @@ namespace Empiria.ProjectManagement {
 
 
     static internal FixedList<ProjectProcess> GetProjectProcesses(Project forProject) {
-      string projectList = UserProjectSecurity.GetUserProjectList();
-
       // ToDo: Use a control tag to match the start activity/event, no the first ProjectObjectId
 
       string sql = "SELECT DISTINCT ProcessUID, SubprocessUID, Min(ProjectObjectId) AS StartActivityId " +

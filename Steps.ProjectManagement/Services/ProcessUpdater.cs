@@ -88,7 +88,7 @@ namespace Empiria.ProjectManagement.Services {
     #region Private methods
 
 
-    private void ApplyCurrentCompletedActivities(WhatIfResult current) {
+    static private void ApplyCurrentCompletedActivities(WhatIfResult current) {
       var currentCompletedActivities =
                 current.StateChanges.FindAll(x => x.ProjectItem.ActualEndDate != ExecutionServer.DateMaxValue &&
                                                   x.ProjectItem.Status == StateEnums.ActivityStatus.Completed);
@@ -113,8 +113,8 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    private bool DataChanged(ProjectItemStateChange currentItem,
-                             ProjectItemStateChange matchedInNewModel) {
+    static private bool DataChanged(ProjectItemStateChange currentItem,
+                                    ProjectItemStateChange matchedInNewModel) {
       ProjectItem projectItem = currentItem.ProjectItem;
 
       if (projectItem.Status != StateEnums.ActivityStatus.Pending) {
@@ -146,8 +146,8 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    private bool DeadlineChanged(ProjectItemStateChange currentItem,
-                                 ProjectItemStateChange matchedInNewModel) {
+    static private bool DeadlineChanged(ProjectItemStateChange currentItem,
+                                        ProjectItemStateChange matchedInNewModel) {
       ProjectItem projectItem = currentItem.ProjectItem;
 
       if (matchedInNewModel.Deadline == ExecutionServer.DateMaxValue) {
@@ -162,8 +162,8 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    private bool HasProgrammingRule(ProjectItemStateChange currentItem,
-                                    ProjectItemStateChange matchedInNewModel) {
+    static private bool HasProgrammingRule(ProjectItemStateChange currentItem,
+                                           ProjectItemStateChange matchedInNewModel) {
       if (DeadlineChanged(currentItem, matchedInNewModel) &&
           ((Activity) matchedInNewModel.Template).Template.IsPeriodic) {
         return false;
@@ -174,7 +174,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     private WhatIfResult GetMergeWhatIfResult(FixedList<ProjectItemStateChange> current,
-                                          FixedList<ProjectItemStateChange> newModel) {
+                                              FixedList<ProjectItemStateChange> newModel) {
       WhatIfResult merge = new WhatIfResult(this.ProjectItem, ProjectItemOperation.UpdateProcessChanges);
 
       merge.AddStateChanges(current);
@@ -219,9 +219,9 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    private ProjectItemStateChange GetMergedStateChange(ProjectItemStateChange currentState,
-                                                        ProjectItemStateChange newModelState,
-                                                        ref int newModelIndex, ref int currentIndex) {
+    static private ProjectItemStateChange GetMergedStateChange(ProjectItemStateChange currentState,
+                                                               ProjectItemStateChange newModelState,
+                                                               ref int newModelIndex, ref int currentIndex) {
 
       if (newModelState.Template.Id == currentState.ProjectItem.TemplateId) {
         newModelIndex++;
@@ -276,6 +276,24 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
+    static private void SetUpdatedData(ProjectItemStateChange currentItem,
+                                       ProjectItemStateChange matchedInNewModel) {
+      ProjectItem projectItem = currentItem.ProjectItem;
+
+      if (projectItem.Name != matchedInNewModel.Template.Name) {
+        currentItem.Name = matchedInNewModel.Template.Name;
+      }
+
+      if (projectItem.Notes != matchedInNewModel.Template.Notes) {
+        currentItem.Notes = matchedInNewModel.Template.Notes;
+      }
+
+      if (projectItem.Theme != matchedInNewModel.Template.Theme) {
+        currentItem.Theme = matchedInNewModel.Template.Theme;
+      }
+    }
+
+
     static private void StoreChanges(WhatIfResult result) {
 
       foreach (var stateChange in result.StateChanges) {
@@ -299,6 +317,9 @@ namespace Empiria.ProjectManagement.Services {
             projectItem.Save();
             break;
 
+          default:
+            break;
+
         }  // switch
 
       }  // foreach
@@ -306,8 +327,8 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    private void TryMatch(ProjectItemStateChange currentItem,
-                          FixedList<ProjectItemStateChange> newModel) {
+    static private void TryMatch(ProjectItemStateChange currentItem,
+                                 FixedList<ProjectItemStateChange> newModel) {
       ProjectItem projectItem = currentItem.ProjectItem;
 
       var matchedInNewModel = newModel.Find(x => x.Template.Id == projectItem.TemplateId);
@@ -325,18 +346,18 @@ namespace Empiria.ProjectManagement.Services {
       bool dataChanged = DataChanged(currentItem, matchedInNewModel);
       bool deadlineChanged = DeadlineChanged(currentItem, matchedInNewModel);
 
-      if (!hasProgrammingRule && !deadlineChanged) {
-        currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.NoProgrammingRule;
+      if (!hasProgrammingRule) {
 
-      } else if (!hasProgrammingRule && deadlineChanged) {
-        currentItem.Deadline = matchedInNewModel.Deadline;
+        if (deadlineChanged) {
+          currentItem.Deadline = matchedInNewModel.Deadline;
+        }
 
         currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.NoProgrammingRule;
 
       } else if (deadlineChanged && dataChanged) {
         currentItem.Deadline = matchedInNewModel.Deadline;
 
-        UpdateData(currentItem, matchedInNewModel);
+        SetUpdatedData(currentItem, matchedInNewModel);
 
         currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedWithDeadlineAndDataChanges;
 
@@ -346,30 +367,15 @@ namespace Empiria.ProjectManagement.Services {
         currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedWithDeadlineChanges;
 
       } else if (!deadlineChanged && dataChanged) {
-        UpdateData(currentItem, matchedInNewModel);
+        SetUpdatedData(currentItem, matchedInNewModel);
 
         currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedWithDataChanges;
 
       } else if (!deadlineChanged && !dataChanged) {
         currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedEqual;
-      }
-    }
 
-
-    private void UpdateData(ProjectItemStateChange currentItem,
-                            ProjectItemStateChange matchedInNewModel) {
-      ProjectItem projectItem = currentItem.ProjectItem;
-
-      if (projectItem.Name != matchedInNewModel.Template.Name) {
-        currentItem.Name = matchedInNewModel.Template.Name;
-      }
-
-      if (projectItem.Notes != matchedInNewModel.Template.Notes) {
-        currentItem.Notes = matchedInNewModel.Template.Notes;
-      }
-
-      if (projectItem.Theme != matchedInNewModel.Template.Theme) {
-        currentItem.Theme = matchedInNewModel.Template.Theme;
+      } else {
+        Assertion.AssertNoReachThisCode("Programming error. Should be impossible to reach this code.");
       }
     }
 
