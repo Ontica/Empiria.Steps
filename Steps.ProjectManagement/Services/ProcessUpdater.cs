@@ -17,8 +17,10 @@ namespace Empiria.ProjectManagement.Services {
     #region Constructors and parsers
 
 
-    public ProcessUpdater(ProjectItem projectItem) {
-      this.ProjectItem = projectItem;
+    public ProcessUpdater(ProjectItem rootProjectItem) {
+      Assertion.AssertObject(rootProjectItem, "rootProjectItem");
+
+      this.RootProjectItem = rootProjectItem;
     }
 
 
@@ -30,19 +32,19 @@ namespace Empiria.ProjectManagement.Services {
 
     Activity ProcessDefinitionRootItem {
       get {
-        return this.ProjectItem.GetTemplate();
+        return this.RootProjectItem.GetTemplate();
       }
     }
 
 
     Project Project {
       get {
-        return this.ProjectItem.Project;
+        return this.RootProjectItem.Project;
       }
     }
 
 
-    ProjectItem ProjectItem {
+    ProjectItem RootProjectItem {
       get;
     }
 
@@ -56,20 +58,18 @@ namespace Empiria.ProjectManagement.Services {
     internal WhatIfResult OnUpdateProcess() {
       WhatIfResult newModelResult = GetNewModelResult();
 
-      WhatIfResult current = GetWhatIfResultWithCurrentUnmatchedActivities();
+      WhatIfResult current = GetWhatIfResultWithRootProjectItemBranch();
 
       WhatIfResult merged = GetMergeWhatIfResult(current.StateChanges, newModelResult.StateChanges);
 
-      ApplyCurrentCompletedActivities(merged);
+      UpdatedDeadlinesForCurrentCompletedActivities(merged);
 
       return merged;
     }
 
 
-    static public FixedList<ProjectItem> UpdatedWithLastProcessChanges(ProjectItem projectItem) {
-      var updater = new ProcessUpdater(projectItem);
-
-      WhatIfResult result = updater.OnUpdateProcess();
+    public FixedList<ProjectItem> UpdatedWithLastProcessChanges() {
+      WhatIfResult result = this.OnUpdateProcess();
 
       if (result.HasErrors) {
         throw result.GetException();
@@ -88,28 +88,14 @@ namespace Empiria.ProjectManagement.Services {
     #region Private methods
 
 
-    static private void ApplyCurrentCompletedActivities(WhatIfResult current) {
-      var currentCompletedActivities =
-                current.StateChanges.FindAll(x => x.ProjectItem.ActualEndDate != ExecutionServer.DateMaxValue &&
-                                                  x.ProjectItem.Status == StateEnums.ActivityStatus.Completed);
-
-      foreach (var completedActivity in currentCompletedActivities) {
-        var onCompleted = ModelingServices.WhatIfCompleted(completedActivity.ProjectItem,
-                                                           completedActivity.ProjectItem.ActualEndDate, false);
-
-        foreach (var change in onCompleted.StateChanges) {
-          var lookup = current.StateChanges.Find(x => x.ProjectItem.UID == change.ProjectItem.UID);
-
-          if (lookup != null && change.Deadline != lookup.ProjectItem.Deadline &&
-              change.Operation == ProjectItemOperation.UpdateDeadline) {
-            lookup.ActualEndDate = change.ActualEndDate;
-            lookup.Deadline = change.Deadline;
-            lookup.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedWithDeadlineChanges;
-          }  // if
-
-        }  // foreach
-
-      }  // foreach
+    static private ProjectItemProcessMatchResult AddDeadlineChangeToMatchResult(ProjectItemProcessMatchResult processMatchResult) {
+      if (processMatchResult == ProjectItemProcessMatchResult.MatchedEqual) {
+        return ProjectItemProcessMatchResult.MatchedWithDeadlineChanges;
+      } else if (processMatchResult == ProjectItemProcessMatchResult.MatchedWithDataChanges) {
+        return ProjectItemProcessMatchResult.MatchedWithDeadlineAndDataChanges;
+      } else {
+        return processMatchResult;
+      }
     }
 
 
@@ -117,7 +103,7 @@ namespace Empiria.ProjectManagement.Services {
                                     ProjectItemStateChange matchedInNewModel) {
       ProjectItem projectItem = currentItem.ProjectItem;
 
-      if (projectItem.Status != StateEnums.ActivityStatus.Pending) {
+      if (projectItem.Status == StateEnums.ActivityStatus.Completed) {
         return false;
       }
 
@@ -126,6 +112,7 @@ namespace Empiria.ProjectManagement.Services {
         return false;
       }
 
+      // ToDo: Parametrize hardcoded constant
       if (projectItem.TemplateId == 109643) {
         return false;
       }
@@ -175,7 +162,7 @@ namespace Empiria.ProjectManagement.Services {
 
     private WhatIfResult GetMergeWhatIfResult(FixedList<ProjectItemStateChange> current,
                                               FixedList<ProjectItemStateChange> newModel) {
-      WhatIfResult merge = new WhatIfResult(this.ProjectItem, ProjectItemOperation.UpdateProcessChanges);
+      WhatIfResult merge = new WhatIfResult(this.RootProjectItem, ProjectItemOperation.UpdateProcessChanges);
 
       merge.AddStateChanges(current);
 
@@ -188,83 +175,19 @@ namespace Empiria.ProjectManagement.Services {
       }
 
       return merge;
-
-      //while (true) {
-      //  if (newModelIndex == newModel.Count && currentIndex == current.Count) {
-      //    break;
-
-      //  } else if (newModelIndex < newModel.Count && currentIndex == current.Count) {
-      //    newModel[newModelIndex].ProcessMatchResult = ProjectItemProcessMatchResult.OnlyInProcess;
-
-      //    merge.AddStateChange(newModel[newModelIndex]);
-
-      //    newModelIndex++;
-      //  } else if (newModelIndex == newModel.Count && currentIndex < current.Count) {
-      //    current[currentIndex].ProcessMatchResult = ProjectItemProcessMatchResult.OnlyInProject;
-
-      //    merge.AddStateChange(current[currentIndex]);
-
-      //    currentIndex++;
-      //  } else if (newModelIndex < newModel.Count && currentIndex < current.Count) {
-      //    ProjectItemStateChange mergedStateChange = GetMergedStateChange(newModel[newModelIndex], current[currentIndex],
-      //                                                                    ref newModelIndex, ref currentIndex);
-
-      //    merge.AddStateChange(mergedStateChange);
-
-      //  }  // if
-
-      //}  // while
-
-      //return merge;
-    }
-
-
-    static private ProjectItemStateChange GetMergedStateChange(ProjectItemStateChange currentState,
-                                                               ProjectItemStateChange newModelState,
-                                                               ref int newModelIndex, ref int currentIndex) {
-
-      if (newModelState.Template.Id == currentState.ProjectItem.TemplateId) {
-        newModelIndex++;
-        currentIndex++;
-
-        return new ProjectItemStateChange(currentState.ProjectItem, ProjectItemOperation.UpdateProcessChanges) {
-          ProcessMatchResult = ProjectItemProcessMatchResult.MatchedEqual
-        };
-      }
-
-      if (newModelIndex < currentIndex) {
-        newModelIndex++;
-        newModelState.ProcessMatchResult = ProjectItemProcessMatchResult.OnlyInProcess;
-        return newModelState;
-
-      } else if (newModelIndex > currentIndex) {
-        currentIndex++;
-        currentState.ProcessMatchResult = ProjectItemProcessMatchResult.OnlyInProject;
-
-        return currentState;
-      } else {
-        currentIndex++;
-        newModelIndex++;
-
-        currentState.ProcessMatchResult = ProjectItemProcessMatchResult.OnlyInProject;
-
-        return currentState;
-      }
     }
 
 
     private WhatIfResult GetNewModelResult() {
       return ModelingServices.WhatIfCreatedFromEvent(this.ProcessDefinitionRootItem,
-                                                     this.Project, this.ProjectItem.Deadline);
+                                                     this.Project, this.RootProjectItem.Deadline);
     }
 
 
-    private WhatIfResult GetWhatIfResultWithCurrentUnmatchedActivities() {
-      WhatIfResult result = new WhatIfResult(this.ProjectItem, ProjectItemOperation.UpdateProcessChanges);
+    private WhatIfResult GetWhatIfResultWithRootProjectItemBranch() {
+      WhatIfResult result = new WhatIfResult(this.RootProjectItem, ProjectItemOperation.UpdateProcessChanges);
 
-      // FixedList<ProjectItem> currentActivities = this.Project.GetInProcessList(this.ProjectItem);
-
-      FixedList<ProjectItem> currentActivities = this.ProjectItem.GetBranch();
+      FixedList<ProjectItem> currentActivities = this.RootProjectItem.GetBranch();
 
       foreach (var projectItem in currentActivities) {
         var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.UpdateProcessChanges);
@@ -273,6 +196,21 @@ namespace Empiria.ProjectManagement.Services {
       }
 
       return result;
+    }
+
+
+    static private ProjectItemProcessMatchResult RemoveDeadlineChangeFromMatchResult(ProjectItemProcessMatchResult processMatchResult) {
+      switch (processMatchResult) {
+
+        case ProjectItemProcessMatchResult.MatchedWithDeadlineAndDataChanges:
+          return ProjectItemProcessMatchResult.MatchedWithDataChanges;
+
+        case ProjectItemProcessMatchResult.MatchedWithDeadlineChanges:
+          return ProjectItemProcessMatchResult.MatchedEqual;
+
+        default:
+          return processMatchResult;
+      }
     }
 
 
@@ -356,7 +294,6 @@ namespace Empiria.ProjectManagement.Services {
 
       } else if (deadlineChanged && dataChanged) {
         currentItem.Deadline = matchedInNewModel.Deadline;
-
         SetUpdatedData(currentItem, matchedInNewModel);
 
         currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedWithDeadlineAndDataChanges;
@@ -377,6 +314,41 @@ namespace Empiria.ProjectManagement.Services {
       } else {
         Assertion.AssertNoReachThisCode("Programming error. Should be impossible to reach this code.");
       }
+    }
+
+
+    static private void UpdatedDeadlinesForCurrentCompletedActivities(WhatIfResult current) {
+      var currentCompletedActivities =
+                current.StateChanges.FindAll(x => x.ProjectItem.ActualEndDate != ExecutionServer.DateMaxValue &&
+                                                  x.ProjectItem.Status == StateEnums.ActivityStatus.Completed);
+
+      foreach (var completedActivity in currentCompletedActivities) {
+        var onCompleted = ModelingServices.WhatIfCompleted(completedActivity.ProjectItem,
+                                                           completedActivity.ProjectItem.ActualEndDate, false);
+
+        foreach (var onCompletedStateChange in onCompleted.StateChanges) {
+          if (onCompletedStateChange.Operation != ProjectItemOperation.UpdateDeadline) {
+            continue;
+          }
+
+          var stateToChange = current.StateChanges.Find(x => x.ProjectItem.UID == onCompletedStateChange.ProjectItem.UID);
+
+          if (stateToChange == null) {
+            continue;
+          }
+
+          if (onCompletedStateChange.Deadline != stateToChange.ProjectItem.Deadline) {
+            stateToChange.Deadline = onCompletedStateChange.Deadline;
+            stateToChange.ProcessMatchResult = AddDeadlineChangeToMatchResult(stateToChange.ProcessMatchResult);
+          } else {
+            stateToChange.Deadline = ExecutionServer.DateMaxValue;
+            stateToChange.ProcessMatchResult = RemoveDeadlineChangeFromMatchResult(stateToChange.ProcessMatchResult);
+          }
+
+        }  // foreach
+
+      }  // foreach
+
     }
 
 

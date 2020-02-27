@@ -114,7 +114,9 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
         Activity activity = project.GetActivity(activityUID);
 
-        FixedList<ProjectItem> activities = ProcessUpdater.UpdatedWithLastProcessChanges(activity);
+        var updater = new ProcessUpdater(activity);
+
+        FixedList<ProjectItem> activities = updater.UpdatedWithLastProcessChanges();
 
         return new CollectionModel(this.Request, activities.ToResponse());
 
