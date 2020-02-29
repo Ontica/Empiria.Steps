@@ -18,13 +18,17 @@ namespace Empiria.ProjectManagement {
 
     AsChildAsLastNode,
 
+    AsChildAtPosition,
+
     AsSiblingAfterInsertionPoint,
 
     AsSiblingBeforeInsertionPoint,
 
     AsTreeRootAtEnd,
 
-    AsTreeRootAtStart
+    AsTreeRootAtStart,
+
+    AtRelativePosition
 
   }  // enum TreeItemInsertionRule
 

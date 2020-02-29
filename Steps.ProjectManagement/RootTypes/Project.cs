@@ -288,6 +288,15 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    public Activity InsertActivity(JsonObject data, int position) {
+      Assertion.AssertObject(data, "data");
+
+      lock (__treeLock) {
+        return this.Items.InsertActivity(data, position);
+      }
+    }
+
+
     private ProjectItemsTree Items {
       get {
         return this.itemsTree.Value;
@@ -329,11 +338,11 @@ namespace Empiria.ProjectManagement {
 
 
     public ProjectItem MoveTo(ProjectItem item, TreeItemInsertionRule insertionRule,
-                              ProjectItem insertionPoint = null, int exactPosition = -1) {
+                              ProjectItem insertionPoint = null, int relativePosition = -1) {
       Assertion.AssertObject(item, "item");
 
       lock (__treeLock) {
-        return this.Items.MoveToInsertionPoint(item, insertionRule, insertionPoint, exactPosition);
+        return this.Items.MoveToInsertionPoint(item, insertionRule, insertionPoint, relativePosition);
       }
     }
 

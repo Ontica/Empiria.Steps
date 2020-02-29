@@ -81,6 +81,26 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    internal Activity InsertActivity(JsonObject data, int position) {
+      Assertion.AssertObject(data, "data");
+
+      var activity = new Activity(this.Project, data);
+
+      activity.SetPosition(position);
+      activity.Save();
+
+      this.ItemsList.Insert(position - 1, activity);
+      UpdateItemParentAndPosition(activity, data);
+      activity.Save();
+
+      for (int i = position; i < this.ItemsList.Count; i++) {
+        this.ItemsList[i].SetPosition(i + 1);
+      }
+      RefreshPositions();
+
+      return (Activity) this.ItemsList.Find(x => x.UID == activity.UID);
+    }
+
     internal Activity CopyActivity(Activity activity) {
       Assertion.AssertObject(activity, "activity");
 
@@ -196,6 +216,7 @@ namespace Empiria.ProjectManagement {
       if (parentFromJson != null && item.Parent.Equals(parentFromJson)) {
         parentFromJson = null;          // Nothing to change
       }
+
       if (positionFromJson != null && item.Position == positionFromJson.Value) {
         positionFromJson = null;        // Nothing to change
       }
@@ -228,7 +249,12 @@ namespace Empiria.ProjectManagement {
     internal ProjectItem ChangeParentAndPosition(ProjectItem item, ProjectItem newParent, int newPosition) {
       EmpiriaLog.Debug($"ChangeParent of {item.Name} to new parent {newParent.Name}");
 
-      int currentItemIndex = this.ItemsList.IndexOf(item);
+      if (item.Equals(newParent)) {
+        EmpiriaLog.Info($"Trying to change the parent of a tree item to itself {item.Name} ({item.UID}).");
+
+        return item;
+      }
+
       var branchToMove = this.GetBranch(item);
 
       Assertion.Assert(!branchToMove.Contains(newParent),
@@ -251,7 +277,7 @@ namespace Empiria.ProjectManagement {
 
       this.RefreshPositions();
 
-      EmpiriaLog.Info($"ChangeParent of {item.UID} to {newParent.UID} at position {newParent.Position + 1}.");
+      EmpiriaLog.Info($"ChangeParentAndPosition of {item.Name} to {newParent.Name} at position {newParent.Position + 1}.");
 
       return item;
     }
@@ -259,6 +285,12 @@ namespace Empiria.ProjectManagement {
 
     internal ProjectItem ChangeParentKeepingPosition(ProjectItem item, ProjectItem newParent) {
       EmpiriaLog.Debug($"ChangeParent of {item.Name} to new parent {newParent.Name} keeping current position.");
+
+      if (item.Equals(newParent)) {
+        EmpiriaLog.Info($"Trying to change the parent of a tree item to itself {item.Name} ({item.UID}).");
+
+        return item;
+      }
 
       int currentItemIndex = this.ItemsList.IndexOf(item);
       var branchToMove = this.GetBranch(item);
@@ -349,7 +381,7 @@ namespace Empiria.ProjectManagement {
 
 
     internal ProjectItem MoveToInsertionPoint(ProjectItem itemToMove, TreeItemInsertionRule insertionRule,
-                                              ProjectItem insertionPoint = null, int exactPosition = -1) {
+                                              ProjectItem insertionPoint = null, int relativePosition = -1) {
       switch (insertionRule) {
 
         case TreeItemInsertionRule.AsSiblingBeforeInsertionPoint:
@@ -378,6 +410,13 @@ namespace Empiria.ProjectManagement {
 
           return itemToMove;
 
+        case TreeItemInsertionRule.AsChildAtPosition:
+          Assertion.Assert(relativePosition > 0, "Relative position must be greater than zero.");
+
+          this.ChangeParentAndPosition(itemToMove, newParent: insertionPoint,
+                                       newPosition: insertionPoint.Position + 1 + relativePosition);
+          return itemToMove;
+
         case TreeItemInsertionRule.AsTreeRootAtStart:
           this.ChangePosition(itemToMove, 1);
 
@@ -386,6 +425,23 @@ namespace Empiria.ProjectManagement {
         case TreeItemInsertionRule.AsTreeRootAtEnd:
           return itemToMove;
 
+        case TreeItemInsertionRule.AtRelativePosition:
+          Assertion.Assert(relativePosition > 0, "Relative position must be greater than zero.");
+
+          int indexOfInsertionPoint = this.itemsList.IndexOf(insertionPoint);
+
+          this.itemsList.Remove(itemToMove);
+
+          itemToMove.SetPosition(indexOfInsertionPoint + relativePosition + 1);
+
+          this.itemsList.Insert(indexOfInsertionPoint + relativePosition, itemToMove);
+
+          EmpiriaLog.Trace($"Item {itemToMove.Name} inserted at position {indexOfInsertionPoint}/{relativePosition}: [{itemToMove.Position}] // {insertionPoint.Name}.");
+
+
+          this.RefreshPositions();
+
+          return itemToMove;
 
         default:
           throw Assertion.AssertNoReachThisCode($"Unrecognized insertion rule '{insertionRule.ToString()}'.");
