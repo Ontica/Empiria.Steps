@@ -317,6 +317,13 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    public bool HasProcess {
+      get {
+        return (this.ProcessID.Length != 0);
+      }
+    }
+
+
     #endregion Public properties
 
     #region Methods
@@ -400,6 +407,9 @@ namespace Empiria.ProjectManagement {
       this.Resource = data.Get<string>("resource", this.Resource);
 
       this.TemplateId = data.Get<int>("templateId", this.TemplateId);
+
+      this.ProcessID = data.Get<string>("processID", this.ProcessID);
+      this.SubprocessID = data.Get<string>("subProcessID", this.SubprocessID);
     }
 
 
