@@ -76,6 +76,18 @@ namespace Empiria.ProjectManagement.Services {
     } = ProjectItemProcessMatchResult.Unknown;
 
 
+    public string ProcessID {
+      get;
+      internal set;
+    } = String.Empty;
+
+
+    public string SubprocessID {
+      get;
+      internal set;
+    } = String.Empty;
+
+
     public DateTime ActualStartDate {
       get;
       internal set;
@@ -106,8 +118,8 @@ namespace Empiria.ProjectManagement.Services {
           return this.ProjectItem.Level;
         }
 
-        if (this.Parent != null) {
-          return this.Parent.ItemLevel + 1;
+        if (this.ParentStateChange != null) {
+          return this.ParentStateChange.ItemLevel + 1;
         } else {
           return 1;
         }
@@ -127,7 +139,7 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    public ProjectItemStateChange Parent {
+    public ProjectItemStateChange ParentStateChange {
       get;
       internal set;
     }
@@ -149,6 +161,31 @@ namespace Empiria.ProjectManagement.Services {
       get;
       internal set;
     }
+
+
+    public bool HasInsertionRule {
+      get {
+        return (InsertionRule != TreeItemInsertionRule.AsTreeRootAtEnd);
+      }
+    }
+
+
+    public TreeItemInsertionRule InsertionRule {
+      get;
+      internal set;
+    } = TreeItemInsertionRule.AsTreeRootAtEnd;
+
+
+    public ProjectItem InsertionPoint {
+      get;
+      internal set;
+    } = ProjectItem.Empty;
+
+
+    public int InsertionPosition {
+      get;
+      internal set;
+    } = -1;
 
 
     #endregion Properties
