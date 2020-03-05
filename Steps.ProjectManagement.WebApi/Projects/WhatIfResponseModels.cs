@@ -85,7 +85,7 @@ namespace Empiria.ProjectManagement.WebApi {
         operation = stateChange.Operation,
         uid = stateChange.UID,
         position,
-        parentUID = stateChange.Parent != null ? stateChange.Parent.UID : String.Empty,
+        parentUID = stateChange.ParentStateChange != null ? stateChange.ParentStateChange.UID : String.Empty,
         level = stateChange.ItemLevel,
 
         name = createFromTemplate ? template.Name : (stateChange.Name ?? activity.Name),

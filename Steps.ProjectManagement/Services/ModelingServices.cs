@@ -45,7 +45,7 @@ namespace Empiria.ProjectManagement.Services {
 
       var template = projectItem.GetTemplate().Template;
 
-      if (template.ExecutionMode != "Periodic" || template.PeriodicRule.IsEmptyInstance) {
+      if (!template.IsPeriodic) {
         return null;
       }
 
