@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Empiria.ProjectManagement.Services {
 
@@ -76,55 +74,13 @@ namespace Empiria.ProjectManagement.Services {
       var stateChange = new ProjectItemStateChange(projectItem, ProjectItemOperation.UpdateDeadline) {
         Deadline = updatedDeadline
       };
-      whatIfResult.AddStateChange(stateChange);
-    }
 
-
-    private FixedList<Activity> GetModelDependencies(Activity activityModel) {
-      var templateProject = activityModel.Project;
-
-      List<Activity> dependencies = templateProject.GetItems()
-                                                   .Select(x => (Activity) x)
-                                                   .ToList();
-
-      return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
-                                       !this.whatIfResult.StateChanges.Exists(y => y.Template.Id == x.Id))
-                         .ToFixedList();
-    }
-
-
-    private FixedList<ProjectItem> GetProjectDependencies(ProjectItem projectItem, Activity model) {
-      var project = this.whatIfResult.Source.Project;
-
-      return project.GetItems().FindAll(x => x.TemplateId == model.Id &&
-                                             x.ProcessID == projectItem.ProcessID &&
-                                             x.SubprocessID == projectItem.SubprocessID);
-    }
-
-
-    private FixedList<ProjectItem> GetRelatedProjectItems(ProjectItem projectItem) {
-      if (!projectItem.HasTemplate) {
-        return new FixedList<ProjectItem>();
-      }
-
-      Activity template = projectItem.GetTemplate();
-
-      FixedList<Activity> modelDependencies = GetModelDependencies(template);
-
-      List<ProjectItem> list = new List<ProjectItem>();
-
-      foreach (var model in modelDependencies) {
-        FixedList<ProjectItem> projectItems = GetProjectDependencies(projectItem, model);
-
-        list.AddRange(projectItems);
-      }
-
-      return list.ToFixedList();
+      this.whatIfResult.AddStateChange(stateChange);
     }
 
 
     private void UpdateRelatedProjectItemsDeadlines(ProjectItem projectItem, DateTime completedDate) {
-      FixedList<ProjectItem> relatedProjectItems = GetRelatedProjectItems(projectItem);
+      FixedList<ProjectItem> relatedProjectItems = this.whatIfResult.GetUncontainedRelatedProjectItems(projectItem);
 
       foreach (var item in relatedProjectItems) {
         var template = ((Activity) item.GetTemplate()).Template;

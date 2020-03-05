@@ -9,7 +9,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Empiria.ProjectManagement.Services {
 
@@ -92,6 +94,82 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
+    private FixedList<ProjectItem> GetProjectDependencies(ProjectItem projectItem, Activity model) {
+      var project = this.Source.Project;
+
+      return project.GetItems().FindAll(x => x.TemplateId == model.Id &&
+                                             x.ProcessID == projectItem.ProcessID &&
+                                             x.SubprocessID == projectItem.SubprocessID);
+    }
+
+
+    internal FixedList<ProjectItemStateChange> GetRelatedStateChanges(ProjectItemStateChange stateChange) {
+      if (stateChange.Template == null) {
+        return new FixedList<ProjectItemStateChange>();
+      }
+
+      Activity template = (Activity) stateChange.Template;
+
+      FixedList<Activity> modelDependencies = this.GetContainedModelDependencies(template);
+
+      List<ProjectItemStateChange> list = new List<ProjectItemStateChange>();
+
+      foreach (var model in modelDependencies) {
+        FixedList<ProjectItemStateChange> projectItems = this.StateChanges.FindAll(x => x.Template.Id == model.Id);
+
+        list.AddRange(projectItems);
+      }
+
+      return list.ToFixedList();
+    }
+
+    internal FixedList<Activity> GetContainedModelDependencies(Activity activityModel) {
+      var templateProject = activityModel.Project;
+
+      List<Activity> dependencies = templateProject.GetItems()
+                                                   .Select(x => (Activity) x)
+                                                   .ToList();
+
+      return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
+                                       this.StateChanges.Exists(y => y.Template.Id == x.Id))
+                         .ToFixedList();
+    }
+
+
+    internal FixedList<Activity> GetUncontainedModelDependencies(Activity activityModel) {
+      var templateProject = activityModel.Project;
+
+      List<Activity> dependencies = templateProject.GetItems()
+                                                   .Select(x => (Activity) x)
+                                                   .ToList();
+
+      return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
+                                       !this.StateChanges.Exists(y => y.Template.Id == x.Id))
+                         .ToFixedList();
+    }
+
+
+    internal FixedList<ProjectItem> GetUncontainedRelatedProjectItems(ProjectItem projectItem) {
+      if (!projectItem.HasTemplate) {
+        return new FixedList<ProjectItem>();
+      }
+
+      Activity template = projectItem.GetTemplate();
+
+      FixedList<Activity> modelDependencies = this.GetUncontainedModelDependencies(template);
+
+      List<ProjectItem> list = new List<ProjectItem>();
+
+      foreach (var model in modelDependencies) {
+        FixedList<ProjectItem> projectItems = GetProjectDependencies(projectItem, model);
+
+        list.AddRange(projectItems);
+      }
+
+      return list.ToFixedList();
+    }
+
+
     internal void InsertStateChange(int index, ProjectItemStateChange stateChange) {
       this.stateChanges.Insert(index, stateChange);
     }
@@ -101,8 +179,8 @@ namespace Empiria.ProjectManagement.Services {
       this.stateChanges.InsertRange(index, stateChangesList);
     }
 
+
     #endregion Methods
 
-  }  // class WhatIfResult
-
+  }  // class
 }  // namespace Empiria.ProjectManagement.Services

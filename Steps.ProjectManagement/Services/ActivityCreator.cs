@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Empiria.ProjectManagement.Services {
 
@@ -56,7 +54,7 @@ namespace Empiria.ProjectManagement.Services {
       stateChange.Deadline = eventDate;
       stateChange.Project = this.targetProject;
       // Append any other external dependencies of the activity model tree
-      var dependencies = this.GetModelDependencies(activityModel);
+      var dependencies = this.whatIfResult.GetUncontainedModelDependencies(activityModel);
 
       foreach (var dependency in dependencies) {
         this.CreateBranchFromTemplate(dependency);
@@ -89,7 +87,7 @@ namespace Empiria.ProjectManagement.Services {
 
         var template = ((Activity) stateChange.Template).Template;
 
-        if (template.ExecutionMode != "Periodic" || template.PeriodicRule.IsEmptyInstance) {
+        if (!template.IsPeriodic) {
           continue;
         }
 
@@ -114,28 +112,16 @@ namespace Empiria.ProjectManagement.Services {
           var parent = this.whatIfResult.StateChanges.Find(x => x.Template.Id == modelItem.Parent.Id);
 
           if (parent != null) {
-            stateChange.Parent = parent;
+            stateChange.ParentStateChange = parent;
           } else {
-            stateChange.Parent = this.whatIfResult.StateChanges[0];
+            stateChange.ParentStateChange = this.whatIfResult.StateChanges[0];
           }
         }  // if
+
         this.whatIfResult.AddStateChange(stateChange);
 
       }  // foreach
 
-    }
-
-
-    private FixedList<Activity> GetModelDependencies(Activity activityModel) {
-      var templateProject = activityModel.Project;
-
-      List<Activity> dependencies = templateProject.GetItems()
-                                                   .Select(x => (Activity) x)
-                                                   .ToList();
-
-      return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
-                                       !this.whatIfResult.StateChanges.Exists(y => y.Template.Id == x.Id))
-                         .ToFixedList();
     }
 
 
