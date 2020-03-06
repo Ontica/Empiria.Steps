@@ -11,9 +11,7 @@ using System;
 
 using Empiria.Json;
 
-
 namespace Empiria.ProjectManagement.Services {
-
 
   /// <summary>Provides project management activity's state update services</summary>
   static public class ProjectUpdater {
@@ -99,7 +97,7 @@ namespace Empiria.ProjectManagement.Services {
 
     #region Private methods
 
-    static private Activity CreateFromTemplate(ProjectItemStateChange stateChange) {
+    static public Activity CreateFromTemplate(ProjectItemStateChange stateChange, int position = -1) {
       Assertion.AssertObject(stateChange, "stateChange");
       Assertion.AssertObject(stateChange.Project, "stateChange.Project");
       Assertion.AssertObject(stateChange.Template, "stateChange.Template");
@@ -114,13 +112,25 @@ namespace Empiria.ProjectManagement.Services {
 
       json.Add("templateId", stateChange.Template.Id);
 
-      Activity activity = stateChange.Project.AddActivity(json);
+      json.Add("processID", stateChange.ProcessID);
+      json.Add("subProcessID", stateChange.SubprocessID);
+
+      Activity activity = null;
+
+
+      if (position == -1) {
+        activity = stateChange.Project.AddActivity(json);
+      } else {
+        activity = stateChange.Project.InsertActivity(json, position);
+      }
 
       if (stateChange.Replaces != null) {
-        activity.SetParentAndPosition(stateChange.Replaces.Parent, stateChange.Replaces.Position);
+        activity.SetParentAndPosition(stateChange.Replaces.Parent,
+                                      stateChange.Replaces.Position);
 
-      } else if (stateChange.Parent != null && !stateChange.Parent.ProjectItem.IsEmptyInstance) {
-        activity.SetAndSaveParent(stateChange.Parent.ProjectItem);
+      } else if (stateChange.ParentStateChange != null &&
+                !stateChange.ParentStateChange.ProjectItem.IsEmptyInstance) {
+        activity.SetAndSaveParent(stateChange.ParentStateChange.ProjectItem);
       }
 
       return activity;
