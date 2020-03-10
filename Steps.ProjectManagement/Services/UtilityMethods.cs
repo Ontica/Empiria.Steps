@@ -58,6 +58,8 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static internal DateTime CalculateNextPeriodicDate(ActivityModel template, DateTime eventDate) {
+      EmpiriaCalendar calendar = null;
+
       var periodicRule = template.PeriodicRule;
 
       switch (periodicRule.RuleType) {
@@ -67,11 +69,19 @@ namespace Empiria.ProjectManagement.Services {
         case "OncePerYear-OnFixedDate":
           return GetNextYearDate(eventDate, periodicRule.Month, periodicRule.Day);
 
+        case "Semi-annual-OnFixedDays":
+          return GetNextSemiannualDate(eventDate, periodicRule.Month, periodicRule.Day);
+
+        case "Semi-annual-BusinessDays":
+          calendar = GetCalendarFor(template);
+
+          return GetNextSemiannualBusinessDate(calendar, eventDate, periodicRule.Month, periodicRule.Day);
+
         case "Monthly-OnFixedDay":
           return GetNextMonthDate(eventDate, periodicRule.Day);
 
         case "Monthly-BusinessDays":
-          var calendar = GetCalendarFor(template);
+          calendar = GetCalendarFor(template);
 
           return UtilityMethods.GetNextMonthBusinessDate(calendar, eventDate, periodicRule.Day);
 
@@ -136,8 +146,6 @@ namespace Empiria.ProjectManagement.Services {
                                    DateTime.DaysInMonth(fromDate.Year, fromDate.Month));
 
       return calendar.AddWorkingDays(date, businessDays);
-
-
     }
 
 
@@ -145,6 +153,52 @@ namespace Empiria.ProjectManagement.Services {
       DateTime date = fromDate.AddMonths(1);
 
       return new DateTime(date.Year, date.Month, monthDay);
+    }
+
+
+    static private DateTime GetNextSemiannualDate(DateTime fromDate, int month, int monthDay) {
+      int secondMonth = month > 6 ? month - 6 : month + 6;
+
+      DateTime firstDate = new DateTime(fromDate.Year, Math.Min(month, secondMonth), monthDay);
+      DateTime secondDate = new DateTime(fromDate.Year, Math.Max(month, secondMonth), monthDay);
+
+      if (fromDate < firstDate) {
+        return firstDate;
+
+      } else if (fromDate < secondDate) {
+        return secondDate;
+
+      } else {
+
+        return new DateTime(firstDate.Year + 1, firstDate.Month, monthDay);
+      }
+    }
+
+
+    static private DateTime GetNextSemiannualBusinessDate(EmpiriaCalendar calendar,
+                                                          DateTime fromDate, int month, int businessDays) {
+
+      int secondMonth = month > 6 ? month - 6 : month + 6;
+
+      DateTime firstDate = new DateTime(fromDate.Year, Math.Min(month, secondMonth), 1).AddDays(-1);
+      firstDate = calendar.AddWorkingDays(firstDate, businessDays);
+
+      DateTime secondDate = new DateTime(fromDate.Year, Math.Max(month, secondMonth), 1).AddDays(-1);
+      secondDate = calendar.AddWorkingDays(secondDate, businessDays);
+
+
+      if (fromDate < firstDate) {
+        return firstDate;
+
+      } else if (fromDate < secondDate) {
+        return secondDate;
+
+      } else {
+        firstDate = new DateTime(fromDate.Year + 1, Math.Min(month, secondMonth), 1).AddDays(-1);
+        firstDate = calendar.AddWorkingDays(firstDate, businessDays);
+
+        return firstDate;
+      }
     }
 
 
