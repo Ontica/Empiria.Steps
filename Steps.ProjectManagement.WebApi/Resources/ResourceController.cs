@@ -21,18 +21,32 @@ namespace Empiria.ProjectManagement.Resources.WebApi {
     #region Public APIs
 
     [HttpGet]
-    [Route("v1/project-management/projects/{projectUID}/resources")]
-    public CollectionModel GetResourcesList(string projectUID) {
+    [Route("v1/project-management/resources")]
+    public CollectionModel GetResourcesList() {
       try {
-        var list = Resource.GetList();
+        var list = Project.ResourcesList;
 
-        return new CollectionModel(this.Request, list.ToResponse(),
-                                   typeof(Project).FullName);
+        return new CollectionModel(this.Request, list);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
     }
+
+
+    //[HttpGet]
+    //[Route("v1/project-management/projects/{projectUID}/resources")]
+    //public CollectionModel GetProjectResourcesList(string projectUID) {
+    //  try {
+    //    var list = Resource.GetList();
+
+    //    return new CollectionModel(this.Request, list.ToResponse(),
+    //                               typeof(Project).FullName);
+
+    //  } catch (Exception e) {
+    //    throw base.CreateHttpException(e);
+    //  }
+    //}
 
 
     [HttpGet]
