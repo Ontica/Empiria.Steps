@@ -71,7 +71,7 @@ namespace Empiria.ProjectManagement.WebApi {
         theme = task.Theme,
         resource = task.Resource,
 
-        tags = task.Tags.Items,
+        tags = task.Tag,
 
         position = task.Position,
         level = task.Level,

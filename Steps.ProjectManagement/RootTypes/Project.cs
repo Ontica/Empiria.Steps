@@ -81,6 +81,19 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    static public FixedList<string> TagsList {
+      get {
+        var list = GeneralList.Parse("ProjectManagement.Tags.List");
+
+        FixedList<string> items = list.GetItems<string>();
+
+        items.Sort((x, y) => x.CompareTo(y));
+
+        return items;
+      }
+    }
+
+
     static public FixedList<string> ThemesList {
       get {
         var list = GeneralList.Parse("ProjectManagement.Themes.List");

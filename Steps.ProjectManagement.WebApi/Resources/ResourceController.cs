@@ -54,16 +54,9 @@ namespace Empiria.ProjectManagement.Resources.WebApi {
     public CollectionModel GetTagsList() {
       try {
 
-        var projects = Project.GetList();
+        var tags = Project.TagsList;
 
-        var tags = new TagsCollection();
-        foreach (var project in projects) {
-          tags.AddRange(project.Tags);
-        }
-        tags.Sort();
-
-        return new CollectionModel(this.Request, tags.ToResponse(),
-                                   typeof(Project).FullName);
+        return new CollectionModel(this.Request, tags);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

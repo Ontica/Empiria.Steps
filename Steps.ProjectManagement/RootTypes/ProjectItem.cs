@@ -140,10 +140,10 @@ namespace Empiria.ProjectManagement {
 
 
     [DataField("Tags")]
-    public TagsCollection Tags {
+    public string Tag {
       get;
       private set;
-    } = TagsCollection.Empty;
+    }
 
 
     [DataField("Resource")]
@@ -161,7 +161,7 @@ namespace Empiria.ProjectManagement {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Name, this.Theme, this.Tags.ToString(), this.Project.Name);
+        return EmpiriaString.BuildKeywords(this.Name, this.Theme, this.Tag, this.Project.Name);
       }
     }
 
@@ -244,7 +244,6 @@ namespace Empiria.ProjectManagement {
       get;
       protected set;
     } = ExecutionServer.DateMaxValue;
-
 
 
     public FixedList<Contact> SendAlertsTo {
@@ -382,7 +381,7 @@ namespace Empiria.ProjectManagement {
       this.Notes = data.Notes;
       this.Theme = data.Theme;
 
-      this.Tags = data.Tags;
+      this.Tag = data.Tag;
       this.ExtensionData = JsonObject.Parse(data.ExtensionData.ToString());
 
       this.Resource = data.Resource;
@@ -395,10 +394,7 @@ namespace Empiria.ProjectManagement {
       this.Notes = data.GetClean("notes", this.Notes);
       this.Theme = data.GetClean("theme", this.Theme);
 
-      var tags = data.GetList<string>("tags", required: false);
-      if (tags != null && tags.Count != 0) {
-        this.Tags = TagsCollection.Parse(tags);
-      }
+      this.Tag = data.GetClean("tags", this.Tag);
 
       if (data.Contains("config")) {
         this.ExtensionData.Set("config", data.Slice("config"));

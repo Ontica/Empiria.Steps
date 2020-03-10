@@ -39,7 +39,7 @@ namespace Empiria.ProjectManagement.WebApi {
         duration = CalculateGanttItemDurationInDays(projectItem),
 
         theme  = projectItem.Theme,
-        tags = projectItem.Tags.Items,
+        tags = projectItem.Tag,
 
         position = projectItem.Position,
         level = projectItem.Level,

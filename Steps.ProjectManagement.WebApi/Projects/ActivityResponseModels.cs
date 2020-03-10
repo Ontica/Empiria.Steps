@@ -83,7 +83,7 @@ namespace Empiria.ProjectManagement.WebApi {
         theme = activity.Theme,
         resource = activity.Resource,
 
-        tags = activity.Tags.Items,
+        tags = activity.Tag,
 
         position = activity.Position,
         level = activity.Level,
@@ -134,7 +134,7 @@ namespace Empiria.ProjectManagement.WebApi {
         theme = summary.Theme,
         resource = summary.Resource,
 
-        tags = summary.Tags.Items,
+        tags = summary.Tag,
 
         position = summary.Position,
         level = summary.Level,
