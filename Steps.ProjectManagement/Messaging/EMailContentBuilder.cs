@@ -24,9 +24,12 @@ namespace Empiria.ProjectManagement.Messaging {
                                                              FixedList<Activity> activities,
                                                              Person contact) {
 
-      var body = GetMainTemplate(ContentTemplateType.AllPendingActivitiesSummary);
+      var body = GetTemplate(ContentTemplateType.AllPendingActivitiesSummary);
+      var withAssigneeTemplate = GetTemplate(ContentTemplateType.ActivityTableRowWithAssignee);
 
-      body = SetMessageFields(body, project, activities, contact);
+      body = ParseGeneralFields(body, project, contact);
+
+      body = ParseActivitiesTable(body, activities, withAssigneeTemplate);
 
       return new EMailContent($"RegTech Project {project.Name} status", body, true);
     }
@@ -35,9 +38,11 @@ namespace Empiria.ProjectManagement.Messaging {
     static internal EMailContent UserPendingActivitiesContent(Project project,
                                                               FixedList<Activity> activities,
                                                               Person user) {
-      var body = GetMainTemplate(ContentTemplateType.YourPendingActivitiesSummary);
+      var body = GetTemplate(ContentTemplateType.YourPendingActivitiesSummary);
+      var noAssigneeRowTemplate = GetTemplate(ContentTemplateType.ActivityTableRowWithoutAssignee);
 
-      body = SetMessageFields(body, project, activities, user);
+      body = ParseGeneralFields(body, project, user);
+      body = ParseActivitiesTable(body, activities, noAssigneeRowTemplate);
 
       return new EMailContent($"Your RegTech Project {project.Name} status", body, true);
     }
@@ -49,17 +54,30 @@ namespace Empiria.ProjectManagement.Messaging {
     #region Private methods
 
 
-    static private string GetActivitiesRowTemplate() {
+    static private string GetTemplate(ContentTemplateType contentTemplate) {
       string templatesPath = ConfigurationData.GetString("Templates.Path");
 
-      string fileName = System.IO.Path.Combine(templatesPath, $"email.template.activity-row.txt");
+      string fileName = System.IO.Path.Combine(templatesPath, $"email.template.{contentTemplate}.txt");
 
       return System.IO.File.ReadAllText(fileName);
     }
 
 
-    static private string GetActivityRow(Activity item) {
-      string temp = GetActivitiesRowTemplate();
+    static private string ParseActivitiesTable(string body,
+                                               FixedList<Activity> activities,
+                                               string tableRowTemplate) {
+      string tableRows = String.Empty;
+
+      foreach (var item in activities) {
+        tableRows += ParseActivityTemplate(tableRowTemplate, item);
+      }
+
+      return body.Replace("{{ACTIVITIES-TABLE-ROWS}}", tableRows);
+    }
+
+
+    static private string ParseActivityTemplate(string template, Activity item) {
+      string temp = template;
 
       temp = temp.Replace("{{ITEM-NAME}}", item.Name);
       temp = temp.Replace("{{ITEM-DATE}}", item.Deadline.ToString("dd/MMM/yyyy"));
@@ -73,33 +91,9 @@ namespace Empiria.ProjectManagement.Messaging {
     }
 
 
-    static private string GetMainTemplate(ContentTemplateType notificationType) {
-      string templatesPath = ConfigurationData.GetString("Templates.Path");
-
-      string fileName = System.IO.Path.Combine(templatesPath, $"email.template.{notificationType}.txt");
-
-      return System.IO.File.ReadAllText(fileName);
-    }
-
-
-    static private string GetProjectItemsTable(FixedList<Activity> activities) {
-      string temp = String.Empty;
-
-      foreach (var item in activities) {
-        temp += GetActivityRow(item);
-      }
-
-      return temp;
-    }
-
-
-    static private string SetMessageFields(string body, Project project,
-                                           FixedList<Activity> activities, Person contact) {
+    static private string ParseGeneralFields(string body, Project project, Person contact) {
       body = body.Replace("{{PROJECT-NAME}}", project.Name);
       body = body.Replace("{{TO-NAME}}", contact.FirstName);
-      body = body.Replace("{{TOTAL-ACTIVITIES}}", project.GetItems().Count.ToString());
-
-      body = body.Replace("{{ACTIVITIES-TABLE-ROW}}", GetProjectItemsTable(activities));
 
       return body;
     }

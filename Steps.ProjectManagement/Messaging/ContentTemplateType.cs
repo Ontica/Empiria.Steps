@@ -14,6 +14,10 @@ namespace Empiria.ProjectManagement.Messaging {
   /// <summary>Enumerates the templates used to generate messages content.</summary>
   internal enum ContentTemplateType {
 
+    ActivityTableRowWithAssignee,
+
+    ActivityTableRowWithoutAssignee,
+
     AllPendingActivitiesSummary,
 
     YourPendingActivitiesSummary
