@@ -82,6 +82,11 @@
       "type": "ProjectManagement",
       "key": "Assignee.List",
       "value": "{{ASSIGNEE-LIST}}"
+    },
+    {
+      "type": "ProjectManagement",
+      "key": "Templates.Path",
+      "value": "{{TEMPLATES-PATH}}"
     }
   ]
 }

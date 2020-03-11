@@ -8,11 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.WebApi;
 
 using Empiria.Contacts;
+
+using Empiria.ProjectManagement.Messaging;
+
 
 namespace Empiria.ProjectManagement.WebApi {
 
@@ -114,6 +118,26 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     #endregion Get methods
+
+
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/send-emails/{sendToUID}")]
+    public async Task<SingleObjectModel> SendEmail([FromUri] string projectUID, string sendToUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        var messenger = new ProjectManagementMessenger();
+
+        Person sendTo = (Person) Contact.Parse(sendToUID);
+
+        await messenger.SendEmail(project, sendTo);
+
+        return new SingleObjectModel(this.Request, "Project e-mails were sent.");
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
 
   }  // class ProjectController
 

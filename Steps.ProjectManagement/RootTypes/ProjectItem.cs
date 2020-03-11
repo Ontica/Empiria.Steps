@@ -246,6 +246,16 @@ namespace Empiria.ProjectManagement {
     } = ExecutionServer.DateMaxValue;
 
 
+    public bool IsUpcoming {
+      get {
+        return this.Status != ActivityStatus.Deleted &&
+               this.Status != ActivityStatus.Completed &&
+               this.Status != ActivityStatus.Canceled &&
+               this.Deadline <= DateTime.Today.AddDays(28);
+      }
+    }
+
+
     public FixedList<Contact> SendAlertsTo {
       get {
         var list = this.ExtensionData.GetList<Contact>("sendAlertsTo", false);
