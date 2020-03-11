@@ -19,18 +19,57 @@ namespace Empiria.ProjectManagement.Messaging {
 
     #region Utility methods
 
-    public async System.Threading.Tasks.Task SendEmail(Project project, Person person) {
+
+    public async System.Threading.Tasks.Task SendAllActivitiesEmail(Project project,
+                                                                    Person sendToPerson) {
+
       Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(person, "person");
+      Assertion.AssertObject(sendToPerson, "sendToPerson");
 
-      var sendTo = new SendTo(person.EMail, person.Alias);
+      FixedList<Activity> activities = MessagingUtilities.GetAllUpcomingActivities(project);
 
-      EMailContent content = EMailContentBuilder.AllPendingActivitiesContent(project, person);
+      if (activities.Count == 0) {
+        return;
+      }
+
+      EMailContent content = EMailContentBuilder.AllPendingActivitiesContent(project, activities, sendToPerson);
+
+      await SendEmail(content, sendToPerson);
+    }
+
+
+    public async System.Threading.Tasks.Task SendPersonalActivitiesEmail(Project project,
+                                                                         Person sendToPerson) {
+      Assertion.AssertObject(project, "project");
+      Assertion.AssertObject(sendToPerson, "sendToPerson");
+
+      FixedList<Activity> activities = MessagingUtilities.GetUserUpcomingActivities(project, sendToPerson);
+
+      if (activities.Count == 0) {
+        return;
+      }
+
+      EMailContent content = EMailContentBuilder.UserPendingActivitiesContent(project, activities, sendToPerson);
+
+      await SendEmail(content, sendToPerson);
+    }
+
+
+    #endregion Utility methods
+
+
+    #region Private methods
+
+
+    private async System.Threading.Tasks.Task SendEmail(EMailContent content,
+                                                        Person sendToPerson) {
+      var sendTo = new SendTo(sendToPerson.EMail, sendToPerson.Alias);
 
       await EMail.SendAsync(sendTo, content);
     }
 
-    #endregion Utility methods
+
+    #endregion Private methods
 
 
   }  // class ProjectManagementMessenger

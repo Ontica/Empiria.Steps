@@ -20,12 +20,26 @@ namespace Empiria.ProjectManagement.Messaging {
     #region Public methods
 
 
-    static internal EMailContent AllPendingActivitiesContent(Project project, Person contact) {
-      var body = GetTemplate(ContentTemplateType.AllPendingActivitiesSummary);
+    static internal EMailContent AllPendingActivitiesContent(Project project,
+                                                             FixedList<Activity> activities,
+                                                             Person contact) {
 
-      body = SetMessageFields(body, project, contact);
+      var body = GetMainTemplate(ContentTemplateType.AllPendingActivitiesSummary);
+
+      body = SetMessageFields(body, project, activities, contact);
 
       return new EMailContent($"RegTech Project {project.Name} status", body, true);
+    }
+
+
+    static internal EMailContent UserPendingActivitiesContent(Project project,
+                                                              FixedList<Activity> activities,
+                                                              Person user) {
+      var body = GetMainTemplate(ContentTemplateType.YourPendingActivitiesSummary);
+
+      body = SetMessageFields(body, project, activities, user);
+
+      return new EMailContent($"Your RegTech Project {project.Name} status", body, true);
     }
 
 
@@ -53,45 +67,13 @@ namespace Empiria.ProjectManagement.Messaging {
       temp = temp.Replace("{{ITEM-PARENT}}", !item.Parent.IsEmptyInstance ? item.Parent.Name : String.Empty);
       temp = temp.Replace("{{ITEM-THEME}}", item.Theme.Length != 0 ? $" | Topic: {item.Theme}" : String.Empty);
       temp = temp.Replace("{{ITEM-TAG}}", item.Tag.Length != 0 ? $" | Tags: {item.Tag}" : String.Empty);
-      temp = temp.Replace("{{ITEM-COLOR}}", GetActivityRowColor(item));
+      temp = temp.Replace("{{ITEM-COLOR}}", MessagingUtilities.GetActivityRowColor(item));
 
       return temp;
     }
 
 
-    static private string GetActivityRowColor(ProjectItem item) {
-      if (item.Deadline <= DateTime.Today.AddDays(7)) {
-        return COLORS.red;
-
-      } else if (item.Deadline <= DateTime.Today.AddDays(14)) {
-        return COLORS.amber;
-
-      } else if (item.Deadline <= DateTime.Today.AddDays(28)) {
-        return COLORS.green;
-
-      } else {
-        return COLORS.gray;
-      }
-    }
-
-
-    static private string GetProjectItemsTable(Project project) {
-      FixedList<ProjectItem> upcoming = project.GetItems()
-                                               .FindAll(x => x is Activity && x.IsUpcoming &&
-                                                             !((Activity) x).Responsible.EMail.Contains("talanza"));
-
-      upcoming.Sort((x, y) => x.Deadline.CompareTo(y.Deadline));
-
-      string temp = String.Empty;
-      foreach (var item in upcoming) {
-        temp += GetActivityRow((Activity) item);
-      }
-
-      return temp;
-    }
-
-
-    static private string GetTemplate(ContentTemplateType notificationType) {
+    static private string GetMainTemplate(ContentTemplateType notificationType) {
       string templatesPath = ConfigurationData.GetString("Templates.Path");
 
       string fileName = System.IO.Path.Combine(templatesPath, $"email.template.{notificationType}.txt");
@@ -100,35 +82,30 @@ namespace Empiria.ProjectManagement.Messaging {
     }
 
 
-    static private string SetMessageFields(string body, Project project, Person contact) {
+    static private string GetProjectItemsTable(FixedList<Activity> activities) {
+      string temp = String.Empty;
+
+      foreach (var item in activities) {
+        temp += GetActivityRow(item);
+      }
+
+      return temp;
+    }
+
+
+    static private string SetMessageFields(string body, Project project,
+                                           FixedList<Activity> activities, Person contact) {
       body = body.Replace("{{PROJECT-NAME}}", project.Name);
       body = body.Replace("{{TO-NAME}}", contact.FirstName);
       body = body.Replace("{{TOTAL-ACTIVITIES}}", project.GetItems().Count.ToString());
 
-      body = body.Replace("{{ACTIVITIES-TABLE-ROW}}", GetProjectItemsTable(project));
+      body = body.Replace("{{ACTIVITIES-TABLE-ROW}}", GetProjectItemsTable(activities));
 
       return body;
     }
 
 
     #endregion Private methods
-
-
-    #region Inner class constants
-
-    private class COLORS {
-
-      public static readonly string green = "#009900";
-      public static readonly string amber = "#ff9900";
-      public static readonly string red = "#cc0000";
-      public static readonly string gray = "#9a9a9a";
-      public static readonly string ghost_color = "#ececec";
-      public static readonly string default_color = "#3dbab3";
-      public static readonly string empty = "";
-
-    }
-
-    #endregion Inner COLORS constants
 
   }  // class EMailContentBuilder
 
