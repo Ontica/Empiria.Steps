@@ -11,6 +11,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using Empiria.Contacts;
+
 namespace Empiria.ProjectManagement.WebApi {
 
   /// <summary>Response static methods for project entities.</summary>
@@ -40,6 +42,8 @@ namespace Empiria.ProjectManagement.WebApi {
 
         theme  = projectItem.Theme,
         tags = projectItem.Tag,
+
+        responsible = projectItem is Activity ? ((Activity) projectItem).Responsible.ToShortResponse() : new { },
 
         position = projectItem.Position,
         level = projectItem.Level,
