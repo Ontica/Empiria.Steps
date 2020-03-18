@@ -85,6 +85,15 @@ namespace Empiria.ProjectManagement.Services {
 
           return UtilityMethods.GetNextMonthBusinessDate(calendar, eventDate, periodicRule.Day);
 
+        case "After-Given-Activity-Yearly":
+          return eventDate.AddYears(1);
+
+        case "After-Given-Activity-Semi-annual":
+          return eventDate.AddMonths(6);
+
+        case "After-Given-Activity-Monthly":
+          return eventDate.AddMonths(1);
+
         default:
           return ExecutionServer.DateMaxValue;
       }
