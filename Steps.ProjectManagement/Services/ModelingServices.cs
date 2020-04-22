@@ -51,9 +51,13 @@ namespace Empiria.ProjectManagement.Services {
 
       var activityCreator = new ActivityCreator(projectItem.Project);
 
-      DateTime newPeriod = UtilityMethods.CalculateNextPeriodicDate(template, projectItem.Deadline);
+      DateTime? newPeriod = UtilityMethods.CalculateNextPeriodicDate(template, projectItem.Deadline);
 
-      return activityCreator.CreateFromEvent(projectItem.GetTemplate(), newPeriod);
+      if (!newPeriod.HasValue) {
+        return null;
+      }
+
+      return activityCreator.CreateFromEvent(projectItem.GetTemplate(), newPeriod.Value);
     }
 
 
