@@ -35,10 +35,10 @@ namespace Empiria.ProjectManagement {
     static internal FixedList<ProjectProcess> GetProjectProcesses(Project forProject) {
       // ToDo: Use a control tag to match the start activity/event, no the first ProjectObjectId
 
-      string sql = "SELECT DISTINCT ProcessUID, SubprocessUID, Min(ProjectObjectId) AS StartActivityId " +
+      string sql = "SELECT DISTINCT ProcessUID, Min(ProjectObjectId) AS StartActivityId " +
                    "FROM PMProjectObjects " +
                   $"WHERE(BaseProjectId = {forProject.Id} AND ProcessUID <> '' AND Status <> 'X') " +
-                   "GROUP BY ProcessUID, SubprocessUID";
+                   "GROUP BY ProcessUID";
 
       var op = DataOperation.Parse(sql);
 

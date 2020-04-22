@@ -44,7 +44,7 @@ namespace Empiria.ProjectManagement {
     } = String.Empty;
 
 
-    [DataField("SubprocessUID")]
+    // [DataField("SubprocessUID")]
     public string SubprocessUID {
       get;
       private set;
