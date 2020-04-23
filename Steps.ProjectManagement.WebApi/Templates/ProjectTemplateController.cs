@@ -75,7 +75,9 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
     #endregion Get methods
 
+
     #region Update methods
+
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/create-from-activity-template")]
@@ -107,16 +109,39 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
 
     [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/update-all-with-last-process-changes")]
+    public SingleObjectModel UpdateAllProjectProcessesWithLastChanges(string projectUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        var result = ModelingServices.ProcessesCheckList(project);
+
+        foreach (var process in result) {
+          Activity startActivity = project.GetActivity(process.StartActivity.UID);
+
+          var updater = new ProcessUpdater(startActivity);
+
+          updater.UpdateWithLastProcessChanges();
+        }
+
+        return new SingleObjectModel(this.Request, result.ToResponse(),
+                                     typeof(WhatIfResult).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/update-with-last-process-changes")]
     public CollectionModel UpdateWithLastProcessChanges(string projectUID, string activityUID) {
       try {
         var project = Project.Parse(projectUID);
 
         Activity activity = project.GetActivity(activityUID);
-
         var updater = new ProcessUpdater(activity);
 
-        FixedList<ProjectItem> activities = updater.UpdatedWithLastProcessChanges();
+        FixedList<ProjectItem> activities = updater.UpdateWithLastProcessChanges();
 
         return new CollectionModel(this.Request, activities.ToResponse());
 
@@ -124,6 +149,7 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
           throw base.CreateHttpException(e);
       }
     }
+
 
     #endregion Update methods
 

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+
 namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Updates project activities based on project model rules.</summary>
@@ -85,7 +86,14 @@ namespace Empiria.ProjectManagement.Services {
       foreach (var item in relatedProjectItems) {
         var template = ((Activity) item.GetTemplate()).Template;
 
-        DateTime? updatedDeadline = UtilityMethods.CalculateNewDeadline(template, completedDate);
+        DateTime? updatedDeadline;
+
+        if (template.IsPeriodic) {
+          updatedDeadline = UtilityMethods.CalculateNextPeriodicDate(template, completedDate);
+
+        } else {
+          updatedDeadline = UtilityMethods.CalculateNewDeadline(template, completedDate);
+        }
 
         if (updatedDeadline.HasValue) {
           AddUpdateDeadlineStateChange(item, updatedDeadline.Value);

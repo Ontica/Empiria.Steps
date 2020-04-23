@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Contains information about all project items which will be changed as a consequence
@@ -97,6 +98,8 @@ namespace Empiria.ProjectManagement.Services {
     private FixedList<ProjectItem> GetProjectDependencies(ProjectItem projectItem, Activity model) {
       var project = this.Source.Project;
 
+     // return project.GetItems().FindAll(x => x.TemplateId == model.Id);
+
       return project.GetItems().FindAll(x => x.TemplateId == model.Id &&
                                              x.ProcessID == projectItem.ProcessID &&
                                              x.SubprocessID == projectItem.SubprocessID);
@@ -124,15 +127,27 @@ namespace Empiria.ProjectManagement.Services {
     }
 
     internal FixedList<Activity> GetContainedModelDependencies(Activity activityModel) {
+      if (activityModel.IsEmptyInstance) {
+        return new FixedList<Activity>();
+      }
+
       var templateProject = activityModel.Project;
 
-      List<Activity> dependencies = templateProject.GetItems()
-                                                   .Select(x => (Activity) x)
-                                                   .ToList();
+      try {
+        List<Activity> dependencies = templateProject.GetItems()
+                                                     .Select(x => (Activity) x)
+                                                     .ToList();
 
-      return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
-                                       this.StateChanges.Exists(y => y.Template.Id == x.Id))
-                         .ToFixedList();
+        return dependencies.FindAll(x => x.Template.DueOnControllerId == activityModel.Id &&
+                                         this.StateChanges.Exists(y => y.Template.Id == x.Id))
+                           .ToFixedList();
+      } catch(Exception e) {
+        var ex = new Exception($"GetContainedModelDependencies issue for {activityModel.Id}.", e);
+
+        EmpiriaLog.Error(ex);
+
+        throw ex;
+      }
     }
 
 

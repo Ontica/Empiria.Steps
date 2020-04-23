@@ -53,12 +53,13 @@ namespace Empiria.ProjectManagement.Services {
 
       stateChange.Deadline = eventDate;
       stateChange.Project = this.targetProject;
-      // Append any other external dependencies of the activity model tree
-      var dependencies = this.whatIfResult.GetUncontainedModelDependencies(activityModel);
 
-      foreach (var dependency in dependencies) {
-        this.CreateBranchFromTemplate(dependency);
-      }
+      //// Append any other external dependencies of the activity model tree
+      // var dependencies = this.whatIfResult.GetUncontainedModelDependencies(activityModel);
+
+      // foreach (var dependency in dependencies) {
+      //   this.CreateBranchFromTemplate(dependency);
+      // }
 
       // ToDo: Change this by a recursive strategy
       for (int i = 0; i < 10; i++) {
@@ -91,7 +92,11 @@ namespace Empiria.ProjectManagement.Services {
           continue;
         }
 
-        stateChange.Deadline = UtilityMethods.CalculateNextPeriodicDate(template, eventDate);
+        DateTime? deadline = UtilityMethods.CalculateNextPeriodicDate(template, eventDate);
+
+        if (deadline.HasValue) {
+          stateChange.Deadline = deadline.Value;
+        }
 
 
       }  // foreach
@@ -139,24 +144,35 @@ namespace Empiria.ProjectManagement.Services {
           continue;
         }
 
-        var controller = this.whatIfResult.StateChanges.Find(x => x.Template.Id == template.DueOnControllerId);
 
-
-        if (controller == null) {
+        DateTime dueOnControllerDeadline = this.GetDueOnControllerDeadline(template);
+        if (dueOnControllerDeadline == ExecutionServer.DateMaxValue) {
           continue;
         }
 
-        if (controller.Deadline == ExecutionServer.DateMaxValue) {
-          continue;
-        }
-
-        DateTime? deadline = UtilityMethods.CalculateNewDeadline(template, controller.Deadline);
+        DateTime? deadline = UtilityMethods.CalculateNewDeadline(template, dueOnControllerDeadline);
 
         if (deadline.HasValue) {
           stateChange.Deadline = deadline.Value;
         }
       }  // foreach
 
+    }
+
+    private DateTime GetDueOnControllerDeadline(ActivityModel template) {
+      var stateChange = this.whatIfResult.StateChanges.Find(x => x.Template.Id == template.DueOnControllerId);
+
+      if (stateChange != null) {
+        return stateChange.Deadline;
+      }
+
+      var projectItem = this.targetProject.GetItems().Find(x => x.TemplateId == template.DueOnControllerId);
+
+      if (projectItem != null) {
+        return projectItem.ActualEndDate != ExecutionServer.DateMaxValue ? projectItem.ActualEndDate : projectItem.Deadline;
+      }
+
+      return ExecutionServer.DateMaxValue;
     }
 
 
