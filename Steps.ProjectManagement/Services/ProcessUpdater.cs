@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
+
 
 namespace Empiria.ProjectManagement.Services {
 
@@ -55,7 +57,31 @@ namespace Empiria.ProjectManagement.Services {
     #region Public Methods
 
 
-    internal WhatIfResult OnUpdateProcess() {
+    public WhatIfResult OnUpdateDeadlines() {
+      WhatIfResult current = GetWhatIfResultWithRootProjectItemBranch();
+
+      foreach (var item in current.StateChanges) {
+        item.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedEqual;
+
+        if (!item.ProjectItem.HasTemplate) {
+           continue;
+        }
+
+        ActivityModel template = ((Activity) item.ProjectItem.GetTemplate()).Template;
+
+        if (template.IsPeriodic) {
+          item.ProcessMatchResult = ProjectItemProcessMatchResult.NoProgrammingRule;
+        }
+      }
+
+      UpdateDeadlinesForUncompletedActivities(current);
+
+      UpdateDeadlinesForCurrentCompletedActivities(current);
+      return current;
+    }
+
+
+    public WhatIfResult OnUpdateWithLastProcessChanges() {
       WhatIfResult current = GetWhatIfResultWithRootProjectItemBranch();
 
       WhatIfResult newModelResult = GetNewModelResult();
@@ -72,8 +98,23 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
+    public FixedList<ProjectItem> UpdateDeadlines() {
+      WhatIfResult result = OnUpdateDeadlines();
+
+      if (result.HasErrors) {
+        throw result.GetException();
+      }
+
+      StoreChanges(result);
+
+      return result.StateChanges.ConvertAll(x => x.ProjectItem)
+             .ToFixedList();
+
+    }
+
+
     public FixedList<ProjectItem> UpdateWithLastProcessChanges() {
-      WhatIfResult result = this.OnUpdateProcess();
+      WhatIfResult result = this.OnUpdateWithLastProcessChanges();
 
       if (result.HasErrors) {
         throw result.GetException();
@@ -210,7 +251,7 @@ namespace Empiria.ProjectManagement.Services {
 
       var items = currentItem.Project.GetItems();
       var isSubsequent = items.Contains(x => x.Parent.Id == parent.Id &&
-                                             x.TemplateId == templateId &&                                             x.Position < position);
+                                             x.TemplateId == templateId && x.Position < position);
 
       return !isSubsequent;
     }
@@ -455,7 +496,7 @@ namespace Empiria.ProjectManagement.Services {
 
     static private void UpdateDeadlinesForCurrentCompletedActivities(WhatIfResult current) {
       var currentCompletedActivities =
-                current.StateChanges.FindAll(x => x.ProjectItem.HasTemplate &&                                                  x.ProjectItem.ActualEndDate != ExecutionServer.DateMaxValue &&
+                current.StateChanges.FindAll(x => x.ProjectItem.HasTemplate && x.ProjectItem.ActualEndDate != ExecutionServer.DateMaxValue &&
                                                   x.ProjectItem.Status == StateEnums.ActivityStatus.Completed);
 
       foreach (var completedActivityStateChange in currentCompletedActivities) {
@@ -468,7 +509,8 @@ namespace Empiria.ProjectManagement.Services {
 
     static private void UpdateDeadlinesForUncompletedActivities(WhatIfResult current) {
       var uncompletedActivities =
-                current.StateChanges.FindAll(x => x.ProjectItem.HasTemplate &&                                                  x.ProjectItem.Deadline < ExecutionServer.DateMaxValue &&                                                  x.ProjectItem.ActualEndDate == ExecutionServer.DateMaxValue &&
+                current.StateChanges.FindAll(x => x.ProjectItem.HasTemplate && x.ProjectItem.Deadline < ExecutionServer.DateMaxValue &&
+                                                  x.ProjectItem.ActualEndDate == ExecutionServer.DateMaxValue &&
                                                   x.ProjectItem.Status != StateEnums.ActivityStatus.Completed);
 
       foreach (var uncompletedActivityStateChange in uncompletedActivities) {

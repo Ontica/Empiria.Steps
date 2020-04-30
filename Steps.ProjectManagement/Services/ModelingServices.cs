@@ -100,7 +100,7 @@ namespace Empiria.ProjectManagement.Services {
 
       var updater = new ProcessUpdater(projectItem);
 
-      return updater.OnUpdateProcess();
+      return updater.OnUpdateWithLastProcessChanges();
     }
 
 

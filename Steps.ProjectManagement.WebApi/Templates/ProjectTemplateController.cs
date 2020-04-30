@@ -109,6 +109,31 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
 
     [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/update-all-deadlines")]
+    public SingleObjectModel UpdateAllProjectDeadlines(string projectUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        FixedList<ProjectProcess> processes = ModelingServices.ProcessesCheckList(project);
+
+        foreach (var process in processes) {
+          Activity startActivity = project.GetActivity(process.StartActivity.UID);
+
+          var updater = new ProcessUpdater(startActivity);
+
+          updater.UpdateDeadlines();
+
+        }
+
+        return new SingleObjectModel(this.Request, processes.ToResponse(),
+                                     typeof(WhatIfResult).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/update-all-with-last-process-changes")]
     public SingleObjectModel UpdateAllProjectProcessesWithLastChanges(string projectUID) {
       try {
@@ -131,6 +156,47 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
+
+    [HttpPost]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/update-deadlines")]
+    public CollectionModel UpdateProjectDeadlines(string projectUID, string activityUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+
+        var updater = new ProcessUpdater(activity);
+
+        FixedList<ProjectItem> result = updater.UpdateDeadlines();
+
+        return new CollectionModel(this.Request, result.ToResponse(), typeof(ProjectItem).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/what-if-deadlines-updated")]
+    public SingleObjectModel WhatIfUpdateProjectDeadlines(string projectUID, string activityUID) {
+      try {
+        var project = Project.Parse(projectUID);
+
+        Activity activity = project.GetActivity(activityUID);
+        var updater = new ProcessUpdater(activity);
+
+        WhatIfResult result = updater.OnUpdateDeadlines();
+        return new SingleObjectModel(this.Request, result.ToResponse(),
+                                     typeof(WhatIfResult).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
 
     [HttpPost]
     [Route("v1/project-management/projects/{projectUID}/activities/{activityUID}/update-with-last-process-changes")]
