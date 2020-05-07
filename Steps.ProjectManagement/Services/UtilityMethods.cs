@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using System.Runtime.Remoting.Lifetime;
 using Empiria.DataTypes;
 
 namespace Empiria.ProjectManagement.Services {
@@ -170,15 +170,33 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static private EmpiriaCalendar GetCalendarFor(ActivityModel template) {
-      if (template.EntityId != -1) {
-        var org = Contacts.Organization.Parse(template.EntityId);
-
-        return EmpiriaCalendar.ParseOrDefault(org.Nickname);
-      } else {
+      if (template.EntityId == -1) {
         return EmpiriaCalendar.Default;
       }
+
+      var org = Contacts.Organization.Parse(template.EntityId);
+
+      var calendarName = org.Nickname;
+
+      if (calendarName == "ASEA") {
+        return GetASEACalendar(template);
+      }
+
+      return EmpiriaCalendar.ParseOrDefault(calendarName);
     }
 
+
+    static private EmpiriaCalendar GetASEACalendar(ActivityModel template) {
+      int[] AseaUsiviCalendarProcedures = { 181, 182, 183, 184, 185, 186, 187, 188, 189, 190 };
+
+      if (EmpiriaMath.IsMemberOf(template.ProcedureId, AseaUsiviCalendarProcedures)) {
+        return EmpiriaCalendar.ParseOrDefault("ASEA-USIVI");
+      } else {
+        return EmpiriaCalendar.ParseOrDefault("ASEA-UGI");
+      }
+
+
+    }
 
     static private DateTime GetNextMonthBusinessDate(EmpiriaCalendar calendar,
                                                      DateTime fromDate, int businessDays) {
