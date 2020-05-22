@@ -1,7 +1,7 @@
 ﻿# About Empiria Steps
 
-[Empiria Steps](http://www.ontica.org/) is our project and workflow management integrated suite for
-governments and enterprises.
+[Empiria Steps](http://www.ontica.org/) is our project and process management integrated suite for
+governments and other sectors and industries.
 
 This repository corresponds to the system's backend.
 
@@ -15,10 +15,16 @@ Visual Studio 2017 Community Edition.
 
 Empiria Steps includes the following software modules:
 
-1. **Workflow**
+1. **Knowledge**
+   Defines protocols and process rules with their constituent steps.
+
+2. **Operations**
+   Manages and executes plans and projects and their actions or activities.
+
+3. **Workflow**
    Workflow Management System with execution engine and process definition domain services.
 
-2. **Workflow Web Api**
+4. **Workflow Web Api**
    Http/Json web services interface used to interact with the Workflow domain services.
 
 3. **Project Management**
