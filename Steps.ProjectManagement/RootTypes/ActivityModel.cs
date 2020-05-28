@@ -51,10 +51,10 @@ namespace Empiria.ProjectManagement {
 
       if (!data.HasValue("periodicityRule")) {
         o.PeriodicRule = PeriodicRuleData.Empty;
-
+        o.PeriodicityRuleJsonData = JsonObject.Empty;
       } else {
         var periodicRuleJson = data.Slice("periodicityRule");
-
+        o.PeriodicityRuleJsonData = periodicRuleJson;
         o.PeriodicRule = PeriodicRuleData.Parse(periodicRuleJson);
       }
 
@@ -156,12 +156,16 @@ namespace Empiria.ProjectManagement {
       private set;
     } = String.Empty;
 
-
     public PeriodicRuleData PeriodicRule {
       get;
       private set;
     } = PeriodicRuleData.Empty;
 
+
+    public JsonObject PeriodicityRuleJsonData {
+      get;
+      private set;
+    }
 
 
     public bool IsPeriodic {
