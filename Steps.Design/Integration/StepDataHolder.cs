@@ -89,6 +89,13 @@ namespace Empiria.Steps.Design.Integration {
     } = new JsonObject();
 
 
+    [DataField("ForeignLangData")]
+    public JsonObject ForeignLanguageData {
+      get;
+      internal set;
+    } = new JsonObject();
+
+
     [DataField("Constraints")]
     public string Constraints {
       get;
@@ -97,10 +104,10 @@ namespace Empiria.Steps.Design.Integration {
 
 
     [DataField("ExecutionContext")]
-    public JsonObject ExecutionContext {
+    public string ExecutionContext {
       get;
       internal set;
-    } = new JsonObject();
+    } = String.Empty;
 
 
     [DataField("DataModels")]

@@ -229,12 +229,8 @@ namespace Empiria.Steps.Design.Integration {
     }
 
 
-    private JsonObject ConvertExecutionContext(ProjectItem projectItem) {
-      var json = new JsonObject();
-
-      json.Add("ContractModels", projectItem.Project.Tags.Items);
-
-      return json;
+    private string ConvertExecutionContext(ProjectItem projectItem) {
+      return EmpiriaString.TrimAll(projectItem.Project.Tags.Items[0]);
     }
 
 

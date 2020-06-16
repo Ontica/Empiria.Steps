@@ -68,10 +68,10 @@ namespace Empiria.Steps.Design.Integration {
     } = String.Empty;
 
 
-    public JsonObject ExecutionContext {
+    public string ExecutionContext {
       get;
       internal set;
-    } = new JsonObject();
+    } = String.Empty;
 
 
     public string DataModels {
