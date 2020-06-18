@@ -23,7 +23,7 @@ namespace Empiria.Steps.Design.WebApi {
     [Route("v3/steps/design/processes")]
     public CollectionModel GetProcessDesignList() {
       try {
-        var list = Process.GetList<Process>("Accessibility = 'Public'");
+        var list = Process.GetList<Process>("Accessibility = 'Public'", "StepName");
 
         return new CollectionModel(this.Request, list.ToResponse(),
                                    typeof(Process).FullName);
