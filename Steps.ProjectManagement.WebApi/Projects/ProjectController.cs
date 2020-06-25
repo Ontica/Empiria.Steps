@@ -41,7 +41,7 @@ namespace Empiria.ProjectManagement.WebApi {
     [Route("v1/project-management/projects/{projectUID}/responsibles")]
     public CollectionModel GetProjectResponsiblesList(string projectUID) {
       try {
-        var project = Project.Parse(projectUID);
+        var project = Project.Empty;
 
         return new CollectionModel(this.Request, project.Responsibles.ToShortResponse(),
                                    typeof(Contact).FullName);
