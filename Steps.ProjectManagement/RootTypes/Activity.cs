@@ -13,6 +13,8 @@ using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Security;
 
+using Empiria.ProjectManagement.Messaging;
+
 namespace Empiria.ProjectManagement {
 
   /// <summary>Describes a project activity.</summary>
@@ -132,6 +134,7 @@ namespace Empiria.ProjectManagement {
         this.AssignedDate = ExecutionServer.DateMaxValue;
         this.AssignedBy = Contact.Empty;
       }
+      // EventsNotifier.ActivityAssigned(this);
     }
 
 
