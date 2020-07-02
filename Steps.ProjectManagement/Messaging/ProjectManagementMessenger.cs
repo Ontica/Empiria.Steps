@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using Empiria.Contacts;
 using Empiria.Messaging;
 
@@ -21,10 +20,9 @@ namespace Empiria.ProjectManagement.Messaging {
 
 
     public async System.Threading.Tasks.Task SendAllActivitiesEmail(Project project,
-                                                                    Person sendToPerson) {
-
+                                                                    Person sendTo) {
       Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(sendToPerson, "sendToPerson");
+      Assertion.AssertObject(sendTo, "sendTo");
 
       FixedList<Activity> activities = MessagingUtilities.GetAllUpcomingActivities(project);
 
@@ -32,26 +30,43 @@ namespace Empiria.ProjectManagement.Messaging {
         return;
       }
 
-      EMailContent content = EMailContentBuilder.AllPendingActivitiesContent(project, activities, sendToPerson);
+      EMailContent content = EMailContentBuilder.AllPendingActivitiesContent(project, activities, sendTo);
 
-      await SendEmail(content, sendToPerson);
+      await SendEmail(content, sendTo);
     }
 
 
-    public async System.Threading.Tasks.Task SendPersonalActivitiesEmail(Project project,
-                                                                         Person sendToPerson) {
+    public async System.Threading.Tasks.Task SendByThemeSummaryEmail(Project project,
+                                                                     Person sendTo) {
       Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(sendToPerson, "sendToPerson");
+      Assertion.AssertObject(sendTo, "sendTo");
 
-      FixedList<Activity> activities = MessagingUtilities.GetUserUpcomingActivities(project, sendToPerson);
+      FixedList<Activity> activities = MessagingUtilities.GetAllUpcomingActivities(project);
 
       if (activities.Count == 0) {
         return;
       }
 
-      EMailContent content = EMailContentBuilder.UserPendingActivitiesContent(project, activities, sendToPerson);
+      EMailContent content = EMailContentBuilder.SendByThemeSummaryEmail(project, activities, sendTo);
 
-      await SendEmail(content, sendToPerson);
+      await SendEmail(content, sendTo);
+    }
+
+
+    public async System.Threading.Tasks.Task SendPersonalActivitiesEmail(Project project,
+                                                                         Person sendTo) {
+      Assertion.AssertObject(project, "project");
+      Assertion.AssertObject(sendTo, "sendTo");
+
+      FixedList<Activity> activities = MessagingUtilities.GetUserUpcomingActivities(project, sendTo);
+
+      if (activities.Count == 0) {
+        return;
+      }
+
+      EMailContent content = EMailContentBuilder.UserPendingActivitiesContent(project, activities, sendTo);
+
+      await SendEmail(content, sendTo);
     }
 
 

@@ -8,8 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Messaging;
 
 namespace Empiria.ProjectManagement.Messaging {
@@ -23,13 +25,26 @@ namespace Empiria.ProjectManagement.Messaging {
     static internal EMailContent AllPendingActivitiesContent(Project project,
                                                              FixedList<Activity> activities,
                                                              Person contact) {
-
       var body = GetTemplate(ContentTemplateType.AllPendingActivitiesSummary);
       var withAssigneeTemplate = GetTemplate(ContentTemplateType.ActivityTableRowWithAssignee);
 
       body = ParseGeneralFields(body, project, contact);
 
       body = ParseActivitiesTable(body, activities, withAssigneeTemplate);
+
+      return new EMailContent($"RegTech Project {project.Name} status", body, true);
+    }
+
+
+    static internal EMailContent SendByThemeSummaryEmail(Project project,
+                                                         FixedList<Activity> activities,
+                                                         Person contact) {
+      var body = GetTemplate(ContentTemplateType.ByThemeSummaryBody);
+      var rowTemplate = GetTemplate(ContentTemplateType.ByThemeSummaryTableRow);
+
+      body = ParseGeneralFields(body, project, contact);
+
+      body = ParseByThemeSummaryTable(body, activities, rowTemplate);
 
       return new EMailContent($"RegTech Project {project.Name} status", body, true);
     }
@@ -50,9 +65,7 @@ namespace Empiria.ProjectManagement.Messaging {
 
     #endregion Public methods
 
-
     #region Private methods
-
 
     static private string GetTemplate(ContentTemplateType contentTemplate) {
       string templatesPath = ConfigurationData.GetString("Templates.Path");
@@ -86,6 +99,33 @@ namespace Empiria.ProjectManagement.Messaging {
       temp = temp.Replace("{{ITEM-THEME}}", item.Theme.Length != 0 ? $" | Topic: {item.Theme}" : String.Empty);
       temp = temp.Replace("{{ITEM-TAG}}", item.Tag.Length != 0 ? $" | Tags: {item.Tag}" : String.Empty);
       temp = temp.Replace("{{ITEM-COLOR}}", MessagingUtilities.GetActivityRowColor(item));
+
+      return temp;
+    }
+
+
+    static private string ParseByThemeSummaryTable(string body,
+                                                   FixedList<Activity> activities,
+                                                   string tableRowTemplate) {
+      string tableRows = String.Empty;
+
+      var group = activities.GroupBy(x => x.Theme + MessagingUtilities.GetActivityRowColor(x)).OrderBy(y => y.Key);
+
+      foreach (var item in activities) {
+        //tableRows += ParseSummaryItem(tableRowTemplate, itemName, count, color);
+      }
+
+      return body.Replace("{{ACTIVITIES-TABLE-ROWS}}", tableRows);
+    }
+
+
+    static private string ParseSummaryItem(string template, string itemName,
+                                           int activitiesCount, string color) {
+      string temp = template;
+
+      temp = temp.Replace("{{SUMMARY-ITEM-NAME}}", itemName);
+      temp = temp.Replace("{{SUMMARY-ITEM-COUNT}}", activitiesCount.ToString());
+      temp = temp.Replace("{{SUMMARY-ITEM-COLOR}}", color);
 
       return temp;
     }
