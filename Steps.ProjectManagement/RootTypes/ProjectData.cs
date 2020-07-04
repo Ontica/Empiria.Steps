@@ -168,12 +168,13 @@ namespace Empiria.ProjectManagement {
 
     #endregion Project contacts methods
 
+
     #region Write methods
 
     static internal void WriteProject(Project o) {
       var op = DataOperation.Parse("writePMProjectObject",
                 o.Id, o.GetEmpiriaType().Id, o.UID, o.Name, o.Notes,
-                o.ExtensionData.ToString(), o.EstimatedDuration.ToString(),
+                o.ExtensionData.ToString(), String.Empty, o.EstimatedDuration.ToString(),
                 o.ActualStartDate, o.ActualEndDate, o.PlannedEndDate, o.Deadline,
                 o.Tags.ToString(), o.Keywords, o.Position, -1,
                 o.Resource, o.Owner.Id,

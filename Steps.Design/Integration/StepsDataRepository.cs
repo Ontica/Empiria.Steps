@@ -18,20 +18,15 @@ namespace Empiria.Steps.Design.Integration {
 
     #region Methods
 
-    //static internal FixedList<StepData> GetList(string keywords) {
-    //  var op = DataOperation.Parse("writeSTStep", o.Id, o.UID
-
-    //  return DataReader.GetPlainObjectFixedList<StepData>(filtxer, sort).ToFixedList();
-    //}
-
 
     static internal void WriteStepData(StepDataHolder o) {
       var op = DataOperation.Parse("writeSTStep", o.Id, o.UID, o.StepType.Id,
                     o.StepKind, o.StepName, o.Notes, o.Themes, o.Tags, o.Keywords,
-                    o.ExtensionData.ToString(), o.Constraints, o.ExecutionContext,
+                    o.ExtensionData.ToString(), o.ForeignLanguageData.ToString(),
+                    o.Constraints, o.ExecutionContext,
                     o.DataModels, o.DefinedMacro, o.MicroWorkflowModel, o.Accessibility,
                     o.DrivenMode, o.FlowControl, o.WorkItemType, o.StepRole, o.ProcessStage,
-                    o.IsOptional, o.LoopControl, o.PeriodicityRule, o.EstimatedDuration.ToString(),
+                    o.IsOptional, o.LoopControl, o.PeriodicityRule.ToString(), o.EstimatedDuration.ToString(),
                     o.DerivedFromStepId, o.NewVersionOfStepId, o.ReferenceOfStepId, o.ParentStepId,
                     o.StepPosition, o.BaseStepId, o.OwnerId, o.ProcedureEntityId, o.ProcedureId,
                     (char) o.Status, o.OldProjectObjectId);

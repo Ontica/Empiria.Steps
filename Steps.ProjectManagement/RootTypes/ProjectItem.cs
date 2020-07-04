@@ -159,6 +159,13 @@ namespace Empiria.ProjectManagement {
     } = new JsonObject();
 
 
+    [DataField("ForeignLangData")]
+    public ForeignLanguageData ForeignLanguageData {
+      get;
+      private set;
+    } = ForeignLanguageData.Empty;
+
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.Name, this.Theme, this.Tag, this.Project.Name);
@@ -408,6 +415,10 @@ namespace Empiria.ProjectManagement {
 
       if (data.Contains("config")) {
         this.ExtensionData.Set("config", data.Slice("config"));
+      }
+
+      if (data.Contains("foreignLang")) {
+        this.ForeignLanguageData = ForeignLanguageData.Parse(data.Slice("foreignLang"));
       }
 
       this.Resource = data.Get<string>("resource", this.Resource);
