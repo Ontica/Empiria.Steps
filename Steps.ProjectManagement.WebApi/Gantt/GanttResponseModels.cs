@@ -37,6 +37,10 @@ namespace Empiria.ProjectManagement.WebApi {
         id = projectItem.Id,
         type = projectItem.ProjectObjectType.Name,
         text = projectItem.Name,
+
+        name = projectItem.Name,
+        nameForeignLang = projectItem.ForeignLanguageData.Name,
+
         start_date = CalculateGanttItemStartDate(projectItem).ToString("yyyy-MM-dd HH:mm"),
         duration = CalculateGanttItemDurationInDays(projectItem),
 
@@ -50,6 +54,7 @@ namespace Empiria.ProjectManagement.WebApi {
         parent = projectItem.Parent.IsEmptyInstance ? 0 : projectItem.Parent.Id
       };
     }
+
 
     #endregion Responses
 

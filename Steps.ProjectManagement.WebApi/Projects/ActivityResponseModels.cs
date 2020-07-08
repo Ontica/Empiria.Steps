@@ -97,7 +97,13 @@ namespace Empiria.ProjectManagement.WebApi {
         rules = activity.GetRules(),
 
         template = activity.HasTemplate ?
-                        activity.GetTemplate().ToActivityTemplateResponse() : new object()
+                        activity.GetTemplate().ToActivityTemplateResponse() : new object(),
+
+        foreignLanguage = new {
+          name = activity.ForeignLanguageData.Name,
+          notes = activity.ForeignLanguageData.Notes,
+        }
+
       };
     }
 
@@ -144,13 +150,17 @@ namespace Empiria.ProjectManagement.WebApi {
         responsible = Contact.Empty.ToShortResponse(),
         assignedDate = "",
         assignedBy = Contact.Empty.ToShortResponse(),
-        template = new object()
+        template = new object(),
+
+        foreignLanguage = new {
+          name = String.Empty,
+          notes = String.Empty,
+        }
       };
     }
 
 
     #endregion Response methods
-
 
   }  // class ActivityResponseModels
 

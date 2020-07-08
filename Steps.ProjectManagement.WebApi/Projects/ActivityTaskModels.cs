@@ -81,7 +81,12 @@ namespace Empiria.ProjectManagement.WebApi {
         responsible = task.Responsible.ToShortResponse(),
         assignedDate = task.AssignedDate,
         assignedBy = task.AssignedBy.ToShortResponse(),
-        template = new object()
+        template = new object(),
+
+        foreignLanguage = new {
+          name = task.ForeignLanguageData.Name,
+          notes = task.ForeignLanguageData.Notes,
+        }
       };
     }
 

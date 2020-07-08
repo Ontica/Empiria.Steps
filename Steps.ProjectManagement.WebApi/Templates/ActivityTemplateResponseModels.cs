@@ -81,7 +81,14 @@ namespace Empiria.ProjectManagement.WebApi {
         position = activity.Position,
         level = activity.Level,
         stage = activity.Stage,
-        status = activity.Status
+        status = activity.Status,
+
+        foreignLanguage = new {
+          name = activity.ForeignLanguageData.Name,
+          notes = activity.ForeignLanguageData.Notes,
+          contractClause = activity.ForeignLanguageData.ContractClause,
+          legalBasis = activity.ForeignLanguageData.LegalBasis,
+        }
       };
     }
 
