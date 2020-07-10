@@ -97,15 +97,20 @@ namespace Empiria.ProjectManagement {
 
     public ActivityModel Template {
       get {
-        var json = this.ConfigurationJson;
+        try {
+          var json = this.ConfigurationJson;
 
-        if (json.IsEmptyInstance) {
-          return ActivityModel.Empty;
-        } else {
-          return ActivityModel.Parse(json);
+          if (json.IsEmptyInstance) {
+            return ActivityModel.Empty;
+          } else {
+            return ActivityModel.Parse(json);
+          }
+        } catch (Exception e) {
+          throw new ResourceNotFoundException("STEP_TEMPLATE_ID", $"Can't parse project template with id {this.Id}.", e);
         }
       }
     }
+
 
 
     private JsonObject ConfigurationJson {
@@ -130,11 +135,13 @@ namespace Empiria.ProjectManagement {
       if (!this.Responsible.IsEmptyInstance) {
         this.AssignedDate = DateTime.Now;
         this.AssignedBy = EmpiriaUser.Current.AsContact();
+
+        EventsNotifier.ActivityAssigned(this);
+
       } else {
         this.AssignedDate = ExecutionServer.DateMaxValue;
         this.AssignedBy = Contact.Empty;
       }
-      // EventsNotifier.ActivityAssigned(this);
     }
 
 

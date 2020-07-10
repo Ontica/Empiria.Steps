@@ -24,7 +24,7 @@ namespace Empiria.ProjectManagement.Messaging {
 
     ByThemeSummaryTableRow,
 
-    YourPendingActivitiesSummary,
+    YourAssignedActivity,
 
   }  // enum ContentTemplateType
 

@@ -64,7 +64,7 @@ namespace Empiria.ProjectManagement.Messaging {
         return;
       }
 
-      EMailContent content = EMailContentBuilder.UserPendingActivitiesContent(project, activities, sendTo);
+      EMailContent content = EMailContentBuilder.UserAssignedActivityContent(project, activities[0], sendTo);
 
       await SendEmail(content, sendTo);
     }

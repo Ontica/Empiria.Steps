@@ -20,10 +20,8 @@ namespace Empiria.ProjectManagement.Messaging {
     #region Public methods
 
     static internal void ActivityAssigned(Activity activity) {
-      var fl = new FixedList<Activity>(new[] { activity });
-
-      var content = EMailContentBuilder.UserPendingActivitiesContent(activity.Project, fl,
-                                                                     (Person) activity.Responsible);
+      var content = EMailContentBuilder.UserAssignedActivityContent(activity.Project, activity,
+                                                                    (Person) activity.Responsible);
 
       SendEmail(content, (Person) activity.Responsible);
     }
@@ -34,6 +32,10 @@ namespace Empiria.ProjectManagement.Messaging {
     #region Private methods
 
     static private void SendEmail(EMailContent content, Person sendToPerson) {
+      if (!sendToPerson.EMail.Contains("talanza.energy") && !sendToPerson.EMail.Contains("ontica.org")) {
+        sendToPerson = Person.Parse(20);
+      }
+
       var sendTo = new SendTo(sendToPerson.EMail, sendToPerson.Alias);
 
       EMail.Send(sendTo, content);

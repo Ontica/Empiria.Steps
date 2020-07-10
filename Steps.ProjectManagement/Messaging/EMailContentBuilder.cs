@@ -50,16 +50,15 @@ namespace Empiria.ProjectManagement.Messaging {
     }
 
 
-    static internal EMailContent UserPendingActivitiesContent(Project project,
-                                                              FixedList<Activity> activities,
-                                                              Person user) {
-      var body = GetTemplate(ContentTemplateType.YourPendingActivitiesSummary);
-      var noAssigneeRowTemplate = GetTemplate(ContentTemplateType.ActivityTableRowWithoutAssignee);
+    static internal EMailContent UserAssignedActivityContent(Project project, Activity activity,
+                                                             Person user) {
+      var body = GetTemplate(ContentTemplateType.YourAssignedActivity);
 
       body = ParseGeneralFields(body, project, user);
-      body = ParseActivitiesTable(body, activities, noAssigneeRowTemplate);
 
-      return new EMailContent($"Your RegTech Project {project.Name} status", body, true);
+      body = ParseActivityTemplate(body, activity);
+
+      return new EMailContent($"You have some {project.Name} assigned tasks", body, true);
     }
 
 

@@ -68,10 +68,11 @@ namespace Empiria.ProjectManagement.Messaging {
 
     static private class COLORS {
 
-      static internal readonly string green = "#009900";
-      static internal readonly string amber = "#ff9900";
-      static internal readonly string red = "#cc0000";
-      static internal readonly string gray = "#9a9a9a";
+      static internal readonly string green = "##00bbb4";
+      static internal readonly string amber = "#f7931e";
+      static internal readonly string red = "#ff0000";
+
+      static internal readonly string gray = "#a8a8a8";
       static internal readonly string ghost_color = "#ececec";
       static internal readonly string default_color = "#3dbab3";
       static internal readonly string empty = "";
