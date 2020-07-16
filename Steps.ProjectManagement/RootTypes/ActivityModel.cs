@@ -40,7 +40,6 @@ namespace Empiria.ProjectManagement {
 
       o.Duration = data.Get<string>("duration", o.Duration);
       o.DurationUnit = data.Get<string>("durationUnit", o.DurationUnit);
-      o.Periodicity = data.Get<string>("periodicity", o.Periodicity);
 
       o.EntityId = data.Get<int>("entity", o.EntityId);
       o.ProcedureId = data.Get<int>("procedure", o.ProcedureId);
@@ -48,14 +47,13 @@ namespace Empiria.ProjectManagement {
       o.ContractClause = data.Get<string>("contractClause", o.ContractClause);
       o.LegalBasis = data.Get<string>("legalBasis", o.LegalBasis);
 
+      if (data.HasValue("periodicityRule")) {        o.PeriodicRule = PeriodicRuleData.Parse(data.Slice("periodicityRule"));
 
-      if (!data.HasValue("periodicityRule")) {
-        o.PeriodicRule = PeriodicRuleData.Empty;
-        o.PeriodicityRuleJsonData = JsonObject.Empty;
+        if (data.HasValue("periodicity")) {
+          o.PeriodicRule.Notes = data.Get<string>("periodicity");
+        }
       } else {
-        var periodicRuleJson = data.Slice("periodicityRule");
-        o.PeriodicityRuleJsonData = periodicRuleJson;
-        o.PeriodicRule = PeriodicRuleData.Parse(periodicRuleJson);
+        o.PeriodicRule = PeriodicRuleData.Empty;
       }
 
       return o;
@@ -150,22 +148,10 @@ namespace Empiria.ProjectManagement {
     } = String.Empty;
 
 
-    [DataField("Periodicity")]
-    public string Periodicity {
-      get;
-      private set;
-    } = String.Empty;
-
     public PeriodicRuleData PeriodicRule {
       get;
       private set;
     } = PeriodicRuleData.Empty;
-
-
-    public JsonObject PeriodicityRuleJsonData {
-      get;
-      private set;
-    }
 
 
     public bool IsPeriodic {

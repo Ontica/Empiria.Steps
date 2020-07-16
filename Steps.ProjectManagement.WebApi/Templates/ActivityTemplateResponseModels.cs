@@ -61,7 +61,6 @@ namespace Empiria.ProjectManagement.WebApi {
         durationUnit = template.DurationUnit,
 
         periodicityRule = ToPeriodicityRule(template.PeriodicRule),
-        periodicity = template.Periodicity,
 
         entity = template.EntityId,
         procedure = template.ProcedureId,
@@ -98,9 +97,20 @@ namespace Empiria.ProjectManagement.WebApi {
       }
 
       return new {
-        ruleType = periodicRule.RuleType,
-        month = periodicRule.Month,
-        day = periodicRule.Day
+        each = new {
+          value = periodicRule.EachValue,
+          unit = periodicRule.EachUnit,
+        },
+
+        dueOn = !periodicRule.DueOnType.HasValue ? null :
+                  new {
+                    type = periodicRule.DueOnType,
+                    month = periodicRule.Month,
+                    dayOfWeek = periodicRule.DayOfWeek,
+                    day = periodicRule.Day
+                  },
+
+        notes = periodicRule.Notes,
       };
     }
 

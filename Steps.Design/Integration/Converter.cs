@@ -178,7 +178,7 @@ namespace Empiria.Steps.Design.Integration {
       }
 
       if (formerModel.IsPeriodic) {
-        data.PeriodicityRule = formerModel.PeriodicityRuleJsonData;
+        data.PeriodicityRule = formerModel.PeriodicRule.ToJson();
       }
 
       data.ProcedureEntityId = formerModel.EntityId;
@@ -239,10 +239,6 @@ namespace Empiria.Steps.Design.Integration {
 
       if (formerModel.LegalBasis.Trim().Length != 0) {
         json.Add("LegalBasis", formerModel.LegalBasis.Trim());
-      }
-
-      if (formerModel.IsPeriodic && formerModel.Periodicity.Trim().Length != 0) {
-        json.Add("PeriodicityNotes", formerModel.Periodicity.Trim());
       }
 
       return json;
