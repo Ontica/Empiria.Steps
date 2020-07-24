@@ -10,7 +10,6 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.Collections;
 using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Ontology;
@@ -211,16 +210,25 @@ namespace Empiria.ProjectManagement {
     } = Duration.Empty;
 
 
-    public int WarnDays {
+    public int TrafficLightDays {
       get {
-        return this.ExtensionData.Get("warnDays", 0);
+        return this.ExtensionData.Get("trafficLight/days", 0);
       }
     }
 
-
-    public string WarnType {
+    public int? ReminderDays {
       get {
-        return this.ExtensionData.Get("warnType", "Default");
+        if (this.ExtensionData.HasValue("reminder/days")) {
+          return this.ExtensionData.Get<int>("reminder/days");
+        } else {
+          return null;
+        }
+      }
+    }
+
+    public string TrafficLightType {
+      get {
+        return this.ExtensionData.Get("trafficLight/type", "Default");
       }
     }
 
@@ -448,13 +456,14 @@ namespace Empiria.ProjectManagement {
         this.ActualStartDate = data.Get("actualStartDate", ExecutionServer.DateMaxValue);
       }
 
-      if (data.HasValue("warnDays")) {
-        this.ExtensionData.Set("warnDays", data.Get<int>("warnDays"));
+      if (data.HasValue("trafficLight")) {
+        this.ExtensionData.Set("trafficLight", data.Slice("trafficLight"));
       }
 
-      if (data.HasValue("warnType")) {
-        this.ExtensionData.Set("warnType", data.Get<string>("warnType"));
+      if (data.HasValue("reminder")) {
+        this.ExtensionData.Set("reminder", data.Slice("reminder"));
       }
+
     }
 
 

@@ -75,8 +75,14 @@ namespace Empiria.ProjectManagement.WebApi {
         actualStartDate = activity.ActualStartDate,
         actualEndDate = activity.ActualEndDate,
 
-        warnDays = activity.WarnDays,
-        warnType = activity.WarnType,
+        trafficLight = new {
+          type = activity.TrafficLightType,
+          days = activity.TrafficLightType == "CalendarDays" ? (int?) activity.TrafficLightDays : null
+        },
+
+        reminder = new {
+          days = activity.ReminderDays
+        },
 
         sendAlertsTo = activity.SendAlertsTo.ToShortResponse(),
 
@@ -132,8 +138,14 @@ namespace Empiria.ProjectManagement.WebApi {
         actualStartDate = summary.ActualStartDate,
         actualEndDate = summary.ActualEndDate,
 
-        warnDays = summary.WarnDays,
-        warnType = summary.WarnType,
+        trafficLight = new {
+            type = summary.TrafficLightType,
+            days = summary.TrafficLightType == "CalendarDays" ? (int?) summary.TrafficLightDays : null
+          },
+
+        reminder = new {
+          days = summary.ReminderDays
+        },
 
         sendAlertsTo = summary.SendAlertsTo.ToShortResponse(),
 

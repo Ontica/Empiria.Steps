@@ -63,8 +63,14 @@ namespace Empiria.ProjectManagement.WebApi {
         actualStartDate = task.ActualStartDate,
         actualEndDate = task.ActualEndDate,
 
-        warnDays = task.WarnDays,
-        warnType = task.WarnType,
+        trafficLight = new {
+            type = task.TrafficLightType,
+            days = task.TrafficLightType == "CalendarDays" ? (int?) task.TrafficLightDays : null
+          },
+
+        reminder = new {
+          days = task.ReminderDays
+        },
 
         sendAlertsTo = task.SendAlertsTo.ToShortResponse(),
 
