@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Runtime.Remoting.Lifetime;
+
 using Empiria.DataTypes;
 
 namespace Empiria.ProjectManagement.Services {
@@ -131,41 +131,74 @@ namespace Empiria.ProjectManagement.Services {
                                                                 EmpiriaCalendar calendar) {
       var periodicRule = template.PeriodicRule;
 
-      if (eventDate.Year > (DateTime.Today.Year + 10)) {
-        return null;
-      }
+      try {
 
-      switch (periodicRule.RuleType) {
-        case "Daily":
-          return eventDate.AddDays(1);
-
-        case "OncePerYear-OnFixedDate":
-          return GetNextYearDate(eventDate, periodicRule.Month, periodicRule.Day);
-
-        case "Semi-annual-OnFixedDays":
-          return GetNextSemiannualDate(eventDate, periodicRule.Month, periodicRule.Day);
-
-        case "Semi-annual-BusinessDays":
-          return GetNextSemiannualBusinessDate(calendar, eventDate, periodicRule.Month, periodicRule.Day);
-
-        case "Monthly-OnFixedDay":
-          return GetNextMonthDate(eventDate, periodicRule.Day);
-
-        case "Monthly-BusinessDays":
-          return UtilityMethods.GetNextMonthBusinessDate(calendar, eventDate, periodicRule.Day);
-
-        case "After-Given-Activity-Yearly":
-          return eventDate.AddYears(1);
-
-        case "After-Given-Activity-Semi-annual":
-          return eventDate.AddMonths(6);
-
-        case "After-Given-Activity-Monthly":
-          return eventDate.AddMonths(1);
-
-        default:
+        if (eventDate.Year > (DateTime.Today.Year + 20)) {
           return null;
+        }
+
+        switch (periodicRule.EachUnit) {
+          case PeriodicRuleUnit.CalendarDays:
+            return GetNextCalendarDay(eventDate, periodicRule.EachValue.Value);
+
+          case PeriodicRuleUnit.Weeks:
+            var nextWeekDate = GetNextCalendarDay(eventDate, periodicRule.EachValue.Value * 7);
+
+            if (periodicRule.DueOnType == PeriodicRuleDueOn.OnFixedDayOfWeek) {
+              return GetNextDayOfWeekDate(nextWeekDate, periodicRule.DayOfWeek.Value);
+
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.AfterTheGivenStep) {
+              return nextWeekDate;
+
+            } else {
+              return null;
+            }
+
+          case PeriodicRuleUnit.Months:
+
+            if (periodicRule.DueOnType == PeriodicRuleDueOn.AfterTheGivenStep) {
+              return eventDate.AddMonths(periodicRule.EachValue.Value);
+
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.OnFirstBusinessDays) {
+              return GetNextMonthBusinessDate(calendar, eventDate,
+                                              periodicRule.EachValue.Value,
+                                              periodicRule.Day.Value);
+
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.OnFirstCalendarDays) {
+              return GetNextMonthDate(eventDate,
+                                      periodicRule.EachValue.Value,
+                                      periodicRule.Day.Value);
+
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.OnFixedDate) {
+              return GetNextMonthFixedDate(eventDate, periodicRule.EachValue.Value,
+                                           periodicRule.Month.Value, periodicRule.Day.Value);
+
+            } else {
+              return null;
+            }
+
+          case PeriodicRuleUnit.Years:
+            if (periodicRule.DueOnType == PeriodicRuleDueOn.AfterTheGivenStep) {
+              return eventDate.AddYears(periodicRule.EachValue.Value);
+            } else {
+              return GetNextSemiannualBusinessDate(calendar, eventDate,
+                                                   periodicRule.Month.Value, periodicRule.Day.Value);
+              }
+
+          case PeriodicRuleUnit.Manual:
+            return null;
+
+          default:
+            return null;
+        }
+      } catch (Exception e) {
+        throw new NotImplementedException($"Unable to calculate periodic rule for template rule: {periodicRule.ToString()}", e);
       }
+    }
+
+
+    static private DateTime GetNextDayOfWeekDate(DateTime date, int dayOfWeek) {
+      return date.AddDays(-1 * (int) date.DayOfWeek).AddDays(dayOfWeek);
     }
 
 
@@ -198,19 +231,35 @@ namespace Empiria.ProjectManagement.Services {
 
     }
 
-    static private DateTime GetNextMonthBusinessDate(EmpiriaCalendar calendar,
-                                                     DateTime fromDate, int businessDays) {
-      DateTime date = new DateTime(fromDate.Year, fromDate.Month,
-                                   DateTime.DaysInMonth(fromDate.Year, fromDate.Month));
 
-      return calendar.AddWorkingDays(date, businessDays);
+    static private DateTime GetNextCalendarDay(DateTime eventDate, int days) {
+      return eventDate.AddDays(days);
     }
 
 
-    static private DateTime GetNextMonthDate(DateTime fromDate, int monthDay) {
-      DateTime date = fromDate.AddMonths(1);
+    static private DateTime GetNextMonthBusinessDate(EmpiriaCalendar calendar,
+                                                     DateTime fromDate, int monthsCount, int businessDays) {
+      DateTime date = fromDate.AddMonths(monthsCount);
+
+      return new DateTime(date.Year, date.Month, 1);
+
+      //DateTime date = new DateTime(fromDate.Year, fromDate.Month,
+      //                             DateTime.DaysInMonth(fromDate.Year, fromDate.Month));
+
+      //return calendar.AddWorkingDays(date, businessDays);
+    }
+
+
+    static private DateTime GetNextMonthDate(DateTime fromDate, int monthsCount, int monthDay) {
+      DateTime date = fromDate.AddMonths(monthsCount);
 
       return new DateTime(date.Year, date.Month, monthDay);
+    }
+
+
+    static private DateTime GetNextMonthFixedDate(DateTime eventDate, int monthsCount,
+                                                  int month, int day) {
+      return GetNextMonthDate(eventDate, monthsCount, day);
     }
 
 
