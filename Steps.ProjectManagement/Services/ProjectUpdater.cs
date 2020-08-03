@@ -18,7 +18,6 @@ namespace Empiria.ProjectManagement.Services {
 
     #region Services
 
-
     static public FixedList<ProjectItem> Complete(ProjectItem projectItem, DateTime completedDate) {
       Assertion.AssertObject(projectItem, "projectItem");
 
@@ -106,6 +105,8 @@ namespace Empiria.ProjectManagement.Services {
 
       json.Add("name", stateChange.Template.Name);
       json.Add("notes", stateChange.Template.Notes);
+
+      json.Add("foreignLang", stateChange.Template.ForeignLanguageData.ToJson());
 
       json.Add("deadline", stateChange.Deadline);
       json.Add("plannedEndDate", stateChange.PlannedEndDate);

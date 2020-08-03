@@ -409,6 +409,8 @@ namespace Empiria.ProjectManagement {
       this.Tag = data.Tag;
       this.ExtensionData = JsonObject.Parse(data.ExtensionData.ToString());
 
+      this.ForeignLanguageData = data.ForeignLanguageData;
+
       this.Resource = data.Resource;
       this.TemplateId = data.TemplateId;
     }

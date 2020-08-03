@@ -85,7 +85,8 @@ namespace Empiria.ProjectManagement {
 
     #region Methods
 
-    public override string ToString() {
+
+    public JsonObject ToJson() {
       var json = new JsonObject();
 
       json.AddIfValue("name", this.Name);
@@ -93,7 +94,11 @@ namespace Empiria.ProjectManagement {
       json.AddIfValue("contractClause", this.ContractClause);
       json.AddIfValue("legalBasis", this.LegalBasis);
 
-      return json.ToString();
+      return json;
+    }
+
+    public override string ToString() {
+      return this.ToJson().ToString();
     }
 
 
