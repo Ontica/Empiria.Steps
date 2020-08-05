@@ -54,6 +54,7 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extensions\Cognition\Empiria.Cognition.csproj" />
     <ProjectReference Include="..\Steps.Design\Empiria.Steps.Design.csproj" />
   </ItemGroup>
   <ItemGroup>

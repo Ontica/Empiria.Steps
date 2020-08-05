@@ -1,0 +1,130 @@
+﻿{
+  "appName": "Empiria Governance Web Api",
+  "version": "1.0",
+  "date": "2019-02-01",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "{{APPLICATION-KEY}}"
+    },
+    {
+      "type": "",
+      "key": "License.Name",
+      "value": "{{LICENSE-NAME}}"
+    },
+    {
+      "type": "",
+      "key": "License.Number",
+      "value": "{{LICENSE-NUMBER}}"
+    },
+    {
+      "type": "",
+      "key": "License.SerialNumber",
+      "value": "{{SERIAL-NUMBER}}"
+    },
+    {
+      "type": "",
+      "key": "Organization.Id",
+      "value": 1
+    },
+    {
+      "type": "",
+      "key": "Server.Id",
+      "value": 40
+    },
+    {
+      "type": "",
+      "key": "System.Description",
+      "value": "Empiria Governance Management Solution"
+    },
+    {
+      "type": "",
+      "key": "System.Name",
+      "value": "Empiria Governance"
+    },
+    {
+      "type": "Data",
+      "key": "IsObjectIdGeneratorServer",
+      "value": true
+    },
+    {
+      "type": "Data",
+      "key": "DataSource.Default",
+      "value": "{{DEFAULT-DATABASE-CONNECTION}}"
+    },
+    {
+      "type": "Data",
+      "key": "DataTechnology.Default",
+      "value": 1
+    },
+    {
+      "type": "Security",
+      "key": "IV",
+      "value": "{{SECURITY-IV}}"
+    },
+    {
+      "type": "Security",
+      "key": "Key",
+      "value": "{{SECURITY-KEY}}"
+    },
+    {
+      "type": "Security",
+      "key": "LKey",
+      "value": "{{SECURITY-LKEY}}"
+    },
+    {
+      "type": "Security",
+      "key": "ChangePasswordKey",
+      "value": "{{CHANGE-PASSWORD-KEY}}"
+    },
+    {
+      "type": "WebApi.Client",
+      "key": "Default.WebApiServer",
+      "value": "Steps"
+    },
+    {
+      "type": "WebApi.Client",
+      "key": "WebApiServer.Steps",
+      "value": "{{WEBAPISERVER.STEPS}}"
+    },
+    {
+      "type": "WebApi.Client",
+      "key": "ServiceDirectory.Path",
+      "value": "v1/system/service-directory"
+    },
+    {
+      "type": "DataTypes",
+      "key": "Default.Calendar.Name",
+      "value": "{{DEFAULT-CALENDAR-NAME}}"
+    },
+    {
+      "type": "Postings.Media",
+      "key": "Default.MediaStorage",
+      "value": "{{DEFAULT-MEDIA-STORAGE}}"
+    },
+    {
+      "type": "Governance",
+      "key": "DocumentsLibrary.BaseAddress",
+      "value": "{{DOCUMENTS-LIBRARY.BASEADDRESS}}"
+    },
+    {
+      "type": "ProjectManagement",
+      "key": "Templates.Path",
+      "value": "{{TEMPLATES-PATH}}"
+    },
+    {
+      "type": "Messaging",
+      "key": "Default.Email.ConfigData",
+      "value": {
+        "SmtpClientHost": "smtp.gmail.com",
+        "SmtpClientPort": 587,
+        "EnableSsl": true,
+        "SenderEMailAddress": "regtech@talanza.energy",
+        "SenderName": "Talanza Energy Consulting - RegTech Services",
+        "SenderEMailPassword": "policeesmireligion",
+        "UseDefaultCredentials": false
+      }
+    }
+  ]
+}
