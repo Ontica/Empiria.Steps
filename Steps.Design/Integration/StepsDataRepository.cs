@@ -4,19 +4,75 @@
 *  Assembly : Empiria.Steps.Design.dll                   Pattern   : Data Services                           *
 *  Type     : StepsDataRepository                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Data repository with methods used to read and write steps definition data.                     *
+*  Summary  : Data repository with methods used to read and write steps data objects.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Data;
 
+using Empiria.ProjectManagement;
+using Empiria.Steps.Design.DataObjects;
+
+
 namespace Empiria.Steps.Design.Integration {
 
-  /// <summary>Data repository with methods used to read and write steps definition data.</summary>
+  /// <summary>Data repository with methods used to read and write steps data objects.</summary>
   static internal class StepsDataRepository {
 
     #region Methods
+
+    internal static FixedList<StepDataObject> GetActionDataObjects(ProjectItem activity) {
+      if (activity.IsEmptyInstance) {
+        return new FixedList<StepDataObject>();
+      }
+
+      var sql = $"SELECT * FROM STStepsDataObjects WHERE " +
+                $"(ActivityId = {activity.Id}) AND (StepDataObjectStatus <> 'X')";
+
+      var op = DataOperation.Parse(sql);
+
+      var list = DataReader.GetList<StepDataObject>(op);
+
+      if (activity.HasTemplate) {
+        var templateDataObjects = StepsDataRepository.GetDataObjects(activity.GetTemplate());
+
+        list.AddRange(templateDataObjects.FindAll(x => !list.Contains(x)));
+      }
+
+      return list.ToFixedList();
+    }
+
+
+    internal static FixedList<StepDataObject> GetDataObjects(ProjectItem step) {
+      var sql = $"SELECT * FROM STStepsDataObjects WHERE " +
+                $"(StepId = {step.Id}) AND (ActivityId = -1) AND (StepDataObjectStatus <> 'X')";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StepDataObject>(op);
+    }
+
+
+    internal static FixedList<StepDataObject> GetFormsData(int dataItemId) {
+      var sql = $"SELECT * FROM STStepsDataObjects WHERE " +
+                $"(DataItemId = {dataItemId}) AND (StepDataObjectStatus <> 'X')";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StepDataObject>(op);
+    }
+
+
+    internal static void WriteStepDataObject(StepDataObject o) {
+      var op = DataOperation.Parse("writeSTStepDataObject", o.Id, o.UID,
+                    o.DataItem.Id, o.Step.Id, o.Activity.Id,
+                    o.MediaFile.Id, o.FormId, o.FormData.ToString(),
+                    o.Configuration.ToString(), o.ExtensionData.ToString(),
+                    (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
 
 
     static internal void WriteStepData(StepDataHolder o) {
