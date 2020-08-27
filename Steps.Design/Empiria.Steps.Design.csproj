@@ -64,6 +64,12 @@
     <Folder Include="UseCases\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extensions\Data.DataObjects\Empiria.Data.DataObjects.csproj" />
+    <ProjectReference Include="..\..\extensions\Office\Empiria.Office.csproj" />
     <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
   </ItemGroup>
 </Project>
