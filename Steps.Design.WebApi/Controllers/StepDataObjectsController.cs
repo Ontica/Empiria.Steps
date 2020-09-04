@@ -98,6 +98,23 @@ namespace Empiria.Steps.Design.WebApi {
       }
     }
 
+
+    [HttpDelete]
+    [Route("v3/empiria-steps/data-objects/{dataObjectUID}")]
+    public NoDataModel RemoveDataObjectLink([FromUri] string dataObjectUID) {
+      try {
+        var dataObject = StepDataObject.Parse(dataObjectUID);
+
+        dataObject.Delete();
+
+        return new NoDataModel(this.Request);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     #endregion Write methods
 
   }  // class StepDataObjectsController

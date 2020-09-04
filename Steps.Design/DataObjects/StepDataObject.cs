@@ -181,6 +181,13 @@ namespace Empiria.Steps.Design.DataObjects {
     }
 
 
+    public void Delete() {
+      this.Status = EntityStatus.Deleted;
+
+      this.Save();
+    }
+
+
     public void RemoveFile() {
       this.UploadedFileUrl = String.Empty;
 
