@@ -1,13 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Web;
-
-using Empiria.Json;
-using Empiria.Postings.Media;
-
-using Empiria.Office.Providers;
-
-using Empiria.Steps.Design.Integration;
 
 namespace Empiria.Steps.Design.DataObjects {
 
@@ -17,11 +8,15 @@ namespace Empiria.Steps.Design.DataObjects {
 
     #region Methods
 
+
     static internal string GetActionName(this StepDataObject _stepDataObject) {
       string namedKey = _stepDataObject.DataItem.NamedKey;
 
       if (namedKey.Contains("WebForm")) {
-        return "Fill form";
+        return "Edit";
+
+      } else if (namedKey.Contains("WebGrid")) {
+        return "Edit";
 
       } else if (namedKey.Contains("FillOut")) {
         return "Upload completed file";
@@ -56,6 +51,9 @@ namespace Empiria.Steps.Design.DataObjects {
       } else if (namedKey.Contains("WebForm")) {
         return "WebForm";
 
+      } else if (namedKey.Contains("WebGrid")) {
+        return "WebGrid";
+
       } else if (namedKey.Contains("DataFile")) {
         return "DataFile";
 
@@ -68,205 +66,6 @@ namespace Empiria.Steps.Design.DataObjects {
       }
       return "Unknown";
     }
-
-
-    static public void GenerateMediaFile(this StepDataObject _stepDataObject) {
-      MediaStorage storage = MediaStorage.Default;
-
-      var template = _stepDataObject.DataItem.TemplateFileInfo;
-
-      var fileName = DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss--") + template.Name;
-
-      string fullPath = Path.Combine(storage.Path, fileName);
-
-      if (_stepDataObject.MediaFormat == "PDF" && _stepDataObject.DataItem.GetPDFFormFields().HasItems) {
-        _stepDataObject.ExecutePDFAutofill2(template.FullName, fullPath);
-
-        _stepDataObject.AutofillFileUrl = $"{MediaStorage.Default.Url}/{fileName}";
-
-        _stepDataObject.Save();
-
-        return;
-      }
-
-      File.Copy(template.FullName, fullPath, true);
-
-      _stepDataObject.AutofillFileUrl = $"{MediaStorage.Default.Url}/{fileName}";
-
-      _stepDataObject.ExecuteAutofill(fullPath, false);
-
-      _stepDataObject.Save();
-    }
-
-
-    static public void UploadFile(this StepDataObject _stepDataObject, HttpPostedFile file) {
-      MediaStorage storage = MediaStorage.Default;
-
-      var template = _stepDataObject.DataItem.TemplateFileInfo;
-
-      var uploadFileName = DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss--Final--") + template.Name;
-
-      string fullPath = Path.Combine(storage.Path, uploadFileName);
-
-      file.SaveAs(fullPath);
-
-      _stepDataObject.UploadedFileUrl = $"{MediaStorage.Default.Url}/{uploadFileName}";
-
-      _stepDataObject.ExecuteAutofill(fullPath, true);
-
-      _stepDataObject.Save();
-
-    }
-
-
-    #endregion Public methods
-
-    #region Private methods
-
-    static private void ExecuteAutofill(this StepDataObject _stepDataObject, string fullPath, bool uploaded) {
-      if (_stepDataObject.MediaFormat == "Excel") {
-        _stepDataObject.ExecuteExcelAutofill(fullPath, uploaded);
-      } else if (_stepDataObject.MediaFormat == "PDF") {
-        _stepDataObject.ExecutePDFAutofill(fullPath, uploaded);
-      }
-    }
-
-
-    static private void ExecuteExcelAutofill(this StepDataObject _stepDataObject, string fullPath, bool uploaded) {
-      if (uploaded) {
-        return;
-      }
-
-      if (_stepDataObject.DataItem.Id == 9) {
-        _stepDataObject.FillOutSasisopa(fullPath);
-        return;
-      }
-
-      try {
-        var excel = OpenXMLSpreadsheet.Open(fullPath);
-
-        var random = new Random();
-
-        for (int i = 11; i <= 56; i++) {
-          excel.SetCell($"M{i}", random.Next(0, 12));
-          excel.SetCell($"N{i}", random.Next(5, 10));
-          excel.SetCell($"O{i}", random.Next(1, 10));
-          excel.SetCell($"P{i}", random.Next(4, 9));
-          excel.SetCell($"Q{i}", random.Next(0, 50));
-          excel.SetCell($"R{i}", random.Next(0, 30));
-          excel.SetCell($"S{i}", random.Next(10, 50));
-          excel.SetCell($"T{i}", random.Next(20, 40));
-          excel.SetCell($"U{i}", random.Next(5, 40));
-          excel.SetCell($"V{i}", random.Next(0, 50));
-        }
-
-        excel.Save();
-
-        excel.Close();
-
-      } catch (Exception e) {
-        throw e;
-      }
-    }
-
-
-    static  private void ExecutePDFAutofill(this StepDataObject _stepDataObject,
-                                            string fullPath, bool uploaded) {
-      var defaults = _stepDataObject.DataItem.GetPDFFormFields();
-
-      try {
-        var pdfFields = PdfFieldsReader.GetFields(fullPath);
-
-        JsonObject json = new JsonObject();
-
-        foreach (var field in pdfFields) {
-          if (uploaded) {
-            json.AddIfValue(field.Key, field.Value);
-          } else {
-            json.Add(field.Key, field.Value);
-          }
-        }
-
-        _stepDataObject.AutoFillFields = json;
-
-
-      } catch (Exception e) {
-        throw e;
-      }
-    }
-
-
-    static private void ExecutePDFAutofill2(this StepDataObject _stepDataObject,
-                                            string templatePath, string fullPath) {
-      try {
-        var defaults = _stepDataObject.DataItem.GetPDFFormFields();
-
-        var pdfFields = PdfFieldsReader.GetFields(templatePath);
-
-        foreach (var field in pdfFields) {
-          if (defaults.Contains(field.Key)) {
-            field.Value = defaults.Get<string>(field.Key);
-          }
-        }
-
-        Stream stream = File.OpenRead(templatePath);
-
-        var autofilled = PdfFieldsWriter.WriteFields(stream, pdfFields);
-
-        byte[] bytes = autofilled.ToArray();
-
-        stream.Close();
-
-        using (FileStream fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write)) {
-          fs.Write(bytes, 0, (int) bytes.Length);
-        }
-
-      } catch (Exception e) {
-        throw e;
-      }
-    }
-
-
-    static private void FillOutSasisopa(this StepDataObject _stepDataObject,
-                                        string fullPath) {
-      try {
-        var excel = OpenXMLSpreadsheet.Open(fullPath);
-
-        var forms = StepsDataRepository.GetFormsData(1);
-
-        int i = 5;
-
-        foreach (var form in forms) {
-          var current = form.FormData;
-          if (!current.HasItems) {
-            continue;
-          }
-          excel.SetCell($"A{i}", current.Get<string>("anexo", String.Empty));
-          excel.SetCell($"B{i}", current.Get<string>("elemento", String.Empty));
-          excel.SetCell($"C{i}", current.Get<string>("actividad", String.Empty));
-          excel.SetCell($"D{i}", current.Get<string>("descripcion", String.Empty));
-          excel.SetCell($"E{i}", current.Get<string>("fechasInicio", String.Empty));
-          excel.SetCell($"F{i}", current.Get<string>("fechasTermino", String.Empty));
-          excel.SetCell($"G{i}", current.Get<string>("periodicity", String.Empty));
-          excel.SetCell($"H{i}", current.Get<string>("responsable", String.Empty));
-          excel.SetCell($"I{i}", current.Get<string>("evidencias", String.Empty));
-          excel.SetCell($"J{i}", current.Get<string>("documentosAnexos", String.Empty));
-          excel.SetCell($"K{i}", current.Get<string>("avance", String.Empty));
-          excel.SetCell($"L{i}", current.Get<string>("observaciones", String.Empty));
-          excel.SetCell($"M{i}", current.Get<string>("siguientesAcciones", String.Empty));
-
-          i++;
-        }
-
-        excel.Save();
-
-        excel.Close();
-
-      } catch (Exception e) {
-        throw e;
-      }
-    }
-
 
     #endregion Private methods
 

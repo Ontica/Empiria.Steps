@@ -85,6 +85,11 @@ namespace Empiria.ProjectManagement {
     }
 
 
+    public static FixedList<GraphData> GetGraphData() {
+      return ProjectData.GetGraphData();
+    }
+
+
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       if (!this.IsEmptyInstance) {
         this.Parent = ProjectItem.Parse((int) row["ParentId"]);

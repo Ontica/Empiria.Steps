@@ -18,6 +18,12 @@ namespace Empiria.ProjectManagement {
   /// <summary>Project data read and write methods.</summary>
   static internal class ProjectData {
 
+    static internal FixedList<GraphData> GetGraphData() {
+      var activities = GetAllActivities();
+
+      return GraphData.Load(activities);
+    }
+
 
     static internal FixedList<ProjectItem> GetAllActivities() {
       string projectList = UserProjectSecurity.GetUserProjectList();

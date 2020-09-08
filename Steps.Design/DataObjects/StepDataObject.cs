@@ -15,7 +15,7 @@ using Empiria.Json;
 using Empiria.StateEnums;
 
 using Empiria.Data.DataObjects;
-using Empiria.Postings.Media;
+using Empiria.Storage;
 
 using Empiria.ProjectManagement;
 using Empiria.Steps.Design.Integration;
@@ -140,36 +140,6 @@ namespace Empiria.Steps.Design.DataObjects {
       private set;
     }
 
-
-    public string AutofillFileUrl {
-      get {
-        return this.Configuration.Get<string>("autofillFileUrl", String.Empty);
-      }
-      internal set {
-        this.Configuration.Set("autofillFileUrl", value);
-      }
-    }
-
-    public JsonObject AutoFillFields {
-      get {
-        return this.FormData.Slice("autofillFields", false);
-      }
-      internal set {
-        this.FormData.Set("autofillFields", value);
-      }
-    }
-
-
-    public string UploadedFileUrl {
-      get {
-        return this.Configuration.Get<string>("uploadedFileUrl", String.Empty);
-      }
-      internal set {
-        this.Configuration.Set("uploadedFileUrl", value);
-      }
-    }
-
-
     #endregion Properties
 
 
@@ -188,31 +158,9 @@ namespace Empiria.Steps.Design.DataObjects {
     }
 
 
-    public void RemoveFile() {
-      this.UploadedFileUrl = String.Empty;
-
-      this.Save();
-    }
-
-
-    public void RemoveMediaFile() {
-      this.AutofillFileUrl = String.Empty;
-
-      this.Save();
-    }
-
-
     protected override void OnSave() {
       StepsDataRepository.WriteStepDataObject(this);
     }
-
-
-    public void SaveFormData(JsonObject json) {
-      this.FormData = json;
-
-      this.Save();
-    }
-
 
     #endregion Methods
 
