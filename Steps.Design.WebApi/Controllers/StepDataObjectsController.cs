@@ -29,11 +29,11 @@ namespace Empiria.Steps.Design.WebApi {
     [Route("v3/empiria-steps/activities/{activityUID}/data-objects")]
     public CollectionModel GetActivityDataObjects([FromUri] string activityUID) {
       try {
-        var action = ProjectItem.Parse(activityUID);
+        var activity = ProjectItem.Parse(activityUID);
 
-        FixedList<StepDataObject> dataObjects = StepDataObject.GetListForAction(action);
+        FixedList<StepDataObject> dataObjects = StepDataObject.GetListForAction(activity);
 
-        return new CollectionModel(this.Request, dataObjects.ToResponse(),
+        return new CollectionModel(this.Request, dataObjects.ToResponse(activity),
                                    typeof(StepDataObject).FullName);
 
       } catch (Exception e) {

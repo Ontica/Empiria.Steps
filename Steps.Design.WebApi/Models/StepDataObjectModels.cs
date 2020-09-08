@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Empiria.WebApi;
 
 using Empiria.Steps.Design.DataObjects;
+using Empiria.ProjectManagement;
 
 namespace Empiria.Steps.Design.WebApi {
 
@@ -23,6 +24,7 @@ namespace Empiria.Steps.Design.WebApi {
     static private string libraryBaseAddress = ConfigurationData.GetString("Empiria.Governance", "DocumentsLibrary.BaseAddress");
 
     #region Response methods
+
 
     static internal ICollection ToResponse(this IList<StepDataObject> list) {
       ArrayList array = new ArrayList(list.Count);
@@ -34,20 +36,82 @@ namespace Empiria.Steps.Design.WebApi {
     }
 
 
+    static internal ICollection ToResponse(this IList<StepDataObject> list, ProjectItem activity) {
+      ArrayList array = new ArrayList(list.Count);
+
+      foreach (var item in list) {
+        if (!item.DataItem.NamedKey.Contains("WebForm") && !item.DataItem.NamedKey.Contains("WebGrid")) {
+          array.Add(ConvertToAutofill(item, activity).ToResponse());
+        } else {
+          array.Add(item.ToResponse(activity));
+        }
+      }
+      return array;
+    }
+
+
+    private static Autofill ConvertToAutofill(StepDataObject dataObject, ProjectItem activity) {
+      return new Autofill(dataObject, activity);
+    }
+
+
     static internal object ToResponse(this StepDataObject dataObject) {
       return new {
         uid = dataObject.UID,
         type = dataObject.DataItem.NamedKey,
         entity = dataObject.Step.ToIdentifiableResponse(x => x.Name),
-        subject = dataObject.Activity.ToIdentifiableResponse(x => x.Name),
+        //subject = activity.ToIdentifiableResponse(x => x.Name),
         action = dataObject.Action,
         family = dataObject.DataItem.Family,
         name = dataObject.DataItem.Name,
         description = dataObject.DataItem.Description,
         mediaFormat = dataObject.MediaFormat,
-        autofillFileUrl = dataObject.AutofillFileUrl,
-        uploadedFileUrl = dataObject.UploadedFileUrl,
+        //autofillFileUrl = String,
+        //uploadedFileUrl = String.Empty,
         templateUrl = dataObject.DataItem.Template.Replace("~", libraryBaseAddress),
+        decorator = dataObject.DataItem.Terms,
+        status = dataObject.Status
+      };
+    }
+
+    static internal object ToResponse(this StepDataObject dataObject, ProjectItem activity) {
+      return new {
+        uid = dataObject.UID,
+        type = dataObject.DataItem.NamedKey,
+        entity = dataObject.Step.ToIdentifiableResponse(x => x.Name),
+        subject = activity.ToIdentifiableResponse(x => x.Name),
+        action = dataObject.Action,
+        family = dataObject.DataItem.Family,
+        name = dataObject.DataItem.Name,
+        description = dataObject.DataItem.Description,
+        mediaFormat = dataObject.MediaFormat,
+        autofillFileUrl = String.Empty,
+        uploadedFileUrl = String.Empty,
+        templateUrl = dataObject.DataItem.Template.Replace("~", libraryBaseAddress),
+        decorator = dataObject.DataItem.Terms,
+        status = dataObject.Status
+      };
+    }
+
+
+    static internal object ToResponse(this Autofill autofill) {
+      var dataObject = autofill.StepDataObject;
+      var activity = autofill.Activity;
+
+      return new {
+        uid = dataObject.UID,
+        type = dataObject.DataItem.NamedKey,
+        entity = dataObject.Step.ToIdentifiableResponse(x => x.Name),
+        subject = activity.ToIdentifiableResponse(x => x.Name),
+        action = dataObject.Action,
+        family = dataObject.DataItem.Family,
+        name = dataObject.DataItem.Name,
+        description = dataObject.DataItem.Description,
+        mediaFormat = dataObject.MediaFormat,
+        autofillFileUrl = autofill.AutofillFileUrl,
+        uploadedFileUrl = autofill.UploadedFileUrl,
+        templateUrl = dataObject.DataItem.Template.Replace("~", libraryBaseAddress),
+        decorator = dataObject.DataItem.Terms,
         status = dataObject.Status
       };
     }

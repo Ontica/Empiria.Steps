@@ -14,6 +14,7 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Steps.Design.DataObjects;
+using Empiria.ProjectManagement;
 
 namespace Empiria.Steps.Design.WebApi {
 
@@ -23,14 +24,18 @@ namespace Empiria.Steps.Design.WebApi {
     #region Write methods
 
     [HttpDelete]
-    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/autofill")]
-    public SingleObjectModel DiscardAutofillFile([FromUri] string dataObjectUID) {
+    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/autofill/{activityUID}")]
+    public SingleObjectModel DiscardAutofillFile([FromUri] string dataObjectUID,
+                                                 [FromUri] string activityUID) {
       try {
         var dataObject = StepDataObject.Parse(dataObjectUID);
+        var activity = ProjectItem.Parse(activityUID);
 
-        dataObject.RemoveMediaFile();
+        var autofill = new Autofill(dataObject, activity);
 
-        return new SingleObjectModel(this.Request, dataObject.ToResponse(),
+        autofill.RemoveMediaFile();
+
+        return new SingleObjectModel(this.Request, autofill.ToResponse(),
                                      typeof(StepDataObject).FullName);
 
       } catch (Exception e) {
@@ -40,14 +45,18 @@ namespace Empiria.Steps.Design.WebApi {
 
 
     [HttpPost]
-    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/autofill")]
-    public SingleObjectModel GenerateAutofillFile([FromUri] string dataObjectUID) {
+    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/autofill/{activityUID}")]
+    public SingleObjectModel GenerateAutofillFile([FromUri] string dataObjectUID,
+                                                  [FromUri] string activityUID) {
       try {
         var dataObject = StepDataObject.Parse(dataObjectUID);
+        var activity = ProjectItem.Parse(activityUID);
 
-        dataObject.GenerateMediaFile();
+        var autofill = new Autofill(dataObject, activity);
 
-        return new SingleObjectModel(this.Request, dataObject.ToResponse(),
+        autofill.GenerateMediaFile();
+
+        return new SingleObjectModel(this.Request, autofill.ToResponse(),
                                      typeof(StepDataObject).FullName);
 
       } catch (Exception e) {
@@ -57,14 +66,18 @@ namespace Empiria.Steps.Design.WebApi {
 
 
     [HttpDelete]
-    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/upload-file")]
-    public SingleObjectModel RemoveUploadedFile([FromUri] string dataObjectUID) {
+    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/upload-file/{activityUID}")]
+    public SingleObjectModel RemoveUploadedFile([FromUri] string dataObjectUID,
+                                                [FromUri] string activityUID) {
       try {
         var dataObject = StepDataObject.Parse(dataObjectUID);
+        var activity = ProjectItem.Parse(activityUID);
 
-        dataObject.RemoveFile();
+        var autofill = new Autofill(dataObject, activity);
 
-        return new SingleObjectModel(this.Request, dataObject.ToResponse(),
+        autofill.RemoveFile();
+
+        return new SingleObjectModel(this.Request, autofill.ToResponse(),
                                      typeof(StepDataObject).FullName);
 
       } catch (Exception e) {
@@ -74,16 +87,20 @@ namespace Empiria.Steps.Design.WebApi {
 
 
     [HttpPost]
-    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/upload-file")]
-    public SingleObjectModel UploadFile([FromUri] string dataObjectUID) {
+    [Route("v3/empiria-steps/data-objects/{dataObjectUID}/upload-file/{activityUID}")]
+    public SingleObjectModel UploadFile([FromUri] string dataObjectUID,
+                                        [FromUri] string activityUID) {
       try {
         var request = HttpContext.Current.Request;
 
         var dataObject = StepDataObject.Parse(dataObjectUID);
+        var activity = ProjectItem.Parse(activityUID);
 
-        dataObject.UploadFile(request.Files[0]);
+        var autofill = new Autofill(dataObject, activity);
 
-        return new SingleObjectModel(this.Request, dataObject.ToResponse(),
+        autofill.UploadFile(request.Files[0]);
+
+        return new SingleObjectModel(this.Request, autofill.ToResponse(),
                                      typeof(StepDataObject).FullName);
 
       } catch (Exception e) {
