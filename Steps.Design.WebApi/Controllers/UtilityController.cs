@@ -27,11 +27,7 @@ namespace Empiria.Steps.Design.WebApi {
     [Route("v3/steps/services/translator/to-english")]
     public async Task<SingleObjectModel> TranslateToEnglish([FromBody] object body) {
       try {
-        base.RequireBody(body);
-
-        var bodyAsJson = JsonObject.Parse(body);
-
-        var sourceText = bodyAsJson.Get<string>("text");
+        var sourceText = GetTextToTranslate(body);
 
         string translatedText = await TextTranslator.Translate(sourceText, Language.English);
 
@@ -44,6 +40,16 @@ namespace Empiria.Steps.Design.WebApi {
 
 
     #endregion Post methods
+
+
+    private string GetTextToTranslate(object body) {
+      base.RequireBody(body);
+
+      var bodyAsJson = JsonObject.Parse(body);
+
+      return bodyAsJson.Get<string>("text");
+    }
+
 
   }  // class UtilityController
 
