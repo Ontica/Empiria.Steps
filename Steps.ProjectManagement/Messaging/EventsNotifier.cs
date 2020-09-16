@@ -10,16 +10,21 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.Messaging;
+
+using Empiria.Messaging.EMailDelivery;
 
 namespace Empiria.ProjectManagement.Messaging {
 
   /// <summary>Methods that serve to integrate with other systems normally using a message queue.</summary>
-  static internal class EventsNotifier {
+  static public class EventsNotifier {
 
     #region Public methods
 
     static internal void ActivityAssigned(Activity activity) {
+      if (activity.Deadline == ExecutionServer.DateMaxValue) {
+        return;
+      }
+
       var content = EMailContentBuilder.UserAssignedActivityContent(activity.Project, activity,
                                                                     (Person) activity.Responsible);
 
@@ -32,10 +37,6 @@ namespace Empiria.ProjectManagement.Messaging {
     #region Private methods
 
     static private void SendEmail(EMailContent content, Person sendToPerson) {
-      if (!sendToPerson.EMail.Contains("talanza.energy") && !sendToPerson.EMail.Contains("ontica.org")) {
-        sendToPerson = Person.Parse(20);
-      }
-
       var sendTo = new SendTo(sendToPerson.EMail, sendToPerson.Alias);
 
       EMail.Send(sendTo, content);

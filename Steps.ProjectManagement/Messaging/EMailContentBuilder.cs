@@ -9,10 +9,10 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+
 using Empiria.Contacts;
-using Empiria.DataTypes;
-using Empiria.Messaging;
+
+using Empiria.Messaging.EMailDelivery;
 
 namespace Empiria.ProjectManagement.Messaging {
 
