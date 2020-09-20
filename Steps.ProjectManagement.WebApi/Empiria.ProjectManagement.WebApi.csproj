@@ -58,11 +58,13 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
     <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
+    <ProjectReference Include="..\..\extensions\Storage\Empiria.Storage.csproj" />
+    <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.ProjectManagement" Version="1.0.0" />
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
+    <PackageReference Include="Empiria.Storage" Version="1.0.0" />
+    <PackageReference Include="Empiria.ProjectManagement" Version="1.0.0" />
   </ItemGroup>
 </Project>

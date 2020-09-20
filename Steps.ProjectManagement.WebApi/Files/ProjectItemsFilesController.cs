@@ -15,7 +15,7 @@ using Empiria.Data;
 using Empiria.WebApi;
 
 using Empiria.Postings;
-using Empiria.Postings.Media;
+using Empiria.Storage;
 
 namespace Empiria.ProjectManagement.WebApi {
 
@@ -63,7 +63,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     [HttpGet]
     [Route("v1/project-management/project-items/{projectItemUID}/files")]
-    public CollectionModel GetProjectItemFiles(string projectItemUID) {
+    public CollectionModel GetProjectItemFiles([FromUri] string projectItemUID) {
       try {
         var projectItem = ProjectItem.Parse(projectItemUID);
 
@@ -83,7 +83,6 @@ namespace Empiria.ProjectManagement.WebApi {
 
     #region UPDATE methods
 
-
     [HttpPost]
     [Route("v1/project-management/project-items/{projectItemUID}/files")]
     public SingleObjectModel UploadProjectItemFile(string projectItemUID) {
@@ -92,7 +91,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var projectItem = ProjectItem.Parse(projectItemUID);
 
-        Posting posting = MediaPostingServices.CreateMediaPost(request, projectItem, "ProjectItem.MediaFile");
+        Posting posting = MediaFilePostingServices.CreateMediaFilePosting(request, projectItem, "ProjectItem.MediaFile");
 
         MediaFile mediaFile = posting.GetPostedItem<MediaFile>();
 
@@ -141,7 +140,7 @@ namespace Empiria.ProjectManagement.WebApi {
         Assertion.Assert(posting.NodeObjectUID == projectItem.UID,
             $"ProjectItem {projectItem.Name} does not have the file {posting.PostedItemUID}.");
 
-        MediaPostingServices.UpdateMediaPost(request, posting);
+        MediaFilePostingServices.UpdateMediaFilePosting(request, posting);
 
         MediaFile mediaFile = posting.GetPostedItem<MediaFile>();
 

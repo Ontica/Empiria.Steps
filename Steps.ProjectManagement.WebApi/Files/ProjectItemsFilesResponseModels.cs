@@ -12,8 +12,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Empiria.Contacts;
+
 using Empiria.Postings;
-using Empiria.Postings.Media;
+using Empiria.Storage;
 
 
 namespace Empiria.ProjectManagement.WebApi {
@@ -21,9 +22,7 @@ namespace Empiria.ProjectManagement.WebApi {
   /// <summary>Response static methods for project items files.</summary>
   static internal class ProjectItemsFilesResponseModels {
 
-
     #region Response methods
-
 
     static internal ICollection ToProjectItemFileResponse(this IList<Posting> list) {
       ArrayList array = new ArrayList(list.Count);

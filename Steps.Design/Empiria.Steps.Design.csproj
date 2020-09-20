@@ -56,19 +56,22 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Core" Version="7.0.0" />
+    <PackageReference Include="Empiria.Data.DataObjects" Version="1.0.0" />
+    <PackageReference Include="Empiria.Office" Version="1.0.0" />
+    <PackageReference Include="Empiria.Postings" Version="1.0.0" />
+    <PackageReference Include="Empiria.Storage" Version="1.0.0" />
+    <PackageReference Include="Empiria.ProjectManagement" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UseCases\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\extensions\Data.DataObjects\Empiria.Data.DataObjects.csproj" />
     <ProjectReference Include="..\..\extensions\Office\Empiria.Office.csproj" />
+    <ProjectReference Include="..\..\extensions\Postings\Postings\Empiria.Postings.csproj" />
+    <ProjectReference Include="..\..\extensions\Storage\Empiria.Storage.csproj" />
     <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
   </ItemGroup>
