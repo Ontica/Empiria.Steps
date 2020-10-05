@@ -106,7 +106,7 @@ namespace Empiria.ProjectManagement {
 
       FixedList<ProjectItem> branchToCopy = activity.GetBranch();
 
-      var copiedItems = new List<Tuple<Activity, string>>(branchToCopy.Count);
+      var copiedItems = new List<Tuple<Activity, ProjectItem, int>>(branchToCopy.Count);
 
       foreach (var item in branchToCopy) {
         var copy = new Activity(this.Project, item);
@@ -116,16 +116,37 @@ namespace Empiria.ProjectManagement {
         var parentInBranch = branchToCopy.Find(x => x.Id == item.Parent.Id);
 
         if (parentInBranch != null) {
-          var copyParent = copiedItems.Find(x => x.Item2 == parentInBranch.UID);
+          var copyParent = copiedItems.Find(x => x.Item2.UID == parentInBranch.UID);
 
           copy.SetParent(copyParent.Item1);
         }
 
+
         copy.Save();
+
+        var dependencyId = copy.Template.DueOnControllerId;
 
         this.ItemsList.Add(copy);
 
-        copiedItems.Add(Tuple.Create(copy, item.UID));
+        copiedItems.Add(Tuple.Create(copy, item, dependencyId));
+      }
+
+
+      // Set copied dependencies or remote them if they are not in the same branch
+      foreach (var tuple in copiedItems.FindAll(x => x.Item3 != -1)) {
+        var dependency = copiedItems.Find(x => x.Item2.Id == tuple.Item3);
+
+        if (dependency != null) {
+          tuple.Item1.ExtensionData.Set("config/dueOnController", dependency.Item1.Id);
+        } else {
+          tuple.Item1.ExtensionData.Remove("config/dueOnController");
+          tuple.Item1.ExtensionData.Remove("config/dueOnCondition");
+          tuple.Item1.ExtensionData.Remove("config/dueOnTermUnit");
+          tuple.Item1.ExtensionData.Remove("config/dueOnTerm");
+          tuple.Item1.ExtensionData.Remove("config/dueOnRuleAppliesForAllContracts");
+        }
+
+        tuple.Item1.Save();
       }
 
       return copiedItems[0].Item1;
