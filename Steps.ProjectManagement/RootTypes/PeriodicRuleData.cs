@@ -27,7 +27,8 @@ namespace Empiria.ProjectManagement {
       return ParseNewDataModel(data);
     }
 
-    private static PeriodicRuleData ParseNewDataModel(JsonObject data) {
+
+    static private PeriodicRuleData ParseNewDataModel(JsonObject data) {
       var o = new PeriodicRuleData();
 
       o.EachUnit = data.Get<PeriodicRuleUnit>("each/unit");
@@ -62,6 +63,7 @@ namespace Empiria.ProjectManagement {
 
       return o;
     }
+
 
     static private PeriodicRuleData ParseFromOldModel(JsonObject data) {
       var ruleType = data.Get<string>("ruleType");
