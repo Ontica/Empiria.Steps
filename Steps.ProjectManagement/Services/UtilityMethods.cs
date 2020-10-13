@@ -14,7 +14,7 @@ using Empiria.DataTypes;
 namespace Empiria.ProjectManagement.Services {
 
   /// <summary>Static utility methods for project management services.</summary>
-  internal class UtilityMethods {
+  static internal class UtilityMethods {
 
     #region Internal methods
 
@@ -170,8 +170,8 @@ namespace Empiria.ProjectManagement.Services {
                                       periodicRule.Day.Value);
 
             } else if (periodicRule.DueOnType == PeriodicRuleDueOn.OnFixedDate) {
-              return GetNextMonthFixedDate(eventDate, periodicRule.EachValue.Value,
-                                           periodicRule.Day.Value);
+              return GetNextMonthBracketDate(eventDate, periodicRule.EachValue.Value,
+                                             periodicRule.Month.Value, periodicRule.Day.Value);
 
             } else {
               return null;
@@ -269,36 +269,20 @@ namespace Empiria.ProjectManagement.Services {
     }
 
 
-    static private DateTime GetNextMonthFixedDate(DateTime eventDate, int monthsCount, int day) {
-      return GetNextMonthDate(eventDate, monthsCount, day);
+    static private DateTime GetNextMonthBracketDate(DateTime fromDate, int bracketMonthsSize,
+                                                    int bracketControlMonth, int bracketMonthDueDay) {
+      var bracketsBuilder = new MonthBracketsBuilder(bracketMonthsSize, bracketControlMonth);
+
+      MonthBracket bracket = bracketsBuilder.GetBracketFor(fromDate);
+
+      int year = fromDate.Year;
+
+      if (fromDate.Month > bracket.DueMonth) {
+        year = year + 1;
+      }
+
+      return new DateTime(year, bracket.DueMonth, bracketMonthDueDay);
     }
-
-
-    //static private DateTime GetNextSemiannualBusinessDate(EmpiriaCalendar calendar,
-    //                                                      DateTime fromDate, int month, int businessDays) {
-
-    //  int secondMonth = month > 6 ? month - 6 : month + 6;
-
-    //  DateTime firstDate = new DateTime(fromDate.Year, Math.Min(month, secondMonth), 1).AddDays(-1);
-    //  firstDate = calendar.AddWorkingDays(firstDate, businessDays);
-
-    //  DateTime secondDate = new DateTime(fromDate.Year, Math.Max(month, secondMonth), 1).AddDays(-1);
-    //  secondDate = calendar.AddWorkingDays(secondDate, businessDays);
-
-
-    //  if (fromDate < firstDate) {
-    //    return firstDate;
-
-    //  } else if (fromDate < secondDate) {
-    //    return secondDate;
-
-    //  } else {
-    //    firstDate = new DateTime(fromDate.Year + 1, Math.Min(month, secondMonth), 1).AddDays(-1);
-    //    firstDate = calendar.AddWorkingDays(firstDate, businessDays);
-
-    //    return firstDate;
-    //  }
-    //}
 
 
     static private DateTime GetNextYearBusinessDate(EmpiriaCalendar calendar,
