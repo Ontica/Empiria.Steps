@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
-    <PackageReference Include="Empiria.Storage" Version="1.0.0" />
+    <PackageReference Include="Empiria.Storage" Version="2.0.0" />
     <PackageReference Include="Empiria.ProjectManagement" Version="1.0.0" />
   </ItemGroup>
 </Project>

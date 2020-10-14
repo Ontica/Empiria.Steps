@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Company>Ontica</Company>
     <Product>Empiria Steps Workflow Management</Product>
-    <Description>Empiria Steps workflow execution and management services.</Description>
+    <Description>Empiria Steps workflow and project management services.</Description>
     <Copyright>(c) 2017-2020. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
