@@ -10,7 +10,7 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.StateEnums;

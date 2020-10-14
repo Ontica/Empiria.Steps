@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Json;
 
 using Empiria.ProjectManagement;

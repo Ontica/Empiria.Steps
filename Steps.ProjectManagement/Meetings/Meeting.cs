@@ -10,7 +10,7 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Json;
 using Empiria.StateEnums;
 
@@ -142,11 +142,11 @@ namespace Empiria.ProjectManagement.Meetings {
 
     public string StartTime {
       get {
-        return Time.ToString(this.StartDateTime, TimeType.HoursMinutes);
+        return TimeString.ToString(this.StartDateTime, TimeType.HoursMinutes);
       }
       private set {
         try {
-          this.StartDateTime = Time.SetTimeToDate(this.Date, value);
+          this.StartDateTime = TimeString.SetTimeToDate(this.Date, value);
         } catch {
           throw new ValidationException("Meeting.StartTime",
                                         $"Meeting start time has a wrong value: '{value}'.");
@@ -157,12 +157,12 @@ namespace Empiria.ProjectManagement.Meetings {
 
     public string EndTime {
       get {
-        return Time.ToString(this.EndDateTime, TimeType.HoursMinutes);
+        return TimeString.ToString(this.EndDateTime, TimeType.HoursMinutes);
       }
       private set {
         try {
           // End date is always equals to the start date, just the time varies.
-          this.EndDateTime = Time.SetTimeToDate(this.Date, value);
+          this.EndDateTime = TimeString.SetTimeToDate(this.Date, value);
         } catch {
           throw new ValidationException("Meeting.EndTime",
                                         $"Meeting end time has a wrong value: '{value}'.");
