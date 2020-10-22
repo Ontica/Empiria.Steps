@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Steps.dll                            Pattern   : Static services                       *
 *  Type     : ProjectExporterServices                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Services that allow export activites data to Office files.                                     *
+*  Summary  : Services that allow export data to Office files.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,10 +15,32 @@ using Empiria.Steps.OfficeIntegration;
 
 namespace Empiria.Steps.Services {
 
-  /// <summary>Services that allow export activites data to Office files.</summary>
-  static public class ProjectExporterServices {
+  /// <summary>Services that allow export data to Office files.</summary>
+  static public class DataExportationServices {
 
-    static public string ExportToExcel(string projectUID, string branchUID = "") {
+
+    static public string ExportProcessToExcel(string processUID, string branchUID = "") {
+      Assertion.AssertObject(processUID, "processUID");
+
+      var project = Project.Parse(processUID);
+
+      ProjectItem branch;
+
+      if (branchUID.Length != 0) {
+        branch = ProjectItem.Parse(branchUID);
+      } else {
+        branch = ProjectItem.Empty;
+      }
+
+      var exporter = new ExcelProcessExporter(project, branch);
+
+      string fileName = exporter.Export();
+
+      return fileName;
+    }
+
+
+    static public string ExportProjectToExcel(string projectUID, string branchUID = "") {
       Assertion.AssertObject(projectUID, "projectUID");
 
       var project = Project.Parse(projectUID);

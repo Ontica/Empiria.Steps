@@ -21,6 +21,24 @@ namespace Empiria.Steps.WebApi {
 
     #region Export methods
 
+
+    [HttpGet]
+    [Route("v3/empiria-steps/processes/{processUID}/export-to-excel/{branchUID?}")]
+    public SingleObjectModel ExportProcessesToExcelFile([FromUri] string processUID,
+                                                        [FromUri] string branchUID = "") {
+      try {
+        base.RequireResource(processUID, "processUID");
+
+        string fileName = DataExportationServices.ExportProcessToExcel(processUID, branchUID);
+
+        return new SingleObjectModel(this.Request, fileName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     [HttpGet]
     [Route("v3/empiria-steps/projects/{projectUID}/export-to-excel/{branchUID?}")]
     public SingleObjectModel ExportProjectToExcelFile([FromUri] string projectUID,
@@ -28,7 +46,7 @@ namespace Empiria.Steps.WebApi {
       try {
         base.RequireResource(projectUID, "projectUID");
 
-        string fileName = ProjectExporterServices.ExportToExcel(projectUID, branchUID);
+        string fileName = DataExportationServices.ExportProjectToExcel(projectUID, branchUID);
 
         return new SingleObjectModel(this.Request, fileName);
 
