@@ -71,6 +71,9 @@
     <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\governance\Governance.Core\Empiria.Governance.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
