@@ -40,6 +40,21 @@ namespace Empiria.ProjectManagement.Templates.WebApi {
 
 
     [HttpGet]
+    [Route("v1/project-management/project-templates/{projectTemplateUID:guid}")]
+    public SingleObjectModel GetProjectTemplate([FromUri] string projectTemplateUID) {
+      try {
+        var template = (Activity) ProjectItem.Parse(projectTemplateUID);
+
+        return new SingleObjectModel(this.Request, template.ToActivityTemplateResponse(),
+                                    typeof(ProjectItem).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/project-management/project-templates/{projectTemplateUID}/as-tree")]
     public CollectionModel GetProjectTemplateAsTree([FromUri] string projectTemplateUID) {
       try {
