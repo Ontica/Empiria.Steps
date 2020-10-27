@@ -119,7 +119,6 @@ namespace Empiria.ProjectManagement {
       }
     }
 
-
     #endregion Properties
 
 

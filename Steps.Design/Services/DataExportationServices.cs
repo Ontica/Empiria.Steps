@@ -10,7 +10,6 @@
 using System;
 
 using Empiria.ProjectManagement;
-
 using Empiria.Steps.OfficeIntegration;
 
 namespace Empiria.Steps.Services {
@@ -19,46 +18,42 @@ namespace Empiria.Steps.Services {
   static public class DataExportationServices {
 
 
-    static public string ExportProcessToExcel(string processUID, string branchUID = "") {
+    static public string ExportProcessToExcel(string processUID, string branchUID) {
       Assertion.AssertObject(processUID, "processUID");
 
-      var project = Project.Parse(processUID);
+      var process = Project.Parse(processUID);
 
-      ProjectItem branch;
+      ProjectItem branch = GetProjectItem(branchUID);
 
-      if (branchUID.Length != 0) {
-        branch = ProjectItem.Parse(branchUID);
-      } else {
-        branch = ProjectItem.Empty;
-      }
+      var exporter = new ExcelProcessExporter(process, branch);
 
-      var exporter = new ExcelProcessExporter(project, branch);
-
-      string fileName = exporter.Export();
-
-      return fileName;
+      return exporter.Export();
     }
 
 
-    static public string ExportProjectToExcel(string projectUID, string branchUID = "") {
+    static public string ExportProjectToExcel(string projectUID, string branchUID) {
       Assertion.AssertObject(projectUID, "projectUID");
 
       var project = Project.Parse(projectUID);
 
-      ProjectItem branch;
-
-      if (branchUID.Length != 0) {
-        branch = ProjectItem.Parse(branchUID);
-      } else {
-        branch = ProjectItem.Empty;
-      }
+      ProjectItem branch = GetProjectItem(branchUID);
 
       var exporter = new ExcelExporter(project, branch);
 
-      string fileName = exporter.Export();
-
-      return fileName;
+      return exporter.Export();
     }
+
+    #region Utility methods
+
+    static private ProjectItem GetProjectItem(string branchUID) {
+      if (String.IsNullOrEmpty(branchUID)) {
+        return ProjectItem.Empty;
+      } else {
+        return ProjectItem.Parse(branchUID);
+      }
+    }
+
+    #endregion Utility methods
 
   }  // class ProjectExporterServices
 

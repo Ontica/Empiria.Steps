@@ -126,6 +126,7 @@ namespace Empiria.ProjectManagement.Services {
       return list.ToFixedList();
     }
 
+
     internal FixedList<Activity> GetContainedModelDependencies(Activity activityModel) {
       if (activityModel.IsEmptyInstance) {
         return new FixedList<Activity>();

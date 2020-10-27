@@ -313,7 +313,6 @@ namespace Empiria.ProjectManagement {
         return item;
       }
 
-      int currentItemIndex = this.ItemsList.IndexOf(item);
       var branchToMove = this.GetBranch(item);
 
       Assertion.Assert(!branchToMove.Contains(newParent),

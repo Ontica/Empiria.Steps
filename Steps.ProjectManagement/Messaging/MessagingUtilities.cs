@@ -73,10 +73,6 @@ namespace Empiria.ProjectManagement.Messaging {
       static internal readonly string red = "#ff0000";
 
       static internal readonly string gray = "#a8a8a8";
-      static internal readonly string ghost_color = "#ececec";
-      static internal readonly string default_color = "#3dbab3";
-      static internal readonly string empty = "";
-
     }
 
     #endregion Inner COLORS constants

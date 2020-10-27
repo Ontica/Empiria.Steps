@@ -16,7 +16,7 @@ namespace Empiria.ProjectManagement.Services {
 
     #region Fields
 
-    private Project targetProject;
+    private readonly Project targetProject;
 
     private WhatIfResult whatIfResult = null;
 
