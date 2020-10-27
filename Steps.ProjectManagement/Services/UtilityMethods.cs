@@ -27,7 +27,12 @@ namespace Empiria.ProjectManagement.Services {
         return newDeadline;
       }
 
-      return calendar.NextWorkingDate(newDeadline.Value, true);
+      if (calendar.IsWeekendDay(newDeadline.Value) || calendar.IsHoliday(newDeadline.Value)) {
+        return calendar.LastWorkingDate(newDeadline.Value, true);
+
+      } else {
+        return calendar.NextWorkingDate(newDeadline.Value, true);
+      }
     }
 
 
@@ -41,7 +46,13 @@ namespace Empiria.ProjectManagement.Services {
         return null;
       }
 
-      return calendar.NextWorkingDate(newPeriodicDate.Value, true);
+      if (calendar.IsWeekendDay(newPeriodicDate.Value) ||  calendar.IsHoliday(newPeriodicDate.Value)) {
+        return calendar.LastWorkingDate(newPeriodicDate.Value, true);
+
+      } else {
+        return calendar.NextWorkingDate(newPeriodicDate.Value, true);
+
+      }
     }
 
 
@@ -52,6 +63,7 @@ namespace Empiria.ProjectManagement.Services {
 
     static private int AdjustTermOnDueOnCondition(ActivityModel template, int term) {
       switch (template.DueOnCondition) {
+
         case "Before":
           return -1 * term;
 
@@ -80,7 +92,6 @@ namespace Empiria.ProjectManagement.Services {
           return term;
 
       } // switch
-
     }
 
 
@@ -102,6 +113,7 @@ namespace Empiria.ProjectManagement.Services {
       term = AdjustTermOnDueOnCondition(template, term);
 
       switch (template.DueOnTermUnit) {
+
         case "BusinessDays":
           if (term >= 0) {
             return calendar.AddWorkingDays(baseDate, term);
@@ -138,6 +150,7 @@ namespace Empiria.ProjectManagement.Services {
         }
 
         switch (periodicRule.EachUnit) {
+
           case PeriodicRuleUnit.CalendarDays:
             return GetNextCalendarDay(eventDate, periodicRule.EachValue.Value);
 
@@ -169,9 +182,14 @@ namespace Empiria.ProjectManagement.Services {
                                       periodicRule.EachValue.Value,
                                       periodicRule.Day.Value);
 
-            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.OnFixedDate) {
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.AfterFixedPeriodOnFixedDate) {
               return GetNextMonthBracketDate(eventDate, periodicRule.EachValue.Value,
                                              periodicRule.Month.Value, periodicRule.Day.Value);
+
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.AfterFixedPeriodOnBusinessDate) {
+              return GetNextMonthBracketBusinessDate(calendar, eventDate,
+                                                     periodicRule.EachValue.Value,
+                                                     periodicRule.Month.Value, periodicRule.Day.Value);
 
             } else {
               return null;
@@ -207,7 +225,7 @@ namespace Empiria.ProjectManagement.Services {
         }
 
       } catch (Exception e) {
-        throw new NotImplementedException($"Unable to calculate periodic rule for template rule: {periodicRule.ToString()}", e);
+        throw new NotImplementedException($"Unable to calculate periodic rule for template rule: {periodicRule}", e);
       }
     }
 
@@ -253,12 +271,20 @@ namespace Empiria.ProjectManagement.Services {
 
     static private DateTime GetNextMonthBusinessDate(EmpiriaCalendar calendar,
                                                      DateTime fromDate, int monthsCount, int businessDays) {
-      DateTime date = fromDate.AddMonths(monthsCount -1);
+      DateTime date = fromDate.AddMonths(monthsCount - 1);
 
       DateTime date2 = new DateTime(date.Year, date.Month,
                                    DateTime.DaysInMonth(date.Year, date.Month));
 
-      return calendar.AddWorkingDays(date2, businessDays);
+      DateTime withWorkingDaysAdded = calendar.AddWorkingDays(date2, businessDays);
+
+      DateTime withinMonthDate = date2.AddDays(1);
+
+      if (withWorkingDaysAdded.Month == withinMonthDate.Month) {
+        return withWorkingDaysAdded;
+      } else {
+        return calendar.LastWorkingDateWithinMonth(withinMonthDate.Year, withinMonthDate.Month);
+      }
     }
 
 
@@ -282,6 +308,31 @@ namespace Empiria.ProjectManagement.Services {
       }
 
       return new DateTime(year, bracket.DueMonth, bracketMonthDueDay);
+    }
+
+
+    static private DateTime GetNextMonthBracketBusinessDate(EmpiriaCalendar calendar,
+                                                            DateTime fromDate, int bracketMonthsSize,
+                                                            int bracketControlMonth, int businessDays) {
+      var bracketsBuilder = new MonthBracketsBuilder(bracketMonthsSize, bracketControlMonth);
+
+      MonthBracket bracket = bracketsBuilder.GetBracketFor(fromDate);
+
+      int year = fromDate.Year;
+
+      if (fromDate.Month > bracket.DueMonth) {
+        year = year + 1;
+      }
+
+      DateTime date = new DateTime(year, bracket.DueMonth, 1).AddDays(-1);
+
+      DateTime withWorkingDaysAdded = calendar.AddWorkingDays(date, businessDays);
+
+      if (withWorkingDaysAdded.Month == bracket.DueMonth) {
+        return withWorkingDaysAdded;
+      } else {
+        return calendar.LastWorkingDateWithinMonth(year, bracket.DueMonth);
+      }
     }
 
 

@@ -7,7 +7,6 @@
 *  Summary  : Enumerates the due on rule for periodic activities.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.ProjectManagement {
 
@@ -22,7 +21,11 @@ namespace Empiria.ProjectManagement {
 
     OnFirstCalendarDays,
 
-    OnFirstBusinessDays
+    OnFirstBusinessDays,
+
+    AfterFixedPeriodOnBusinessDate,
+
+    AfterFixedPeriodOnFixedDate,
 
   }
 
