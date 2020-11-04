@@ -191,6 +191,15 @@ namespace Empiria.ProjectManagement.Services {
                                                      periodicRule.EachValue.Value,
                                                      periodicRule.Month.Value, periodicRule.Day.Value);
 
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.AfterAdjustablePeriodOnFixedDate) {
+              return GetNextMonthBracketDate(eventDate, periodicRule.EachValue.Value,
+                                             GetAdjustedPeriodMonth(eventDate), periodicRule.Day.Value);
+
+            } else if (periodicRule.DueOnType == PeriodicRuleDueOn.AfterAdjustablePeriodOnBusinessDate) {
+              return GetNextMonthBracketBusinessDate(calendar, eventDate,
+                                                     periodicRule.EachValue.Value,
+                                                     GetAdjustedPeriodMonth(eventDate), periodicRule.Day.Value);
+
             } else {
               return null;
             }
@@ -226,6 +235,17 @@ namespace Empiria.ProjectManagement.Services {
 
       } catch (Exception e) {
         throw new NotImplementedException($"Unable to calculate periodic rule for template rule: {periodicRule}", e);
+      }
+    }
+
+
+    static private int GetAdjustedPeriodMonth(DateTime eventDate) {
+      int month = eventDate.Month;
+
+      if (month > 1) {
+        return month - 1;
+      } else {
+        return 12;
       }
     }
 

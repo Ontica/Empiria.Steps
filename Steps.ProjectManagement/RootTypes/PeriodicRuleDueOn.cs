@@ -27,6 +27,10 @@ namespace Empiria.ProjectManagement {
 
     AfterFixedPeriodOnFixedDate,
 
+    AfterAdjustablePeriodOnBusinessDate,
+
+    AfterAdjustablePeriodOnFixedDate
+
   }
 
 }
