@@ -276,24 +276,53 @@ namespace Empiria.ProjectManagement {
     }
 
 
-    public FixedList<Contact> SendAlertsTo {
+    // public FixedList<Contact> SendAlertsTo {
+    //  get {
+    //    var list = this.ExtensionData.GetList<Contact>("sendAlertsTo", false);
+
+    //    return list.ToFixedList();
+    //  }
+    //  set {
+    //    Assertion.AssertObject(value, "value");
+
+    //    var idsArray = value.ConvertAll<int>((x) => x.Id);
+
+    //    if (idsArray == null || idsArray.Count == 0) {
+    //      this.ExtensionData.Remove("sendAlertsTo");
+    //    } else {
+    //      this.ExtensionData.Set("sendAlertsTo", idsArray);
+    //    }
+    //  }
+    //}
+
+
+
+
+    public JsonObject ReminderData {
       get {
-        var list = this.ExtensionData.GetList<Contact>("sendAlertsTo", false);
-
-        return list.ToFixedList();
-      }
-      set {
-        Assertion.AssertObject(value, "value");
-
-        var idsArray = value.ConvertAll<int>((x) => x.Id);
-
-        if (idsArray == null || idsArray.Count == 0) {
-          this.ExtensionData.Remove("sendAlertsTo");
-        } else {
-          this.ExtensionData.Set("sendAlertsTo", idsArray);
-        }
+        return this.ExtensionData.Slice("reminder", false);
       }
     }
+
+
+    //public JsonObject SendAlertsTo {
+    //  get {
+    //    return this.ExtensionData.Slice("reminder/sendAlertsTo", false);
+    //  }
+    //  // set {
+    //  //  this.ExtensionData.Set("sendAlertsTo", value);
+    //  //}
+    //}
+
+
+    //public string SendAlertsToEMails {
+    //  get {
+    //    return this.ExtensionData.Get("reminder/sendAlertsToEMails", String.Empty);
+    //  }
+    //  //set {
+    //  //  this.ExtensionData.Set("sendAlertsToEMails", value);
+    //  //}
+    //}
 
 
     [DataField("Status", Default = ActivityStatus.Pending)]
@@ -442,6 +471,7 @@ namespace Empiria.ProjectManagement {
 
       this.ProcessID = data.Get<string>("processID", this.ProcessID);
       this.SubprocessID = data.Get<string>("subProcessID", this.SubprocessID);
+
     }
 
 
@@ -471,6 +501,14 @@ namespace Empiria.ProjectManagement {
         this.ExtensionData.Set("reminder", data.Slice("reminder"));
       }
 
+      //if (data.Contains("sendAlertsTo")) {
+      //  EmpiriaLog.Critical(data.ToString());
+      //  this.SendAlertsTo = data.Slice("sendAlertsTo", false);
+      //}
+
+      //if (data.Contains("sendAlertsToEMails")) {
+      //  this.SendAlertsToEMails = data.Get<string>("sendAlertsToEMails", String.Empty);
+      //}
     }
 
 

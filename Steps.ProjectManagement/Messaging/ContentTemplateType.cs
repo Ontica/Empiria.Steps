@@ -26,6 +26,10 @@ namespace Empiria.ProjectManagement.Messaging {
 
     YourAssignedActivity,
 
+    ActivityReminder,
+
+    Notification,
+
   }  // enum ContentTemplateType
 
 }  // namespace Empiria.ProjectManagement.Messaging

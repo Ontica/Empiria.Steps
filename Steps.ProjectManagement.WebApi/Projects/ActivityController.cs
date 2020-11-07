@@ -13,6 +13,8 @@ using System.Web.Http;
 using Empiria.Json;
 using Empiria.WebApi;
 
+using Empiria.Postings;
+using Empiria.ProjectManagement.Messaging;
 using Empiria.ProjectManagement.Services;
 
 namespace Empiria.ProjectManagement.WebApi {
@@ -228,6 +230,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
         activity.Update(bodyAsJson);
 
+        if (!activity.ReminderData.IsEmptyInstance) {
+          EventsNotifier.RemindActivity(activity, activity.ReminderData);
+        }
+
         return new SingleObjectModel(this.Request, activity.ToResponse(),
                                      typeof(Activity).FullName);
 
@@ -255,6 +261,34 @@ namespace Empiria.ProjectManagement.WebApi {
     }
 
     #endregion Update methods
+
+
+    [HttpPost]
+    [Route("v1/postings-new/{objectUID}")]
+    public SingleObjectModel CreateObjectPosting(string objectUID,
+                                                 [FromBody] object body) {
+      try {
+        base.RequireBody(body);
+
+        var bodyAsJson = JsonObject.Parse(body);
+
+        var posting = new ObjectPosting(objectUID, bodyAsJson);
+
+        posting.Save();
+
+        if (!posting.SendTo.IsEmptyInstance) {
+          var activity = Activity.Parse(objectUID);
+
+          EventsNotifier.SendNotification(activity, posting.SendTo, posting.Title, posting.Body);
+        }
+
+        return new SingleObjectModel(this.Request, posting.ToResponse(),
+                                     typeof(ObjectPosting).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
 
   }  // class ActivityController
 

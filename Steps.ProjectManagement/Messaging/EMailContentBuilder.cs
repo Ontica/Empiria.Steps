@@ -50,6 +50,40 @@ namespace Empiria.ProjectManagement.Messaging {
     }
 
 
+    internal static EMailContent RemindActivityContent(Project project, Activity activity) {
+      var body = GetTemplate(ContentTemplateType.ActivityReminder);
+
+      body = ParseGeneralFields(body, project);
+
+      body = ParseActivityTemplate(body, activity);
+
+      return new EMailContent($"Task reminder for RegTech Project {project.Name}", body, true);
+    }
+
+
+    internal static EMailContent SendNotificationContent(Project project, Activity activity, string title, string text) {
+      var body = GetTemplate(ContentTemplateType.Notification);
+
+      body = ParseGeneralFields(body, project);
+
+      body = ParseActivityTemplate(body, activity);
+
+      if (activity.HasTemplate) {
+        // var template = activity.GetTemplate().Template;
+
+        // StepsLegalDataServices.ProcessLegalData(processUID, branchUID);
+
+        // template.ContractClause
+
+        body = ParseNotification(body, title, text);
+      } else {
+        body = ParseNotification(body, title, text);
+      }
+
+      return new EMailContent(title, body, true);
+    }
+
+
     static internal EMailContent UserAssignedActivityContent(Project project, Activity activity,
                                                              Person user) {
       var body = GetTemplate(ContentTemplateType.YourAssignedActivity);
@@ -130,6 +164,13 @@ namespace Empiria.ProjectManagement.Messaging {
     }
 
 
+    static private string ParseGeneralFields(string body, Project project) {
+      body = body.Replace("{{PROJECT-NAME}}", project.Name);
+
+      return body;
+    }
+
+
     static private string ParseGeneralFields(string body, Project project, Person contact) {
       body = body.Replace("{{PROJECT-NAME}}", project.Name);
       body = body.Replace("{{TO-NAME}}", contact.FirstName);
@@ -137,6 +178,12 @@ namespace Empiria.ProjectManagement.Messaging {
       return body;
     }
 
+    static private string ParseNotification(string body, string title, string text) {
+      body = body.Replace("{{NOTIFICATION-TITLE}}", title);
+      body = body.Replace("{{NOTIFICATION-TEXT}}", text);
+
+      return body;
+    }
 
     #endregion Private methods
 

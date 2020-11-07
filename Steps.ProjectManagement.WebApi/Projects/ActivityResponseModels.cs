@@ -80,11 +80,13 @@ namespace Empiria.ProjectManagement.WebApi {
           days = activity.TrafficLightType == "CalendarDays" ? (int?) activity.TrafficLightDays : null
         },
 
-        reminder = new {
-          days = activity.ReminderDays
-        },
+        reminder = activity.ReminderData.ToObject(),
 
-        sendAlertsTo = activity.SendAlertsTo.ToShortResponse(),
+        //reminder = new {
+        //  days = activity.ReminderDays,
+        //  sendAlertsTo = activity.SendAlertsTo.ToObject(),
+        //  sendAlertsToEMails = activity.SendAlertsToEMails
+        //},
 
         theme = activity.Theme,
         resource = activity.Resource,
@@ -143,11 +145,8 @@ namespace Empiria.ProjectManagement.WebApi {
             days = summary.TrafficLightType == "CalendarDays" ? (int?) summary.TrafficLightDays : null
           },
 
-        reminder = new {
-          days = summary.ReminderDays
-        },
+        reminder = summary.ReminderData.ToObject(),
 
-        sendAlertsTo = summary.SendAlertsTo.ToShortResponse(),
 
         theme = summary.Theme,
         resource = summary.Resource,
