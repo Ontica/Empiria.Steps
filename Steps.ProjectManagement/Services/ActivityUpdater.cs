@@ -96,6 +96,14 @@ namespace Empiria.ProjectManagement.Services {
         }
 
         if (updatedDeadline.HasValue) {
+
+          if (IsSpecialDeadlineCase(item.GetTemplate())) {
+            int daysToAdd = GetSpecialDeadlineCaseDaysToAdd(item);
+
+            updatedDeadline = UtilityMethods.AddWorkingDays(template, updatedDeadline.Value, daysToAdd);
+          }
+
+
           AddUpdateDeadlineStateChange(item, updatedDeadline.Value);
 
           // Recursive call
@@ -104,6 +112,52 @@ namespace Empiria.ProjectManagement.Services {
       }
     }
 
+
+    private bool IsSpecialDeadlineCase(Activity template) {
+      return (template.Id == 347127 || template.Id == 374969);
+    }
+
+
+    private int GetSpecialDeadlineCaseDaysToAdd(ProjectItem item) {
+      ProjectItem adder1 = SeekRelatedParent(item, 374966);
+      ProjectItem adder2 = SeekRelatedParent(item, 347125);
+
+
+      return GetDaysToAdd(adder1) + GetDaysToAdd(adder2);
+    }
+
+
+    private ProjectItem SeekRelatedParent(ProjectItem item, int seekForTemplateId) {
+      var parent = item.Parent;
+
+      while (true) {
+        if (parent.IsEmptyInstance) {
+          return ProjectItem.Empty;
+        }
+
+        var branch = parent.GetBranch();
+
+        var relatedParent = branch.Find((x) => x.TemplateId == seekForTemplateId);
+
+        if (relatedParent != null) {
+          return relatedParent;
+        }
+
+        parent = parent.Parent;
+      }
+    }
+
+
+    private int GetDaysToAdd(ProjectItem adder) {
+      if (adder.IsEmptyInstance) {
+        return 0;
+      }
+      if (adder.Status != StateEnums.ActivityStatus.Completed) {
+        return 0;
+      }
+
+      return adder.Deadline.Subtract(adder.ActualEndDate).Days;
+    }
 
     #endregion Private methods
 

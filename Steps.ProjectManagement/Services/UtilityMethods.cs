@@ -18,6 +18,14 @@ namespace Empiria.ProjectManagement.Services {
 
     #region Internal methods
 
+
+    static internal DateTime AddWorkingDays(ActivityModel template, DateTime baseDate, int workingDays) {
+      EmpiriaCalendar calendar = GetCalendarFor(template);
+
+      return calendar.AddWorkingDays(baseDate, workingDays);
+    }
+
+
     static internal DateTime? CalculateNewDeadline(ActivityModel template, DateTime baseDate) {
       EmpiriaCalendar calendar = GetCalendarFor(template);
 
