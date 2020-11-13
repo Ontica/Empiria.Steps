@@ -17,6 +17,7 @@ namespace Empiria.Workflow.Definition {
   /// <summary>Data read and write methods for workflow objects.</summary>
   static internal class WorkflowDefinitionData {
 
+
     static internal List<Process> GetProcesses(string filter) {
       string sql = $"SELECT * FROM WFWorkflowObjects " +
                    $"WHERE WorkflowObjectTypeId = {WorkflowObjectType.Process.Id} " +
@@ -39,6 +40,7 @@ namespace Empiria.Workflow.Definition {
     }
 
     #region Write data methods
+
 
     static internal void WriteBpmnDiagram(BpmnDiagram o) {
       var op = DataOperation.Parse("writeSimpleObject",
