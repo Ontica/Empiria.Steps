@@ -15,6 +15,7 @@ using Empiria.WebApi;
 
 using Empiria.Steps.Design.DataObjects;
 using Empiria.ProjectManagement;
+using Empiria.Data.DataObjects;
 
 namespace Empiria.Steps.Design.WebApi {
 
@@ -59,20 +60,25 @@ namespace Empiria.Steps.Design.WebApi {
       return new {
         uid = dataObject.UID,
         type = dataObject.DataItem.NamedKey,
-        entity = dataObject.Step.ToIdentifiableResponse(x => x.Name),
-        //subject = activity.ToIdentifiableResponse(x => x.Name),
-        action = dataObject.Action,
-        family = dataObject.DataItem.Family,
-        name = dataObject.DataItem.Name,
-        description = dataObject.DataItem.Description,
-        mediaFormat = dataObject.MediaFormat,
-        //autofillFileUrl = String,
-        //uploadedFileUrl = String.Empty,
-        templateUrl = dataObject.DataItem.Template.Replace("~", libraryBaseAddress),
-        decorator = dataObject.DataItem.Terms,
-        status = dataObject.Status
+        name = dataObject.Name,
+        description = dataObject.Description,
+        dataObject = dataObject.DataItem.ToResponse(),
+        optional = dataObject.Optional,
+        legalBasis = dataObject.LegalBasis,
       };
     }
+
+    // static internal object ToResponse(this DataStore dataStore) {
+    //  return new {
+    //    uid = dataStore.UID,
+    //    type = dataStore.NamedKey,
+    //    family = dataStore.Family,
+    //    name = dataStore.Name,
+    //    description = dataStore.Description,
+    //    templateUrl = dataStore.Template.Replace("~", libraryBaseAddress)
+    //  };
+    //}
+
 
     static internal object ToResponse(this StepDataObject dataObject, ProjectItem activity) {
       return new {

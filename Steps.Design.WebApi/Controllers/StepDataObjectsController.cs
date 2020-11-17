@@ -43,8 +43,8 @@ namespace Empiria.Steps.Design.WebApi {
 
 
     [HttpGet]
-    [Route("v3/empiria-steps/steps/{stepUID}/data-objects")]
-    public CollectionModel GetStepDataObjects([FromUri] string stepUID) {
+    [Route("v3/empiria-steps/steps/{stepUID:guid}/requirements")]
+    public CollectionModel GetStepRequirementsList([FromUri] string stepUID) {
       try {
         var step = ProjectItem.Parse(stepUID);
 
@@ -78,32 +78,11 @@ namespace Empiria.Steps.Design.WebApi {
 
     #region Write methods
 
-    [HttpPost]
-    [Route("v3/empiria-steps/steps/{stepUID}/data-objects")]
-    public SingleObjectModel LinkStepWithDataSource([FromUri] string stepUID, [FromBody] object body) {
-      try {
-        var step = ProjectItem.Parse(stepUID);
-
-        var dataSource = base.GetFromBody<DataStore>(body, "dataSourceUID");
-
-        StepDataObject dataObject = new StepDataObject(step, dataSource);
-
-        dataObject.Save();
-
-        return new SingleObjectModel(this.Request, dataObject.ToResponse(),
-                                   typeof(StepDataObject).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-
     [HttpDelete]
-    [Route("v3/empiria-steps/data-objects/{dataObjectUID}")]
-    public NoDataModel RemoveDataObjectLink([FromUri] string dataObjectUID) {
+    [Route("v3/empiria-steps/requirements/{requirementUID:guid}")]
+    public NoDataModel RemoveStepRequirement([FromUri] string requirementUID) {
       try {
-        var dataObject = StepDataObject.Parse(dataObjectUID);
+        var dataObject = StepDataObject.Parse(requirementUID);
 
         dataObject.Delete();
 
@@ -114,6 +93,25 @@ namespace Empiria.Steps.Design.WebApi {
       }
     }
 
+    [HttpPost]
+    [Route("v3/empiria-steps/steps/{stepUID}/requirements")]
+    public SingleObjectModel AddStepRequirement([FromUri] string stepUID, [FromBody] object body) {
+      try {
+        var step = ProjectItem.Parse(stepUID);
+
+        var requirement = base.GetJsonFromBody(body);
+
+        StepDataObject dataObject = new StepDataObject(step, requirement);
+
+        dataObject.Save();
+
+        return new SingleObjectModel(this.Request, dataObject.ToResponse(),
+                                   typeof(StepDataObject).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
 
     #endregion Write methods
 

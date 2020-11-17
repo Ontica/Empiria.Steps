@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 
-
 using Empiria.Json;
 using Empiria.StateEnums;
 
@@ -33,11 +32,16 @@ namespace Empiria.Steps.Design.DataObjects {
     }
 
 
+    public StepDataObject(ProjectItem step, JsonObject requirement) {
+      this.Step = step;
+      this.LoadRequirement(requirement);
+    }
+
+
     public StepDataObject(ProjectItem step, DataStore dataStore) {
       this.Step = step;
       this.DataItem = dataStore;
     }
-
 
     static internal StepDataObject Parse(int id) {
       return BaseObject.ParseId<StepDataObject>(id);
@@ -140,14 +144,51 @@ namespace Empiria.Steps.Design.DataObjects {
       private set;
     }
 
+    public string Name {
+      get {
+        return this.ExtensionData.Get("requirement/name", this.DataItem.Name);
+      }
+    }
+
+    public string Description {
+      get {
+        return this.ExtensionData.Get("requirement/description", this.DataItem.Description);
+      }
+    }
+
+    public string Optional {
+      get {
+        return this.ExtensionData.Get("requirement/optional", "Mandatory");
+      }
+    }
+
+    public string LegalBasis {
+      get {
+        return this.ExtensionData.Get("requirement/legalBasis", String.Empty);
+      }
+    }
+
     #endregion Properties
 
 
     #region Methods
 
-
     public IDictionary<string, object> GetFormFields() {
       return FormData.ToDictionary();
+    }
+
+
+    private void LoadRequirement(JsonObject requirementData) {
+      if (requirementData.Contains("dataObject/uid")) {
+        this.DataItem = DataStore.Parse(requirementData.Get<string>("dataObject/uid"));
+      } else {
+        this.DataItem = DataStore.Empty;
+      }
+
+      requirementData.Remove("uid");
+      requirementData.Remove("dataObject");
+
+      this.ExtensionData.Set("requirement", requirementData);
     }
 
 
