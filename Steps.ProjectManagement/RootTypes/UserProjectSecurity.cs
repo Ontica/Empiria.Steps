@@ -11,7 +11,6 @@ using System;
 
 using Empiria.Contacts;
 
-
 namespace Empiria.ProjectManagement {
 
   /// <summary>Project data read and write methods.</summary>

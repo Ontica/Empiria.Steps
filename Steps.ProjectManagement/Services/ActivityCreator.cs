@@ -98,9 +98,7 @@ namespace Empiria.ProjectManagement.Services {
           stateChange.Deadline = deadline.Value;
         }
 
-
       }  // foreach
-
     }
 
 
