@@ -1,0 +1,23 @@
+﻿{
+  "appName": "Empiria Steps Tests",
+  "description": "Environment settings",
+  "version": "3.0",
+  "date": "2021-01-01",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "{{APPLICATION-KEY}}"
+    },
+    {
+      "type": "",
+      "key": "GlobalConfigurationFile",
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
+    },
+    {
+      "type": "Steps.Tests",
+      "key": "Testing.ProcessUID",
+      "value": "{{TESTING-PROCESS-UID}}"
+    }
+  ]
+}
