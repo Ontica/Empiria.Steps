@@ -1,0 +1,17 @@
+﻿{
+  "appName": "Empiria Steps Web Api Local Development.",
+  "version": "3.0",
+  "date": "2021-01-01",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "{{APPLICATION-KEY}}"
+    },
+    {
+      "type": "",
+      "key": "GlobalConfigurationFile",
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
+    }
+  ]
+}
