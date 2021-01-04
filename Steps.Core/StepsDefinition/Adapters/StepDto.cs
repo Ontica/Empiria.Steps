@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-
 namespace Empiria.Steps.Definition.Adapters {
 
   /// <summary>Output DTO that holds full data related to a step definition.</summary>
@@ -19,6 +18,33 @@ namespace Empiria.Steps.Definition.Adapters {
       get; internal set;
     }
 
+    public string Type {
+      get; internal set;
+    }
+
+    public string TypeName {
+      get; internal set;
+    }
+
+    public string Kind {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+    public string Topics {
+      get; internal set;
+    }
+
+    public string Tags {
+      get; internal set;
+    }
+    public string Entity {
+      get;
+      internal set;
+    }
   }  // class StepDto
 
 }  // namespace Empiria.Steps.Definition.Adapters

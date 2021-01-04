@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="StepsDefinition\Data\" />
-    <Folder Include="StepsDefinition\Entities\" />
   </ItemGroup>
   <ItemGroup>
 

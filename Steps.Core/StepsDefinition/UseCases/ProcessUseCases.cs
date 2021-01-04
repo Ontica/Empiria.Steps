@@ -27,7 +27,11 @@ namespace Empiria.Steps.Definition.UseCases {
     }
 
     public StepDto GetProcess(string processUID) {
-      throw new NotImplementedException();
+      Assertion.AssertObject(processUID, "processUID");
+
+      var process = Process.Parse(processUID);
+
+      return StepMapper.Map(process);
     }
 
     public FixedList<StepListItemDto> SearchProcesses(SearchStepsCommand searchCommand) {
