@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Steps Definition                             Component : Web Api                               *
 *  Assembly : Empiria.Steps.WebApi.dll                     Pattern   : Controller                            *
-*  Type     : ProcessesController                          License   : Please read LICENSE.txt file          *
+*  Type     : ProcessController                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web Api used to work with process definitions.                                                  *
+*  Summary  : Web Api used to work with process definitions.                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Web.Http;
@@ -17,7 +17,7 @@ using Empiria.Steps.Definition.UseCases;
 namespace Empiria.Steps.Definition.WebApi {
 
   /// <summary>Web Api used to work with process definitions.</summary>
-  public class ProcessesController : WebApiController {
+  public class ProcessController : WebApiController {
 
     #region Web Apis
 
@@ -40,7 +40,7 @@ namespace Empiria.Steps.Definition.WebApi {
       Assertion.AssertObject(searchCommand, "searchCommand");
 
       using (var usecases = ProcessUseCases.UseCaseInteractor()) {
-        FixedList<StepListItemDto> list = usecases.SearchProcesses(searchCommand);
+        FixedList<StepShortModel> list = usecases.SearchProcesses(searchCommand);
 
         return new CollectionModel(this.Request, list);
       }
@@ -48,6 +48,6 @@ namespace Empiria.Steps.Definition.WebApi {
 
     #endregion Web Apis
 
-  }  // class ProcessesController
+  }  // class ProcessController
 
 }  //namespace Empiria.Steps.Definition.WebApi

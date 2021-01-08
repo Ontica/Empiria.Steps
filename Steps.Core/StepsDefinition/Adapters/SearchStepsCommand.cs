@@ -15,26 +15,22 @@ namespace Empiria.Steps.Definition.Adapters {
   public class SearchStepsCommand {
 
     public string Keywords {
-      get;
-      set;
+      get; set;
     } = string.Empty;
 
 
     public string OrderBy {
-      get;
-      set;
+      get; set;
     } = string.Empty;
 
 
     public int PageSize {
-      get;
-      set;
-    } = 50;
+      get; set;
+    } = 100;
 
 
     public int Page {
-      get;
-      set;
+      get; set;
     } = 1;
 
   }  // class SearchStepsCommand

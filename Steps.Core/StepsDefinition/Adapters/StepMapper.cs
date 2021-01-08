@@ -19,6 +19,12 @@ namespace Empiria.Steps.Definition.Adapters {
       return new FixedList<StepDto>(mappedItems);
     }
 
+    internal static FixedList<StepShortModel> MapToShortModel(FixedList<Process> list) {
+      var mappedItems = list.Select((x) => MapToShortModel(x));
+
+      return new FixedList<StepShortModel>(mappedItems);
+    }
+
     static internal StepDto Map(Process process) {
       var dto = new StepDto {
         UID = process.UID,
@@ -26,6 +32,7 @@ namespace Empiria.Steps.Definition.Adapters {
         TypeName = process.StepType.DisplayName,
         Kind = process.Kind,
         Name = process.Name,
+        Description = process.Description,
         Topics = process.Topics,
         Tags = process.Tags,
         Entity = process.Entity.Alias
@@ -33,6 +40,23 @@ namespace Empiria.Steps.Definition.Adapters {
 
       return dto;
     }
+
+    static internal StepShortModel MapToShortModel(Process process) {
+      var dto = new StepShortModel {
+        UID = process.UID,
+        Type = process.StepType.Name,
+        TypeName = process.StepType.DisplayName,
+        Kind = process.Kind,
+        Name = process.Name,
+        Description = process.Description,
+        Topics = process.Topics,
+        Tags = process.Tags,
+        Entity = process.Entity.Alias
+      };
+
+      return dto;
+    }
+
 
   }  // class StepMapper
 

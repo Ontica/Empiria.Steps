@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Services;
 using Empiria.Steps.Definition.Adapters;
 
@@ -26,6 +27,10 @@ namespace Empiria.Steps.Definition.UseCases {
       return ProcessUseCases.CreateInstance<ProcessUseCases>();
     }
 
+    #endregion Constructors and parsers
+
+    #region Use cases
+
     public StepDto GetProcess(string processUID) {
       Assertion.AssertObject(processUID, "processUID");
 
@@ -34,11 +39,16 @@ namespace Empiria.Steps.Definition.UseCases {
       return StepMapper.Map(process);
     }
 
-    public FixedList<StepListItemDto> SearchProcesses(SearchStepsCommand searchCommand) {
-      throw new NotImplementedException();
+
+    public FixedList<StepShortModel> SearchProcesses(SearchStepsCommand searchCommand) {
+      Assertion.AssertObject(searchCommand, "searchCommand");
+
+      var list = Process.GetList(searchCommand);
+
+      return StepMapper.MapToShortModel(list);
     }
 
-    #endregion Constructors and parsers
+    #endregion Use cases
 
   }  // class ProcessUseCases
 

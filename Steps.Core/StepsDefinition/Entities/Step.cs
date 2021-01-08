@@ -5,18 +5,22 @@
 *  Type     : Step                                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Abstract class that describes a process, a procedure, a protocol, a gateway, a task or other   *
-*             kinds of atomic steps.                                                                         *
+*             kinds of atomic and compound steps.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Contacts;
 using Empiria.Ontology;
 using Empiria.StateEnums;
 
+using Empiria.Steps.Definition.Adapters;
+using Empiria.Steps.Definition.Data;
+
 namespace Empiria.Steps.Definition {
 
   /// <summary>Abstract class that describes a process, a procedure, a protocol, a gateway,
-  /// a task or other kinds of atomic steps.</summary>
+  /// a task or other kinds of atomic or compound steps.</summary>
   [PartitionedType(typeof(StepType))]
   abstract public class Step : BaseObject {
 
@@ -31,6 +35,11 @@ namespace Empiria.Steps.Definition {
       return BaseObject.ParseKey<Step>(uid);
     }
 
+    static internal FixedList<Step> GetList(SearchStepsCommand searchCommand) {
+      Assertion.AssertObject(searchCommand, "searchCommand");
+
+      return StepsData.GetStepsList(searchCommand);
+    }
 
     #endregion Constructors and parsers
 
@@ -55,7 +64,7 @@ namespace Empiria.Steps.Definition {
     }
 
     [DataField("StepNotes")]
-    public string Notes {
+    public string Description {
       get;
       private set;
     }
@@ -80,11 +89,10 @@ namespace Empiria.Steps.Definition {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Name, this.StepType.DisplayName,
-                                           this.Entity.Keywords, this.Topics, this.Tags, this.Notes);
+        return EmpiriaString.BuildKeywords(this.Name, this.StepType.DisplayName, this.Entity.Keywords,
+                                           this.Topics, this.Tags, this.Description);
       }
     }
-
 
     [DataField("Accessibility")]
     public string Accesibility {

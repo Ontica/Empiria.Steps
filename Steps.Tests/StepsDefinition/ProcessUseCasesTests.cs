@@ -48,28 +48,27 @@ namespace Empiria.Steps.Tests.StepsDefinition {
       StepDto process = _usecases.GetProcess(TestingConstants.PROCESS_UID);
 
       Assert.Equal(TestingConstants.PROCESS_UID, process.UID);
-
     }
 
 
     [Fact]
-    public void Should_Search_And_Get_A_ProcessList() {
+    public void Should_Search_Processes() {
       var searchCommand = new SearchStepsCommand {
         PageSize = 100,
       };
 
-      FixedList<StepListItemDto> list = _usecases.SearchProcesses(searchCommand);
+      FixedList<StepShortModel> list = _usecases.SearchProcesses(searchCommand);
 
       Assert.NotEmpty(list);
 
       int moreGeneralListItemsCount = list.Count;
 
-      searchCommand.Keywords = "seguridad";
+      searchCommand.Keywords = "cnh hidrocarburos";
 
       list = _usecases.SearchProcesses(searchCommand);
 
       Assert.True(list.Count <= moreGeneralListItemsCount,
-                 "Search processes by keyword must return the same or fewer items.");
+                  "Search processes by keyword must return the same or fewer items.");
     }
 
     #endregion Facts

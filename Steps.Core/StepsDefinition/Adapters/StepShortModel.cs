@@ -2,17 +2,16 @@
 *                                                                                                            *
 *  Module   : Steps Definition                           Component : Interface adapters                      *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Data Transfer Object                    *
-*  Type     : StepDto                                    License   : Please read LICENSE.txt file            *
+*  Type     : StepShortModel                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO that holds full data related to a step definition.                                  *
+*  Summary  : Output DTO that holds minimal step definition data to be used as list items.                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Steps.Definition.Adapters {
 
-  /// <summary>Output DTO that holds full data related to a step definition.</summary>
-  public class StepDto {
+  /// <summary>Output DTO that holds minimal step definition data to be used as list items.</summary>
+  public class StepShortModel {
 
     public string UID {
       get; internal set;
@@ -50,6 +49,6 @@ namespace Empiria.Steps.Definition.Adapters {
       get; internal set;
     }
 
-  }  // class StepDto
+  }  // class StepShortModel
 
 }  // namespace Empiria.Steps.Definition.Adapters
