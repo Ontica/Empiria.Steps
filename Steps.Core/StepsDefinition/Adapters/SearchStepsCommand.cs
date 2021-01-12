@@ -14,6 +14,10 @@ namespace Empiria.Steps.Definition.Adapters {
   /// <summary>Command payload used for steps definition searching.</summary>
   public class SearchStepsCommand {
 
+    public string StepsType {
+      get; set;
+    } = string.Empty;
+
     public string Keywords {
       get; set;
     } = string.Empty;
@@ -21,7 +25,7 @@ namespace Empiria.Steps.Definition.Adapters {
 
     public string OrderBy {
       get; set;
-    } = string.Empty;
+    } = "StepName";
 
 
     public int PageSize {

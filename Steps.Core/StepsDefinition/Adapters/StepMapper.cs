@@ -13,19 +13,14 @@ namespace Empiria.Steps.Definition.Adapters {
 
   static internal class StepMapper {
 
-    static internal FixedList<StepDto> Map(FixedList<Process> list) {
+    static internal FixedList<StepDto> Map(FixedList<Step> list) {
       var mappedItems = list.Select((x) => Map(x));
 
       return new FixedList<StepDto>(mappedItems);
     }
 
-    internal static FixedList<StepShortModel> MapToShortModel(FixedList<Process> list) {
-      var mappedItems = list.Select((x) => MapToShortModel(x));
 
-      return new FixedList<StepShortModel>(mappedItems);
-    }
-
-    static internal StepDto Map(Process process) {
+    static internal StepDto Map(Step process) {
       var dto = new StepDto {
         UID = process.UID,
         Type = process.StepType.Name,
@@ -41,22 +36,28 @@ namespace Empiria.Steps.Definition.Adapters {
       return dto;
     }
 
-    static internal StepShortModel MapToShortModel(Process process) {
+
+    static internal FixedList<StepShortModel> MapToShortModel(FixedList<Step> list) {
+      var mappedItems = list.Select((x) => MapToShortModel(x));
+
+      return new FixedList<StepShortModel>(mappedItems);
+    }
+
+
+    static internal StepShortModel MapToShortModel(Step process) {
       var dto = new StepShortModel {
         UID = process.UID,
         Type = process.StepType.Name,
         TypeName = process.StepType.DisplayName,
         Kind = process.Kind,
         Name = process.Name,
-        Description = process.Description,
-        Topics = process.Topics,
         Tags = process.Tags,
+        Topics = process.Topics,
         Entity = process.Entity.Alias
       };
 
       return dto;
     }
-
 
   }  // class StepMapper
 

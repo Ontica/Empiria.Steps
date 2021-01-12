@@ -67,6 +67,10 @@
       <Project>{dacbf2c5-1f67-48e3-837c-8ca45b105e44}</Project>
       <Name>Empiria.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Steps.Core\Empiria.Steps.Core.csproj">
+      <Project>{2fc9efa2-7be2-46ba-a41a-df2fa61dd7de}</Project>
+      <Name>Empiria.Steps.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Steps.Design\Empiria.Steps.Design.csproj">
       <Project>{f6761e9c-e651-4dce-8934-588d35e737a8}</Project>
       <Name>Empiria.Steps.Design</Name>

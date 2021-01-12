@@ -38,6 +38,8 @@ namespace Empiria.Steps.Definition {
 
     public static StepType Block => ObjectTypeInfo.Parse<StepType>("ObjectType.Step.Block");
 
+    public static StepType Event => ObjectTypeInfo.Parse<StepType>("ObjectType.Step.Event");
+
     public static StepType Gateway => ObjectTypeInfo.Parse<StepType>("ObjectType.Step.Gateway");
 
     public static StepType Process => ObjectTypeInfo.Parse<StepType>("ObjectType.Step.Process");

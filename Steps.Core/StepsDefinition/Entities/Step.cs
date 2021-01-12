@@ -69,14 +69,14 @@ namespace Empiria.Steps.Definition {
       private set;
     }
 
-    [DataField("Themes")]
-    public string Topics {
+    [DataField("Tags")]
+    public string Tags {
       get;
       private set;
     }
 
-    [DataField("Tags")]
-    public string Tags {
+    [DataField("Themes")]
+    public string Topics {
       get;
       private set;
     }

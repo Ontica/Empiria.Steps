@@ -33,10 +33,6 @@ namespace Empiria.Steps.Definition.Adapters {
       get; internal set;
     }
 
-    public string Description {
-      get; internal set;
-    }
-
     public string Topics {
       get; internal set;
     }

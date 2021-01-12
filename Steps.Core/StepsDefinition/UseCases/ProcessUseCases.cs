@@ -34,7 +34,7 @@ namespace Empiria.Steps.Definition.UseCases {
     public StepDto GetProcess(string processUID) {
       Assertion.AssertObject(processUID, "processUID");
 
-      var process = Process.Parse(processUID);
+      var process = Step.Parse(processUID);
 
       return StepMapper.Map(process);
     }
@@ -43,7 +43,7 @@ namespace Empiria.Steps.Definition.UseCases {
     public FixedList<StepShortModel> SearchProcesses(SearchStepsCommand searchCommand) {
       Assertion.AssertObject(searchCommand, "searchCommand");
 
-      var list = Process.GetList(searchCommand);
+      var list = Step.GetList(searchCommand);
 
       return StepMapper.MapToShortModel(list);
     }

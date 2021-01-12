@@ -24,6 +24,13 @@ namespace Empiria.Steps.Definition.Data {
       var sql = $"SELECT * FROM STSteps WHERE " +
                 $"(StepTypeId = {processType.Id}) AND (DesignStatus <> 'X')";
 
+      if (!String.IsNullOrWhiteSpace(searchCommand.Keywords)) {
+        var keywordsFilter = SearchExpression.ParseAndLikeKeywords("Keywords", searchCommand.Keywords);
+        sql += $" AND {keywordsFilter}";
+      }
+
+      sql += $"ORDER BY {searchCommand.OrderBy}";
+
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetFixedList<Process>(op);
@@ -34,11 +41,42 @@ namespace Empiria.Steps.Definition.Data {
       var sql = $"SELECT * FROM STSteps WHERE " +
                 $"(DesignStatus <> 'X')";
 
+      sql += " AND " + GetStepsTypeFilter(searchCommand);
+
+      if (!String.IsNullOrWhiteSpace(searchCommand.Keywords)) {
+        var keywordsFilter = SearchExpression.ParseAndLikeKeywords("Keywords", searchCommand.Keywords);
+
+        sql += $" AND {keywordsFilter}";
+      }
+
+      sql += $"ORDER BY {searchCommand.OrderBy}";
+
+
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetFixedList<Step>(op);
-
     }
+
+
+    static private string GetStepsTypeFilter(SearchStepsCommand searchCommand) {
+      switch (searchCommand.StepsType) {
+        case "All":
+          return $"(StepTypeId <> 230847)";
+
+        case "Processes":
+          return $"(StepTypeId = {StepType.Process.Id})";
+
+        case "Activities":
+          return $"(StepTypeId = {StepType.Task.Id})";
+
+        case "Events":
+          return $"(StepTypeId = {StepType.Event.Id})";
+
+        default:
+          throw Assertion.AssertNoReachThisCode($"Invalid steps type {searchCommand.StepsType}.");
+      }
+    }
+
   }  // class StepsData
 
 }  // namespace Empiria.Steps.Definition.Data
