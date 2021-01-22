@@ -52,6 +52,15 @@ namespace Empiria.ProjectManagement.WebApi {
 
 
     static internal object ToResponse(this Activity activity) {
+      Activity template = activity.HasTemplate ? activity.GetTemplate() : null;
+
+      string entityName = string.Empty;
+
+      if (template != null && template.Template.EntityId != -1) {
+        entityName = Organization.Parse(template.Template.EntityId).Nickname;
+      }
+
+
       return new {
         id = activity.Id,
         uid = activity.UID,
@@ -82,30 +91,24 @@ namespace Empiria.ProjectManagement.WebApi {
 
         reminder = activity.ReminderData.ToObject(),
 
-        //reminder = new {
-        //  days = activity.ReminderDays,
-        //  sendAlertsTo = activity.SendAlertsTo.ToObject(),
-        //  sendAlertsToEMails = activity.SendAlertsToEMails
-        //},
-
-        theme = activity.Theme,
-        resource = activity.Resource,
-
-        tags = activity.Tag,
-
         position = activity.Position,
         level = activity.Level,
         stage = activity.Stage,
         status = activity.Status,
 
+        theme = activity.Theme,
+        resource = activity.Resource,
+        tags = activity.Tag,
+
         responsible = activity.Responsible.ToShortResponse(),
+        entity = entityName,
+
         assignedDate = activity.AssignedDate,
         assignedBy = activity.AssignedBy.ToShortResponse(),
 
         rules = activity.GetRules(),
 
-        template = activity.HasTemplate ?
-                        activity.GetTemplate().ToActivityTemplateResponse() : new object(),
+        template = template != null ? template.ToActivityTemplateResponse() : new object(),
 
         foreignLanguage = new {
           name = activity.ForeignLanguageData.Name,
@@ -159,6 +162,8 @@ namespace Empiria.ProjectManagement.WebApi {
         status = summary.Status,
 
         responsible = Contact.Empty.ToShortResponse(),
+        entity = string.Empty,
+
         assignedDate = "",
         assignedBy = Contact.Empty.ToShortResponse(),
         template = new object(),

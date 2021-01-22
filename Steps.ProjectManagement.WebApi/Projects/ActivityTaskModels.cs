@@ -89,6 +89,7 @@ namespace Empiria.ProjectManagement.WebApi {
         status = task.Status,
 
         responsible = task.Responsible.ToShortResponse(),
+        entity = string.Empty,
         assignedDate = task.AssignedDate,
         assignedBy = task.AssignedBy.ToShortResponse(),
         template = new object(),
