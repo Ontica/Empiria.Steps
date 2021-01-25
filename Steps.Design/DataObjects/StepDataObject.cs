@@ -203,6 +203,17 @@ namespace Empiria.Steps.Design.DataObjects {
       StepsDataRepository.WriteStepDataObject(this);
     }
 
+
+    public void ToggleStatus() {
+      if (this.Status == EntityStatus.Active) {
+        this.Status = EntityStatus.Pending;
+        this.Save();
+      } else if (this.Status == EntityStatus.Pending) {
+        this.Status = EntityStatus.Active;
+        this.Save();
+      }
+    }
+
     #endregion Methods
 
   }  // class StepDataObject

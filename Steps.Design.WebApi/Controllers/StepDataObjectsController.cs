@@ -42,6 +42,28 @@ namespace Empiria.Steps.Design.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v3/empiria-steps/activities/{activityUID}/data-objects/{dataObjectUID}/toggle-status")]
+    public CollectionModel ToggleActivityDataObjectStatus([FromUri] string activityUID,
+                                                          [FromUri] string dataObjectUID) {
+      try {
+        StepDataObject dataObject = StepDataObject.Parse(dataObjectUID);
+
+        dataObject.ToggleStatus();
+
+        var activity = ProjectItem.Parse(activityUID);
+
+        FixedList<StepDataObject> dataObjects = StepDataObject.GetListForAction(activity);
+
+        return new CollectionModel(this.Request, dataObjects.ToResponse(activity),
+                                   typeof(StepDataObject).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
     [HttpGet]
     [Route("v3/empiria-steps/steps/{stepUID:guid}/requirements")]
     public CollectionModel GetStepRequirementsList([FromUri] string stepUID) {
