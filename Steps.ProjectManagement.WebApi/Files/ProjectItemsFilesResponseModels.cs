@@ -38,7 +38,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
     static internal object ToProjectItemFileResponse(this Posting posting) {
       ProjectItem projectItem = posting.GetNodeObjectItem<ProjectItem>();
-      MediaFile mediaFile = posting.GetPostedItem<MediaFile>();
+      FormerMediaFile mediaFile = posting.GetPostedItem<FormerMediaFile>();
 
       return new {
         uid = posting.UID,

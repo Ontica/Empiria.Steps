@@ -36,7 +36,7 @@ namespace Empiria.ProjectManagement.WebApi {
         list = list.FindAll(x => projects.Exists(y => y.Id == x.GetNodeObjectItem<ProjectItem>().Project.Id));
 
         return new CollectionModel(this.Request, list.ToProjectItemFileResponse(),
-                                  typeof(MediaFile).FullName);
+                                  typeof(FormerMediaFile).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -53,7 +53,7 @@ namespace Empiria.ProjectManagement.WebApi {
         FixedList<Posting> list = GetProjectFilesPostingsList(project);
 
         return new CollectionModel(this.Request, list.ToProjectItemFileResponse(),
-                                  typeof(MediaFile).FullName);
+                                  typeof(FormerMediaFile).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -67,10 +67,10 @@ namespace Empiria.ProjectManagement.WebApi {
       try {
         var projectItem = ProjectItem.Parse(projectItemUID);
 
-        FixedList<MediaFile> list = PostingList.GetPostedItems<MediaFile>(projectItem, "ProjectItem.MediaFile");
+        FixedList<FormerMediaFile> list = PostingList.GetPostedItems<FormerMediaFile>(projectItem, "ProjectItem.MediaFile");
 
         return new CollectionModel(this.Request, list.ToResponse(),
-                                  typeof(MediaFile).FullName);
+                                  typeof(FormerMediaFile).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -93,10 +93,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
         Posting posting = MediaFilePostingServices.CreateMediaFilePosting(request, projectItem, "ProjectItem.MediaFile");
 
-        MediaFile mediaFile = posting.GetPostedItem<MediaFile>();
+        FormerMediaFile mediaFile = posting.GetPostedItem<FormerMediaFile>();
 
         return new SingleObjectModel(this.Request, mediaFile.ToResponse(),
-                                     typeof(MediaFile).FullName);
+                                     typeof(FormerMediaFile).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -142,10 +142,10 @@ namespace Empiria.ProjectManagement.WebApi {
 
         MediaFilePostingServices.UpdateMediaFilePosting(request, posting);
 
-        MediaFile mediaFile = posting.GetPostedItem<MediaFile>();
+        FormerMediaFile mediaFile = posting.GetPostedItem<FormerMediaFile>();
 
         return new SingleObjectModel(this.Request, mediaFile.ToResponse(),
-                                     typeof(MediaFile).FullName);
+                                     typeof(FormerMediaFile).FullName);
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
