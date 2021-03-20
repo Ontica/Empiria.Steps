@@ -97,7 +97,7 @@ namespace Empiria.Steps.Design.DataObjects {
 
 
     [DataField("MediaId")]
-    public MediaFile MediaFile {
+    public FormerMediaFile MediaFile {
       get;
       private set;
     }
@@ -189,6 +189,11 @@ namespace Empiria.Steps.Design.DataObjects {
       requirementData.Remove("dataObject");
 
       this.ExtensionData.Set("requirement", requirementData);
+    }
+
+
+    public void Update(JsonObject requirement) {
+      this.LoadRequirement(requirement);
     }
 
 

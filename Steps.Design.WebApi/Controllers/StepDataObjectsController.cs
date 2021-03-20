@@ -123,7 +123,14 @@ namespace Empiria.Steps.Design.WebApi {
 
         var requirement = base.GetJsonFromBody(body);
 
-        StepDataObject dataObject = new StepDataObject(step, requirement);
+        StepDataObject dataObject;
+
+        if (!requirement.HasValue("uid")) {
+          dataObject = new StepDataObject(step, requirement);
+        } else {
+          dataObject = StepDataObject.Parse(requirement.Get<string>("uid"));
+          dataObject.Update(requirement);
+        }
 
         dataObject.Save();
 
