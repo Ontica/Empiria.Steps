@@ -158,7 +158,7 @@ namespace Empiria.Steps.Design.DataObjects {
 
       this.UploadedFileUrl = $"{MediaStorage.Default.Url}/{uploadFileName}";
 
-      this.ExecuteAutofill(fullPath, true);
+      // this.ExecuteAutofill(fullPath, true);
 
       this.Save();
     }

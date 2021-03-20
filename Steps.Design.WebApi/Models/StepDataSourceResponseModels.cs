@@ -38,6 +38,7 @@ namespace Empiria.Steps.Design.WebApi {
         type = dataStore.NamedKey,
         family = dataStore.Family,
         name = dataStore.Name,
+        mediaFormat = dataStore.GetMediaFormat(),
         description = dataStore.Description,
         templateUrl = dataStore.Template.Replace("~", libraryBaseAddress)
       };

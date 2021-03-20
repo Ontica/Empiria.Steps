@@ -15,7 +15,6 @@ using Empiria.WebApi;
 
 using Empiria.Steps.Design.DataObjects;
 using Empiria.ProjectManagement;
-using Empiria.Data.DataObjects;
 
 namespace Empiria.Steps.Design.WebApi {
 
@@ -96,7 +95,10 @@ namespace Empiria.Steps.Design.WebApi {
         uploadedFileUrl = String.Empty,
         templateUrl = dataObject.DataItem.Template.Replace("~", libraryBaseAddress),
         decorator = dataObject.DataItem.Terms,
-        status = dataObject.Status
+        status = dataObject.Status,
+        dataObject = dataObject.DataItem.ToResponse(),
+        optional = dataObject.Optional,
+        legalBasis = dataObject.LegalBasis,
       };
     }
 
@@ -120,7 +122,10 @@ namespace Empiria.Steps.Design.WebApi {
         uploadedFileUrl = autofill.UploadedFileUrl,
         templateUrl = dataObject.DataItem.Template.Replace("~", libraryBaseAddress),
         decorator = dataObject.DataItem.Terms,
-        status = dataObject.Status
+        status = dataObject.Status,
+        dataObject = dataObject.DataItem.ToResponse(),
+        optional = dataObject.Optional,
+        legalBasis = dataObject.LegalBasis,
       };
     }
 
