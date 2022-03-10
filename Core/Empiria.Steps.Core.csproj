@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Company>Ontica</Company>
-    <Product>Empiria Steps Web Api</Product>
-    <Description>Empiria Steps Http/Json web services interface.</Description>
-    <Copyright>(c) 2017-2021. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Product>Empiria Steps Core</Product>
+    <Description>Empiria core process and project management components.</Description>
+    <Copyright>(c) 2017-2022. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>3.0.0</Version>
     <AssemblyVersion>3.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.WebApi/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.WebApi</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Core/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Core</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/steps/empiria-steps.logo.png</PackageIconUrl>
-    <PackageTags>workflow management system, project management, business process, task management, bpmn, wfmc, web services, web api</PackageTags>
+    <PackageTags>workflow management system, project management, business process, task management, bpmn, wfmc</PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
@@ -20,6 +20,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
+    <AssemblyName>Empiria.Steps.Core</AssemblyName>
+    <RootNamespace>Empiria.Steps</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -51,25 +53,12 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
-    <PackageReference Include="Empiria.WebApi.Client" Version="2.0.0" />
-    <PackageReference Include="Empiria.Steps.Core" Version="3.0.0" />
+    <PackageReference Include="Empiria.Core" Version="7.0.0" />
+    <PackageReference Include="Empiria.Services" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
-    <ProjectReference Include="..\..\extensions\WebApi.Client\Empiria.WebApi.Client.csproj" />
-    <ProjectReference Include="..\Steps.Core\Empiria.Steps.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="empiria.environment.vars.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
+    <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
   </ItemGroup>
 </Project>

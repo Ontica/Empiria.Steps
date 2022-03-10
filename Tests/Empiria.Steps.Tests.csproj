@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Company>Ontica</Company>
     <Product>Empiria Steps Tests</Product>
-    <Description>Test suite for Empiria Steps components.</Description>
-    <Copyright>(c) 2017-2021. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Description>Tests suite for Empiria Steps components.</Description>
+    <Copyright>(c) 2017-2022. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>3.0.0</Version>
     <AssemblyVersion>3.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.Tests/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.Tests</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Tests/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Tests</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/steps/empiria-steps.logo.png</PackageIconUrl>
     <PackageTags>process design, protocol management, business rules, process rules, workflow definition, business process, bpmn, wfmc</PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
@@ -20,6 +20,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
+    <AssemblyName>Empiria.Steps.Tests</AssemblyName>
+    <RootNamespace>Empiria.Steps.Tests</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -71,8 +73,8 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Steps.Core" Version="3.0.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\Steps.Core\Empiria.Steps.Core.csproj" />
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Empiria.Steps.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">

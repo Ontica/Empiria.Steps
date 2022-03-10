@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Steps.WebApi.dll                   Pattern   : Assembly Attributes File                *
 *  Type     : None                                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Empiria Steps Http/Json web services interface.                                                *
+*  Summary  : Empiria Steps web services interface.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
