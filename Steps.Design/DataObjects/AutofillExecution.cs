@@ -15,47 +15,47 @@ namespace Empiria.Steps.Design.DataObjects {
 
     #region Public methods
 
-    static internal void ExecuteAutofill(this Autofill autofill,
-                                     string fullPath, bool uploaded) {
-      if (autofill.StepDataObject.MediaFormat == "Excel") {
-        autofill.ExecuteExcelAutofill(fullPath, uploaded);
-      } else if (autofill.StepDataObject.MediaFormat == "PDF") {
-        autofill.ExecutePDFAutofill(fullPath, uploaded);
-      } else {
-        Assertion.AssertNoReachThisCode($"Unrecognized autofill handler for media format {autofill.StepDataObject.MediaFormat}.");
-      }
-    }
+    //static internal void ExecuteAutofill(this Autofill autofill,
+    //                                 string fullPath, bool uploaded) {
+    //  if (autofill.StepDataObject.MediaFormat == "Excel") {
+    //    autofill.ExecuteExcelAutofill(fullPath, uploaded);
+    //  } else if (autofill.StepDataObject.MediaFormat == "PDF") {
+    //    autofill.ExecutePDFAutofill(fullPath, uploaded);
+    //  } else {
+    //    Assertion.AssertNoReachThisCode($"Unrecognized autofill handler for media format {autofill.StepDataObject.MediaFormat}.");
+    //  }
+    //}
 
 
-    static internal void ExecutePDFAutofill2(this Autofill autofill,
-                                           string templatePath, string fullPath) {
-      try {
-        var defaults = autofill.StepDataObject.DataItem.GetPDFFormFields();
+    //static internal void ExecutePDFAutofill2(this Autofill autofill,
+    //                                       string templatePath, string fullPath) {
+    //  try {
+    //    var defaults = autofill.StepDataObject.DataItem.GetPDFFormFields();
 
-        var pdfFields = PdfFieldsReader.GetFields(templatePath);
+    //    var pdfFields = PdfFieldsReader.GetFields(templatePath);
 
-        foreach (var field in pdfFields) {
-          if (defaults.Contains(field.Key)) {
-            field.Value = defaults.Get<string>(field.Key);
-          }
-        }
+    //    foreach (var field in pdfFields) {
+    //      if (defaults.Contains(field.Key)) {
+    //        field.Value = defaults.Get<string>(field.Key);
+    //      }
+    //    }
 
-        Stream stream = File.OpenRead(templatePath);
+    //    Stream stream = File.OpenRead(templatePath);
 
-        var autofilled = PdfFieldsWriter.WriteFields(stream, pdfFields);
+    //    var autofilled = PdfFieldsWriter.WriteFields(stream, pdfFields);
 
-        byte[] bytes = autofilled.ToArray();
+    //    byte[] bytes = autofilled.ToArray();
 
-        stream.Close();
+    //    stream.Close();
 
-        using (FileStream fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write)) {
-          fs.Write(bytes, 0, (int) bytes.Length);
-        }
+    //    using (FileStream fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write)) {
+    //      fs.Write(bytes, 0, (int) bytes.Length);
+    //    }
 
-      } catch (Exception e) {
-        throw e;
-      }
-    }
+    //  } catch (Exception e) {
+    //    throw e;
+    //  }
+    //}
 
     #endregion Public methods
 
@@ -99,30 +99,30 @@ namespace Empiria.Steps.Design.DataObjects {
     }
 
 
-    static private void ExecutePDFAutofill(this Autofill autofill,
-                                                string fullPath, bool uploaded) {
-      var defaults = autofill.StepDataObject.DataItem.GetPDFFormFields();
+    //static private void ExecutePDFAutofill(this Autofill autofill,
+    //                                            string fullPath, bool uploaded) {
+    //  var defaults = autofill.StepDataObject.DataItem.GetPDFFormFields();
 
-      try {
-        var pdfFields = PdfFieldsReader.GetFields(fullPath);
+    //  try {
+    //    var pdfFields = PdfFieldsReader.GetFields(fullPath);
 
-        JsonObject json = new JsonObject();
+    //    JsonObject json = new JsonObject();
 
-        foreach (var field in pdfFields) {
-          if (uploaded) {
-            json.AddIfValue(field.Key, field.Value);
-          } else {
-            json.Add(field.Key, field.Value);
-          }
-        }
+    //    foreach (var field in pdfFields) {
+    //      if (uploaded) {
+    //        json.AddIfValue(field.Key, field.Value);
+    //      } else {
+    //        json.Add(field.Key, field.Value);
+    //      }
+    //    }
 
-        autofill.AutofillFields = json;
-        autofill.Save();
+    //    autofill.AutofillFields = json;
+    //    autofill.Save();
 
-      } catch (Exception e) {
-        throw e;
-      }
-    }
+    //  } catch (Exception e) {
+    //    throw e;
+    //  }
+    //}
 
 
     static private void FillOutMensualActividadesCNH(this Autofill autofill,

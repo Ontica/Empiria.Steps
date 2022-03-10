@@ -55,7 +55,7 @@ namespace Empiria.Steps.OfficeIntegration {
 
       FillOut(newFile);
 
-      return MediaFileTemplateServices.GeFileUrl(newFile);
+      return MediaFileTemplateServices.GetFileUrl(newFile);
     }
 
 

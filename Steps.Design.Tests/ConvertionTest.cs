@@ -23,11 +23,16 @@ namespace Empiria.Steps.Design.Tests {
 /*                      "ab329289-ed96-4565-85f5-1145c79537ad",
                         "be9fd6bf-c4b4-4ff2-ae14-d8ce5624de47",
                         "c8ae585c-36dc-4834-827e-fa3767009e3d"
+
 */    [TestMethod]
     public void Convert() {
-      string[] uids = { "166871d7-5cd7-40c7-aa47-618db5e643b8",
-                        "ea805b13-a259-41c2-ae26-86232f45ac4d",
-                        "442537c8-5395-4c25-b3bd-f054d2855e8d"};
+      string[] uids = { "163286aa-5ddf-4206-85d0-5888c977e4de",
+                        "ab329289-ed96-4565-85f5-1145c79537ad",
+                        "be9fd6bf-c4b4-4ff2-ae14-d8ce5624de47",
+                        "50036465-c8fe-465b-b8f0-e4fe2d3e679a",
+                        "f81744a3-0fc3-46bd-a728-90ece8187abc",
+                        "c8ae585c-36dc-4834-827e-fa3767009e3d",
+                        "5234852e-0cfd-4d9d-8ec5-4252afd9ff7d"};
 
       foreach (var projectUID in uids) {
         var project = Project.Parse(projectUID);

@@ -52,6 +52,9 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">

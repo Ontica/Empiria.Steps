@@ -103,31 +103,33 @@ namespace Empiria.Steps.Design.DataObjects {
         return;
       }
 
-      MediaStorage storage = MediaStorage.Default;
+      return;
 
-      var template = this.StepDataObject.DataItem.TemplateFileInfo;
+      //MediaStorage storage = MediaStorage.Default;
 
-      var fileName = DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss--") + template.Name;
+      //var template = this.StepDataObject.DataItem.TemplateFileInfo;
 
-      string fullPath = Path.Combine(storage.Path, fileName);
+      //var fileName = DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss--") + template.Name;
 
-      if (this.StepDataObject.MediaFormat == "PDF" && this.StepDataObject.DataItem.GetPDFFormFields().HasItems) {
-        this.ExecutePDFAutofill2(template.FullName, fullPath);
+      //string fullPath = Path.Combine(storage.Path, fileName);
 
-        this.AutofillFileUrl = $"{MediaStorage.Default.Url}/{fileName}";
+      //if (this.StepDataObject.MediaFormat == "PDF" && this.StepDataObject.DataItem.GetPDFFormFields().HasItems) {
+      //  this.ExecutePDFAutofill2(template.FullName, fullPath);
 
-        this.Save();
+      //  this.AutofillFileUrl = $"{MediaStorage.Default.Url}/{fileName}";
 
-        return;
-      }
+      //  this.Save();
 
-      File.Copy(template.FullName, fullPath, true);
+      //  return;
+      //}
 
-      this.AutofillFileUrl = $"{MediaStorage.Default.Url}/{fileName}";
+      //File.Copy(template.FullName, fullPath, true);
 
-      this.ExecuteAutofill(fullPath, false);
+      //this.AutofillFileUrl = $"{MediaStorage.Default.Url}/{fileName}";
 
-      this.Save();
+      //this.ExecuteAutofill(fullPath, false);
+
+      //this.Save();
     }
 
 

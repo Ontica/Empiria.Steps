@@ -55,7 +55,7 @@ namespace Empiria.Steps.OfficeIntegration {
 
       FillOut(newFile);
 
-      return MediaFileTemplateServices.GeFileUrl(newFile);
+      return MediaFileTemplateServices.GetFileUrl(newFile);
     }
 
 
@@ -134,4 +134,4 @@ namespace Empiria.Steps.OfficeIntegration {
 
   }  // class ExcelExporter
 
-  }  // namespace Empiria.Steps.OfficeIntegration
+}  // namespace Empiria.Steps.OfficeIntegration

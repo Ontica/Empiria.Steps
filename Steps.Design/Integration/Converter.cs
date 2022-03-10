@@ -22,14 +22,14 @@ namespace Empiria.Steps.Design.Integration {
 
     #region Fields
 
-    private Project project;
+    private readonly Project _project;
 
     #endregion Fields
 
     #region Constructors and parsers
 
     public Converter(Project project) {
-      this.project = project;
+      _project = project;
     }
 
     #endregion Constructors and parsers
@@ -258,7 +258,7 @@ namespace Empiria.Steps.Design.Integration {
 
 
     private FixedList<ProjectItem> GetProjectRootItems() {
-      return project.GetItems().FindAll(x => x.Level == 1);
+      return _project.GetItems().FindAll(x => x.Level == 1);
     }
 
     #endregion Utility methods
