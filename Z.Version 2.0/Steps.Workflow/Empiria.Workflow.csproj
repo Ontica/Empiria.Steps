@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Company>Ontica</Company>
-    <Product>Empiria Steps Inbox</Product>
-    <Description>Seamless centralized task management solution.</Description>
+    <Product>Empiria Steps Workflow Management</Product>
+    <Description>Empiria Steps workflow and project management services.</Description>
     <Copyright>(c) 2017-2020. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.Inbox/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.Inbox</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.Workflow/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.Workflow</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/steps/empiria-steps.logo.png</PackageIconUrl>
-    <PackageTags>workflow management system, project management, business process, task management, bpmn, wfmc</PackageTags>
+    <PackageTags>workflow management system, workflow definition, workflow engine, business process, task management, bpmn, wfmc</PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
@@ -20,8 +20,9 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
-    <AssemblyName>Empiria.Inbox</AssemblyName>
-    <RootNamespace>Empiria.Inbox</RootNamespace>
+    <PackageId>Empiria.Workflow</PackageId>
+    <AssemblyName>Empiria.Workflow</AssemblyName>
+    <RootNamespace>Empiria.Workflow</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -53,4 +54,10 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Core" Version="7.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
+  </ItemGroup>
 </Project>

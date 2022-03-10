@@ -63,15 +63,15 @@
     <PackageReference Include="Empiria.ProjectManagement" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
-    <ProjectReference Include="..\..\extensions\Data.DataObjects\Empiria.Data.DataObjects.csproj" />
-    <ProjectReference Include="..\..\extensions\Office\Empiria.Office.csproj" />
-    <ProjectReference Include="..\..\extensions\Postings\Postings\Empiria.Postings.csproj" />
-    <ProjectReference Include="..\..\extensions\Storage\Empiria.Storage.csproj" />
     <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\governance\Governance.Core\Empiria.Governance.csproj" />
+    <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
+    <ProjectReference Include="..\..\..\extensions\Data.DataObjects\Empiria.Data.DataObjects.csproj" />
+    <ProjectReference Include="..\..\..\extensions\Office\Empiria.Office.csproj" />
+    <ProjectReference Include="..\..\..\extensions\Postings\Postings\Empiria.Postings.csproj" />
+    <ProjectReference Include="..\..\..\extensions\Storage\Empiria.Storage.csproj" />
+    <ProjectReference Include="..\..\..\governance\Governance.Core\Empiria.Governance.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.IO.Compression" />

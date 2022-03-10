@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Company>Ontica</Company>
     <Product>Empiria Steps Project Management</Product>
-    <Description>Domain types and services used to build Empiria Steps Project Management based solutions.</Description>
+    <Description>Web service interface used to interact with Empiria Steps Project Management domain services.</Description>
     <Copyright>(c) 2017-2020. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.ProjectManagement/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.ProjectManagement</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Steps/blob/master/Steps.ProjectManagement.WebApi/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Steps/tree/master/Steps.ProjectManagement.WebApi</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/steps/empiria-steps.logo.png</PackageIconUrl>
     <PackageTags>project management, gantt, kanban, task management</PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Steps</RepositoryUrl>
@@ -20,8 +20,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
-    <AssemblyName>Empiria.ProjectManagement</AssemblyName>
-    <RootNamespace>Empiria.ProjectManagement</RootNamespace>
+    <AssemblyName>Empiria.ProjectManagement.WebApi</AssemblyName>
+    <RootNamespace>Empiria.ProjectManagement.WebApi</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -53,15 +53,20 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
-    <ProjectReference Include="..\..\extensions\Messaging\Empiria.Messaging.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.Core" Version="7.0.0" />
-    <PackageReference Include="Empiria.Messaging" Version="7.0.0" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\extensions\Storage\Empiria.Storage.csproj" />
+    <ProjectReference Include="..\..\..\extensions\WebApi\Empiria.WebApi.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\governance\Governance.Core\Empiria.Governance.csproj" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\Steps.ProjectManagement\Empiria.ProjectManagement.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
+    <PackageReference Include="Empiria.Storage" Version="2.0.0" />
+    <PackageReference Include="Empiria.ProjectManagement" Version="1.0.0" />
   </ItemGroup>
 </Project>
