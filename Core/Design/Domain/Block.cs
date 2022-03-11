@@ -1,36 +1,35 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Domain Layer                            *
+*  Module   : Steps Design                               Component : Domain Layer                            *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Information Holder                      *
-*  Type     : Task                                       License   : Please read LICENSE.txt file            *
+*  Type     : Block                                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : A task represents a single unit of work that is not or cannot be broken down to a further      *
-*             level of business process detail. It is referred to as an atomic activity.                     *
+*  Summary  : Represents a list of activities.                                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Steps.Definition {
+namespace Empiria.Steps.Design {
 
-  /// <summary>Describes an atomic task.</summary>
-  public class Task : Step {
+  /// <summary>Represents a list of activities.</summary>
+  public class Block : Step {
 
     #region Constructors and parsers
 
-    internal Task() : base(StepType.Task) {
+    internal Block() : base(StepType.Block) {
       // no-op
     }
 
-    private Task(StepType powertype) : base(powertype) {
+    private Block(StepType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public new Task Parse(string uid) {
-      return BaseObject.ParseKey<Task>(uid);
+    static public new Block Parse(string uid) {
+      return BaseObject.ParseKey<Block>(uid);
     }
 
     #endregion Constructors and parsers
 
-  }  // class Task
+  }  // class Block
 
-}  // namespace Empiria.Steps.Definition
+}  // namespace Empiria.Steps.Design

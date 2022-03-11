@@ -1,46 +1,46 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Use cases Layer                         *
+*  Module   : Steps Design                               Component : Use cases Layer                         *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Use case interactor class               *
-*  Type     : ProcessUseCases                            License   : Please read LICENSE.txt file            *
+*  Type     : StepsDesignUseCases                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for process definition searching and retrieving.                                     *
+*  Summary  : Use cases for steps designs.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Services;
-using Empiria.Steps.Definition.Adapters;
+using Empiria.Steps.Design.Adapters;
 
-namespace Empiria.Steps.Definition.UseCases {
+namespace Empiria.Steps.Design.UseCases {
 
   /// <summary>Use cases for process definition searching and retrieving.</summary>
-  public class ProcessUseCases : UseCase {
+  public class StepsDesignUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected ProcessUseCases() {
+    protected StepsDesignUseCases() {
       // no-op
     }
 
-    static public ProcessUseCases UseCaseInteractor() {
-      return ProcessUseCases.CreateInstance<ProcessUseCases>();
+    static public StepsDesignUseCases UseCaseInteractor() {
+      return StepsDesignUseCases.CreateInstance<StepsDesignUseCases>();
     }
 
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public StepDto GetProcess(string processUID) {
-      Assertion.AssertObject(processUID, "processUID");
+    public StepDto GetStep(string stepUID) {
+      Assertion.AssertObject(stepUID, "stepUID");
 
-      var process = Step.Parse(processUID);
+      var step = Step.Parse(stepUID);
 
-      return StepMapper.Map(process);
+      return StepMapper.Map(step);
     }
 
 
-    public FixedList<StepShortModel> SearchProcesses(SearchStepsCommand searchCommand) {
+    public FixedList<StepDescriptorDto> SearchSteps(SearchStepsCommand searchCommand) {
       Assertion.AssertObject(searchCommand, "searchCommand");
 
       var list = Step.GetList(searchCommand);
@@ -50,6 +50,6 @@ namespace Empiria.Steps.Definition.UseCases {
 
     #endregion Use cases
 
-  }  // class ProcessUseCases
+  }  // class StepsDesignUseCases
 
-}  // namespace Empiria.Steps.Definition.UseCases
+}  // namespace Empiria.Steps.Design.UseCases

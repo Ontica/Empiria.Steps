@@ -15,7 +15,7 @@ namespace Empiria.Steps.Tests {
 
     static internal string SESSION_TOKEN => ConfigurationData.GetString("Testing.SessionToken");
 
-    static public string PROCESS_UID => ConfigurationData.Get<string>("Testing.ProcessUID");
+    static public string STEP_UID => ConfigurationData.Get<string>("Testing.StepUID");
 
   }  // class TestingConstants
 

@@ -1,21 +1,21 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Data Access Layer                       *
+*  Module   : Steps Design                               Component : Data Access Layer                       *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Data Services                           *
 *  Type     : StepsData                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Data read and write services for steps definition data.                                        *
+*  Summary  : Data read and write services for Steps Design     data.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Data;
 
-using Empiria.Steps.Definition.Adapters;
+using Empiria.Steps.Design.Adapters;
 
-namespace Empiria.Steps.Definition.Data {
+namespace Empiria.Steps.Design.Data {
 
-  /// <summary>Data read and write services for steps definition data.</summary>
+  /// <summary>Data read and write services for Steps Design     data.</summary>
   static internal class StepsData {
 
     static internal FixedList<Process> GetProcessList(SearchStepsCommand searchCommand) {
@@ -73,10 +73,10 @@ namespace Empiria.Steps.Definition.Data {
           return $"(StepTypeId = {StepType.Event.Id})";
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Invalid steps type {searchCommand.StepsType}.");
+          throw Assertion.AssertNoReachThisCode($"Invalid steps type '{searchCommand.StepsType}'.");
       }
     }
 
   }  // class StepsData
 
-}  // namespace Empiria.Steps.Definition.Data
+}  // namespace Empiria.Steps.Design.Data

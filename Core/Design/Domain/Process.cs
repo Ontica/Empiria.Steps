@@ -1,6 +1,6 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Domain Layer                            *
+*  Module   : Steps Design                               Component : Domain Layer                            *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Information Holder                      *
 *  Type     : Process                                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -9,10 +9,10 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Steps.Definition.Adapters;
-using Empiria.Steps.Definition.Data;
+using Empiria.Steps.Design.Adapters;
+using Empiria.Steps.Design.Data;
 
-namespace Empiria.Steps.Definition {
+namespace Empiria.Steps.Design {
 
   /// <summary>Describes a process definition.</summary>
   internal class Process : Step {
@@ -41,4 +41,4 @@ namespace Empiria.Steps.Definition {
 
   }  // class Process
 
-}  // namespace Empiria.Steps.Definition
+}  // namespace Empiria.Steps.Design

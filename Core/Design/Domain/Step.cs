@@ -1,6 +1,6 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Domain Layer                            *
+*  Module   : Steps Design                               Component : Domain Layer                            *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Partitioned Type / Information Holder   *
 *  Type     : Step                                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -14,10 +14,10 @@ using Empiria.Contacts;
 using Empiria.Ontology;
 using Empiria.StateEnums;
 
-using Empiria.Steps.Definition.Adapters;
-using Empiria.Steps.Definition.Data;
+using Empiria.Steps.Design.Adapters;
+using Empiria.Steps.Design.Data;
 
-namespace Empiria.Steps.Definition {
+namespace Empiria.Steps.Design {
 
   /// <summary>Abstract class that describes a process, a procedure, a protocol, a gateway,
   /// a task or other kinds of atomic or compound steps.</summary>
@@ -81,8 +81,14 @@ namespace Empiria.Steps.Definition {
       private set;
     }
 
-    [DataField("ProcedureEntityId")]
+    [DataField("EntityId")]
     public Contact Entity {
+      get;
+      private set;
+    }
+
+    [DataField("ProcedureId")]
+    public int ProcedureId {
       get;
       private set;
     }
@@ -118,4 +124,4 @@ namespace Empiria.Steps.Definition {
 
   }  // class Step
 
-}  // namespace Empiria.Steps.Definition
+}  // namespace Empiria.Steps.Design

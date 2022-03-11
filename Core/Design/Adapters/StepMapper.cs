@@ -1,15 +1,15 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Interface adapters                      *
+*  Module   : Steps Design                               Component : Interface adapters                      *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Mapper class                            *
 *  Type     : StepMapper                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Methods used to map steps definitions to StepDto objects.                                      *
+*  Summary  : Methods used to map Steps Design    s to StepDto objects.                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Steps.Definition.Adapters {
+namespace Empiria.Steps.Design.Adapters {
 
   static internal class StepMapper {
 
@@ -20,40 +20,40 @@ namespace Empiria.Steps.Definition.Adapters {
     }
 
 
-    static internal StepDto Map(Step process) {
+    static internal StepDto Map(Step step) {
       var dto = new StepDto {
-        UID = process.UID,
-        Type = process.StepType.Name,
-        TypeName = process.StepType.DisplayName,
-        Kind = process.Kind,
-        Name = process.Name,
-        Description = process.Description,
-        Topics = process.Topics,
-        Tags = process.Tags,
-        Entity = process.Entity.Alias
+        UID = step.UID,
+        Type = step.StepType.Name,
+        TypeName = step.StepType.DisplayName,
+        Kind = step.Kind,
+        Name = step.Name,
+        Description = step.Description,
+        Topics = step.Topics,
+        Tags = step.Tags,
+        Entity = step.Entity.Alias
       };
 
       return dto;
     }
 
 
-    static internal FixedList<StepShortModel> MapToShortModel(FixedList<Step> list) {
+    static internal FixedList<StepDescriptorDto> MapToShortModel(FixedList<Step> list) {
       var mappedItems = list.Select((x) => MapToShortModel(x));
 
-      return new FixedList<StepShortModel>(mappedItems);
+      return new FixedList<StepDescriptorDto>(mappedItems);
     }
 
 
-    static internal StepShortModel MapToShortModel(Step process) {
-      var dto = new StepShortModel {
-        UID = process.UID,
-        Type = process.StepType.Name,
-        TypeName = process.StepType.DisplayName,
-        Kind = process.Kind,
-        Name = process.Name,
-        Tags = process.Tags,
-        Topics = process.Topics,
-        Entity = process.Entity.Alias
+    static internal StepDescriptorDto MapToShortModel(Step step) {
+      var dto = new StepDescriptorDto {
+        UID = step.UID,
+        Type = step.StepType.Name,
+        TypeName = step.StepType.DisplayName,
+        Kind = step.Kind,
+        Name = step.Name,
+        Tags = step.Tags,
+        Topics = step.Topics,
+        Entity = step.Entity.Alias
       };
 
       return dto;
@@ -61,4 +61,4 @@ namespace Empiria.Steps.Definition.Adapters {
 
   }  // class StepMapper
 
-}  // namespace Empiria.Steps.Definition.Adapters
+}  // namespace Empiria.Steps.Design.Adapters

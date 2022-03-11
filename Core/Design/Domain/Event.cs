@@ -1,35 +1,36 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Domain Layer                            *
+*  Module   : Steps Design                               Component : Domain Layer                            *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Information Holder                      *
-*  Type     : Block                                      License   : Please read LICENSE.txt file            *
+*  Type     : Event                                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a list of activities.                                                               *
+*  Summary  : Denotes something that happens, compared with an activity, which is something that is done.    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Steps.Definition {
+namespace Empiria.Steps.Design {
 
-  /// <summary>Represents a list of activities.</summary>
-  public class Block : Step {
+  /// <summary>Denotes something that happens, compared with an activity,
+  /// which is something that is done.</summary>
+  public class Event : Step {
 
     #region Constructors and parsers
 
-    internal Block() : base(StepType.Block) {
+    internal Event() : base(StepType.Event) {
       // no-op
     }
 
-    private Block(StepType powertype) : base(powertype) {
+    private Event(StepType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public new Block Parse(string uid) {
-      return BaseObject.ParseKey<Block>(uid);
+    static public new Event Parse(string uid) {
+      return BaseObject.ParseKey<Event>(uid);
     }
 
     #endregion Constructors and parsers
 
-  }  // class Block
+  }  // class Event
 
-}  // namespace Empiria.Steps.Definition
+}  // namespace Empiria.Steps.Design

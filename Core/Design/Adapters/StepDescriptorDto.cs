@@ -1,18 +1,17 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Interface adapters                      *
+*  Module   : Steps Design                               Component : Interface adapters                      *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Data Transfer Object                    *
-*  Type     : StepDto                                    License   : Please read LICENSE.txt file            *
+*  Type     : StepDescriptorDto                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO that holds full data related to a step definition.                                  *
+*  Summary  : Output DTO that holds minimal step definition data to be used as list items.                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-namespace Empiria.Steps.Definition.Adapters {
+namespace Empiria.Steps.Design.Adapters {
 
-  /// <summary>Output DTO that holds full data related to a step definition.</summary>
-  public class StepDto {
+  /// <summary>Output DTO that holds minimal step definition data to be used as list items.</summary>
+  public class StepDescriptorDto {
 
     public string UID {
       get; internal set;
@@ -34,10 +33,6 @@ namespace Empiria.Steps.Definition.Adapters {
       get; internal set;
     }
 
-    public string Description {
-      get; internal set;
-    }
-
     public string Topics {
       get; internal set;
     }
@@ -50,6 +45,6 @@ namespace Empiria.Steps.Definition.Adapters {
       get; internal set;
     }
 
-  }  // class StepDto
+  }  // class StepDescriptorDto
 
-}  // namespace Empiria.Steps.Definition.Adapters
+}  // namespace Empiria.Steps.Design.Adapters

@@ -1,6 +1,6 @@
 ﻿/* Empiria Steps *********************************************************************************************
 *                                                                                                            *
-*  Module   : Steps Definition                           Component : Domain Layer                            *
+*  Module   : Steps Design                               Component : Domain Layer                            *
 *  Assembly : Empiria.Steps.Core.dll                     Pattern   : Power type                              *
 *  Type     : StepType                                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Ontology;
 
-namespace Empiria.Steps.Definition {
+namespace Empiria.Steps.Design {
 
   /// <summary>Power type that defines a step definition object like
   /// a process, protocol, task or a gateway.</summary>
@@ -50,4 +50,4 @@ namespace Empiria.Steps.Definition {
 
   } // class StepType
 
-} // namespace Empiria.Steps.Definition
+} // namespace Empiria.Steps.Design
