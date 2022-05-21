@@ -75,7 +75,7 @@ namespace Empiria.Steps.Design {
       private set;
     }
 
-    [DataField("Themes")]
+    [DataField("Topics")]
     public string Topics {
       get;
       private set;
@@ -93,6 +93,7 @@ namespace Empiria.Steps.Design {
       private set;
     }
 
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.Name, this.StepType.DisplayName, this.Entity.Keywords,
@@ -100,17 +101,12 @@ namespace Empiria.Steps.Design {
       }
     }
 
+
     [DataField("Accessibility")]
     public string Accesibility {
       get;
       private set;
     }
-
-    [DataField("OwnerId")]
-    public int OwnerId {
-      get;
-      internal set;
-    } = -1;
 
 
     [DataField("DesignStatus", Default = EntityStatus.Pending)]

@@ -27,7 +27,7 @@ namespace Empiria.Steps.Design.Integration {
         return new FixedList<StepDataObject>();
       }
 
-      var sql = $"SELECT * FROM STStepsDataObjects WHERE " +
+      var sql = $"SELECT * FROM STPStepsDataObjects WHERE " +
                 $"(ActivityId = {activity.Id}) AND (StepDataObjectStatus <> 'X')";
 
       var op = DataOperation.Parse(sql);
@@ -45,7 +45,7 @@ namespace Empiria.Steps.Design.Integration {
 
 
     internal static FixedList<StepDataObject> GetDataObjects(ProjectItem step) {
-      var sql = $"SELECT * FROM STStepsDataObjects WHERE " +
+      var sql = $"SELECT * FROM STPStepsDataObjects WHERE " +
                 $"(StepId = {step.Id}) AND (ActivityId = -1) AND (StepDataObjectStatus <> 'X')";
 
       var op = DataOperation.Parse(sql);
@@ -55,7 +55,7 @@ namespace Empiria.Steps.Design.Integration {
 
 
     internal static FixedList<StepDataObject> GetFormsData(int dataItemId) {
-      var sql = $"SELECT * FROM STStepsDataObjects WHERE " +
+      var sql = $"SELECT * FROM STPStepsDataObjects WHERE " +
                 $"(DataItemId = {dataItemId}) AND (StepDataObjectStatus <> 'X')";
 
       var op = DataOperation.Parse(sql);
@@ -65,7 +65,7 @@ namespace Empiria.Steps.Design.Integration {
 
 
     internal static void WriteStepDataObject(StepDataObject o) {
-      var op = DataOperation.Parse("writeSTStepDataObject", o.Id, o.UID,
+      var op = DataOperation.Parse("writeSTPStepDataObject", o.Id, o.UID,
                     o.DataItem.Id, o.Step.Id, o.Activity.Id,
                     o.MediaFile.Id, o.FormId, o.FormData.ToString(),
                     o.Configuration.ToString(), o.ExtensionData.ToString(),
@@ -76,7 +76,7 @@ namespace Empiria.Steps.Design.Integration {
 
 
     static internal void WriteStepData(StepDataHolder o) {
-      var op = DataOperation.Parse("writeSTStep", o.Id, o.UID, o.StepType.Id,
+      var op = DataOperation.Parse("writeSTPStep", o.Id, o.UID, o.StepType.Id,
                     o.StepKind, o.StepName, o.Notes, o.Themes, o.Tags, o.Keywords,
                     o.ExtensionData.ToString(), o.ForeignLanguageData.ToString(),
                     o.Constraints, o.ExecutionContext,
@@ -92,7 +92,7 @@ namespace Empiria.Steps.Design.Integration {
 
 
     static internal void WriteStepRelationData(StepRelationDataHolder o) {
-      var op = DataOperation.Parse("writeSTStepRelation", o.Id, o.UID, o.StepRelationType.Id,
+      var op = DataOperation.Parse("writeSTPStepRelation", o.Id, o.UID, o.StepRelationType.Id,
               o.RelationKind, o.RelationName, o.Keywords, o.ExtensionData.ToString(),
               o.Constraints, o.ExecutionContext, o.DataModels, o.DueOnRule.ToString(),
               o.Accessibility, o.DrivenMode, o.FlowControl, o.WorkSequenceKind, o.RelationRole,

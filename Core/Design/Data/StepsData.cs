@@ -21,7 +21,7 @@ namespace Empiria.Steps.Design.Data {
     static internal FixedList<Process> GetProcessList(SearchStepsCommand searchCommand) {
       var processType = StepType.Process;
 
-      var sql = $"SELECT * FROM STSteps WHERE " +
+      var sql = $"SELECT * FROM STPSteps WHERE " +
                 $"(StepTypeId = {processType.Id}) AND (DesignStatus <> 'X')";
 
       if (!String.IsNullOrWhiteSpace(searchCommand.Keywords)) {
@@ -38,7 +38,7 @@ namespace Empiria.Steps.Design.Data {
 
 
     static internal FixedList<Step> GetStepsList(SearchStepsCommand searchCommand) {
-      var sql = $"SELECT * FROM STSteps WHERE " +
+      var sql = $"SELECT * FROM STPSteps WHERE " +
                 $"(DesignStatus <> 'X')";
 
       sql += " AND " + GetStepsTypeFilter(searchCommand);
