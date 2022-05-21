@@ -74,6 +74,7 @@
     <PackageReference Include="Empiria.Steps.Core" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
     <ProjectReference Include="..\Core\Empiria.Steps.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

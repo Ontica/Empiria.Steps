@@ -13,8 +13,6 @@ namespace Empiria.Steps.Tests {
   /// <summary>Provides Empiria Land testing constants.</summary>
   static public class TestingConstants {
 
-    static internal string SESSION_TOKEN => ConfigurationData.GetString("Testing.SessionToken");
-
     static public string STEP_UID => ConfigurationData.Get<string>("Testing.StepUID");
 
   }  // class TestingConstants

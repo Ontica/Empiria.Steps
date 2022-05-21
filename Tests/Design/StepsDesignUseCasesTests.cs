@@ -11,6 +11,8 @@ using System;
 
 using Xunit;
 
+using Empiria.Tests;
+
 using Empiria.Steps.Design.Adapters;
 using Empiria.Steps.Design.UseCases;
 
@@ -28,7 +30,7 @@ namespace Empiria.Steps.Tests {
     #region Initialization
 
     public StepsDesignUseCasesTests() {
-      CommonMethods.Authenticate();
+      TestsCommonMethods.Authenticate();
 
       _usecases = StepsDesignUseCases.UseCaseInteractor();
     }
