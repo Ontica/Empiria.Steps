@@ -73,7 +73,7 @@ namespace Empiria.Steps.Design.Data {
           return $"(StepTypeId = {StepType.Event.Id})";
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Invalid steps type '{searchCommand.StepsType}'.");
+          throw Assertion.EnsureNoReachThisCode($"Invalid steps type '{searchCommand.StepsType}'.");
       }
     }
 

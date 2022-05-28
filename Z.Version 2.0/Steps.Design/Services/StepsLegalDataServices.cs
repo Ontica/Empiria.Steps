@@ -19,7 +19,7 @@ namespace Empiria.Steps.Services {
   static public class StepsLegalDataServices {
 
     static public FixedList<LegalData> ContractClauseLegalData(string clauseUID) {
-      Assertion.AssertObject(clauseUID, "clauseUID");
+      Assertion.Require(clauseUID, "clauseUID");
 
       var clause = Clause.Parse(clauseUID);
 
@@ -37,7 +37,7 @@ namespace Empiria.Steps.Services {
 
 
     static public FixedList<LegalData> ProcessLegalData(string processUID, string branchUID) {
-      Assertion.AssertObject(processUID, "processUID");
+      Assertion.Require(processUID, "processUID");
 
       var process = Project.Parse(processUID);
 

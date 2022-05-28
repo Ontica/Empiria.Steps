@@ -146,7 +146,7 @@ namespace Empiria.Steps.Design.WebApi {
           posting.Delete();
 
         } else {
-          throw Assertion.AssertNoReachThisCode($"Unrecognized event {eventType}.");
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized event {eventType}.");
         }
 
         return new SingleObjectModel(this.Request, dataObject.ToResponse(activity),

@@ -33,7 +33,7 @@ namespace Empiria.ProjectManagement {
 
 
     static internal ProjectItemsTree Load(Project project) {
-      Assertion.AssertObject(project, "project");
+      Assertion.Require(project, "project");
 
       return new ProjectItemsTree(project);
     }
@@ -65,7 +65,7 @@ namespace Empiria.ProjectManagement {
     #region Public methods
 
     internal Activity AddActivity(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       var activity = new Activity(this.Project, data);
 
@@ -82,7 +82,7 @@ namespace Empiria.ProjectManagement {
 
 
     internal Activity InsertActivity(JsonObject data, int position) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       var activity = new Activity(this.Project, data);
 
@@ -102,7 +102,7 @@ namespace Empiria.ProjectManagement {
     }
 
     internal Activity CopyActivity(Activity activity) {
-      Assertion.AssertObject(activity, "activity");
+      Assertion.Require(activity, "activity");
 
       FixedList<ProjectItem> branchToCopy = activity.GetBranch();
 
@@ -154,9 +154,9 @@ namespace Empiria.ProjectManagement {
 
 
     internal void DeleteActivity(Activity activity) {
-      Assertion.AssertObject(activity, "activity");
+      Assertion.Require(activity, "activity");
 
-      Assertion.Assert(this.ItemsList.Exists(x => x.UID == activity.UID),
+      Assertion.Require(this.ItemsList.Exists(x => x.UID == activity.UID),
                       $"Activity '{activity.Name}' doesn't belong to this project.");
 
 
@@ -177,11 +177,11 @@ namespace Empiria.ProjectManagement {
 
 
     public Activity GetActivity(string activityUID) {
-      Assertion.AssertObject(activityUID, "activityUID");
+      Assertion.Require(activityUID, "activityUID");
 
       Activity activity = this.ItemsList.Find((x) => x.UID == activityUID && x is Activity) as Activity;
 
-      Assertion.AssertObject(activity,
+      Assertion.Require(activity,
                              $"Activity with uid '{activityUID}' is not part of project '{this.Project.Name}'.");
 
       return activity;
@@ -189,8 +189,8 @@ namespace Empiria.ProjectManagement {
 
 
     internal Activity MoveActivity(Activity activity) {
-      Assertion.AssertObject(activity, "activity");
-      Assertion.Assert(!activity.Project.Equals(this.Project),
+      Assertion.Require(activity, "activity");
+      Assertion.Require(!activity.Project.Equals(this.Project),
             $"Can't move activity '{activity.Name}' because its project is the same than the target project.");
 
       FixedList<ProjectItem> branch = activity.GetBranch();
@@ -214,7 +214,7 @@ namespace Empiria.ProjectManagement {
 
 
     internal void RemoveBranch(Activity root) {
-      Assertion.AssertObject(root, "root");
+      Assertion.Require(root, "root");
 
       FixedList<ProjectItem> branch = root.GetBranch();
 
@@ -244,7 +244,7 @@ namespace Empiria.ProjectManagement {
       }
 
       if (parentFromJson != null && positionFromJson != null) {
-        Assertion.AssertFail("It is not possible to change position and parent at the same time.");
+        Assertion.RequireFail("It is not possible to change position and parent at the same time.");
 
         return;
 
@@ -262,7 +262,7 @@ namespace Empiria.ProjectManagement {
         return;
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
       }
 
     }
@@ -279,7 +279,7 @@ namespace Empiria.ProjectManagement {
 
       var branchToMove = this.GetBranch(item);
 
-      Assertion.Assert(!branchToMove.Contains(newParent),
+      Assertion.Require(!branchToMove.Contains(newParent),
                        $"Can't change the parent of '{item.Name}' because it is a branch " +
                        $"and '{newParent.Name}' is one of its children.");
 
@@ -316,7 +316,7 @@ namespace Empiria.ProjectManagement {
 
       var branchToMove = this.GetBranch(item);
 
-      Assertion.Assert(!branchToMove.Contains(newParent),
+      Assertion.Require(!branchToMove.Contains(newParent),
                        $"Can't change the parent of '{item.Name}' because it is a branch " +
                        $"and '{newParent.Name}' is one of its children.");
 
@@ -332,7 +332,7 @@ namespace Empiria.ProjectManagement {
 
       var branchToMove = this.GetBranch(item);
 
-      Assertion.Assert(newPosition < branchToMove[0].Position ||
+      Assertion.Require(newPosition < branchToMove[0].Position ||
                        newPosition > branchToMove[branchToMove.Count - 1].Position,
                        "Can't move item because it's a branch and the requested new position is inside it.");
 
@@ -432,7 +432,7 @@ namespace Empiria.ProjectManagement {
           return itemToMove;
 
         case TreeItemInsertionRule.AsChildAtPosition:
-          Assertion.Assert(relativePosition > 0, "Relative position must be greater than zero.");
+          Assertion.Require(relativePosition > 0, "Relative position must be greater than zero.");
 
           this.ChangeParentAndPosition(itemToMove, newParent: insertionPoint,
                                        newPosition: insertionPoint.Position + 1 + relativePosition);
@@ -447,7 +447,7 @@ namespace Empiria.ProjectManagement {
           return itemToMove;
 
         case TreeItemInsertionRule.AtRelativePosition:
-          Assertion.Assert(relativePosition > 0, "Relative position must be greater than zero.");
+          Assertion.Require(relativePosition > 0, "Relative position must be greater than zero.");
 
           int indexOfInsertionPoint = this.itemsList.IndexOf(insertionPoint);
 
@@ -465,7 +465,7 @@ namespace Empiria.ProjectManagement {
           return itemToMove;
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unrecognized insertion rule '{insertionRule.ToString()}'.");
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized insertion rule '{insertionRule.ToString()}'.");
       }
     }
 
@@ -516,9 +516,11 @@ namespace Empiria.ProjectManagement {
         return ProjectItem.Empty;
       }
 
-      Assertion.Assert(this.ItemsList.Exists(x => x.UID == parent.UID),
-                       new ValidationException("UnrecognizedActivityParent",
-                                               $"Invalid activity parent '{parent.Name}' for project '{this.Project.Name}'."));
+      if (!this.ItemsList.Exists(x => x.UID == parent.UID)) {
+        throw new ValidationException("UnrecognizedActivityParent",
+                                     $"Invalid activity parent '{parent.Name}' for project '{this.Project.Name}'.");
+      }
+
       return parent;
     }
 
@@ -530,9 +532,11 @@ namespace Empiria.ProjectManagement {
 
       var position = data.Get<int>("position");
 
-      Assertion.Assert(1 <= position && position <= this.ItemsList.Count + 1,
-                       new ValidationException("PositionOutOfIndex",
-                                               $"Invalid activity position {position} for project '{this.Project.Name}'."));
+      if (!(1 <= position && position <= this.ItemsList.Count + 1)) {
+        throw new ValidationException("PositionOutOfIndex",
+                                     $"Invalid activity position {position} for project '{this.Project.Name}'.");
+
+      }
 
       return position;
     }

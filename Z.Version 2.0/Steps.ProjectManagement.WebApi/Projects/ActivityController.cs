@@ -198,7 +198,7 @@ namespace Empiria.ProjectManagement.WebApi {
     public SingleObjectModel MoveActivityToProject(string projectUID, string activityUID,
                                                    string targetProjectUID) {
       try {
-        Assertion.Assert(projectUID != targetProjectUID, "Source and target projects must be different.");
+        Assertion.Require(projectUID != targetProjectUID, "Source and target projects must be different.");
 
         var project = Project.Parse(projectUID);
         var targetProject = Project.Parse(targetProjectUID);

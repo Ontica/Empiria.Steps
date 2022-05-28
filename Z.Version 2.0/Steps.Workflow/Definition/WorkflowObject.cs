@@ -29,8 +29,8 @@ namespace Empiria.Workflow.Definition {
 
     protected internal WorkflowObject(WorkflowObjectType type,
                                       WorkflowObject parent, JsonObject data) : base(type) {
-      Assertion.AssertObject(parent, "parent");
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(parent, "parent");
+      Assertion.Require(data, "data");
 
       this.Parent = parent;
       this.AssertIsValid(data);
@@ -153,7 +153,7 @@ namespace Empiria.Workflow.Definition {
     #region Private methods
 
     protected virtual void AssertIsValid(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
     }
 
@@ -165,12 +165,12 @@ namespace Empiria.Workflow.Definition {
 
 
     protected override void OnSave() {
-      throw Assertion.AssertNoReachThisCode();
+      throw Assertion.EnsureNoReachThisCode();
     }
 
 
     public void Update(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       this.Load(data);
     }

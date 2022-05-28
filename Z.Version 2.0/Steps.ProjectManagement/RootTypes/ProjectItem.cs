@@ -31,10 +31,10 @@ namespace Empiria.ProjectManagement {
 
     protected internal ProjectItem(ProjectItemType type,
                                    Project project) : base(type) {
-      Assertion.AssertObject(type, "type");
-      Assertion.AssertObject(project, "project");
+      Assertion.Require(type, "type");
+      Assertion.Require(project, "project");
 
-      Assertion.Assert(!project.IsEmptyInstance,
+      Assertion.Require(!project.IsEmptyInstance,
                        "Project can't be the empty instance.");
 
 
@@ -46,11 +46,11 @@ namespace Empiria.ProjectManagement {
     protected internal ProjectItem(ProjectItemType type,
                                    Project project,
                                    JsonObject data) : base(type) {
-      Assertion.AssertObject(type, "type");
-      Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(type, "type");
+      Assertion.Require(project, "project");
+      Assertion.Require(data, "data");
 
-      Assertion.Assert(!project.IsEmptyInstance,
+      Assertion.Require(!project.IsEmptyInstance,
                        "Project can't be the empty instance.");
 
 
@@ -387,19 +387,19 @@ namespace Empiria.ProjectManagement {
     #region Methods
 
     public Task AddTask(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       return new Task(this, data);
     }
 
 
     protected virtual void AssertIsValid(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
     }
 
 
     public virtual void Complete(DateTime actualEndDate) {
-      Assertion.Assert(this.Status != ActivityStatus.Completed,
+      Assertion.Require(this.Status != ActivityStatus.Completed,
                        "This activity is already marked as completed.");
 
       this.ActualEndDate = actualEndDate;
@@ -412,7 +412,7 @@ namespace Empiria.ProjectManagement {
 
 
     internal void Delete() {
-      Assertion.Assert(this.Status != ActivityStatus.Completed,
+      Assertion.Require(this.Status != ActivityStatus.Completed,
                        "Deletion is only possible for project items with statuses distinct than completed.");
 
       this.Status = ActivityStatus.Deleted;
@@ -513,12 +513,12 @@ namespace Empiria.ProjectManagement {
 
 
     protected override void OnSave() {
-      throw Assertion.AssertNoReachThisCode();
+      throw Assertion.EnsureNoReachThisCode();
     }
 
 
     public virtual void Reactivate() {
-      Assertion.Assert(this.Status != ActivityStatus.Active,
+      Assertion.Require(this.Status != ActivityStatus.Active,
                       "Reactivation is only possible when status is distinct than active.");
 
       this.ActualEndDate = ExecutionServer.DateMaxValue;
@@ -549,12 +549,12 @@ namespace Empiria.ProjectManagement {
 
 
     internal void SetParent(ProjectItem parent) {
-      Assertion.AssertObject(parent, "parent");
-      Assertion.Assert(!parent.Equals(this),
+      Assertion.Require(parent, "parent");
+      Assertion.Require(!parent.Equals(this),
                 "A project item can't be parent of itself.");
 
       if (this.ProjectObjectType.Id != ProjectItemType.TaskType.Id) {
-        Assertion.Assert(parent.Position < this.Position,
+        Assertion.Require(parent.Position < this.Position,
                $"Wrong operation 0: Parent position {parent.Position} {parent.Name} can not be below of this project item  position {this.Position} {this.Name}.");
       }
       this.Parent = parent;
@@ -562,10 +562,10 @@ namespace Empiria.ProjectManagement {
 
 
     internal void SetParentAndPosition(ProjectItem parent, int position) {
-      Assertion.AssertObject(parent, "parent");
-      Assertion.Assert(!parent.Equals(this),
+      Assertion.Require(parent, "parent");
+      Assertion.Require(!parent.Equals(this),
                        "A project item can't be parent of itself.");
-      Assertion.Assert(position >= 0, "position can not be negative.");
+      Assertion.Require(position >= 0, "position can not be negative.");
 
       this.Parent = parent;
       this.Position = position;
@@ -575,10 +575,10 @@ namespace Empiria.ProjectManagement {
 
 
     public void SetAndSaveParent(ProjectItem parent) {
-      Assertion.AssertObject(parent, "parent");
-      Assertion.Assert(!parent.Equals(this),
+      Assertion.Require(parent, "parent");
+      Assertion.Require(!parent.Equals(this),
               "A project item can't be parent of itself.");
-      Assertion.Assert(parent.Position < this.Position,
+      Assertion.Require(parent.Position < this.Position,
               $"Wrong operation 1: Parent's position can not be below of this project item's position.");
 
       this.Parent = parent;
@@ -588,9 +588,9 @@ namespace Empiria.ProjectManagement {
 
 
     internal void SetPosition(int position, bool assert = false) {
-      Assertion.Assert(position > 0, "position must be greater than zero.");
+      Assertion.Require(position > 0, "position must be greater than zero.");
       if (assert) {
-        Assertion.Assert(this.Parent.Position < position,
+        Assertion.Require(this.Parent.Position < position,
                          $"Wrong operation 2: Parent position {this.Parent.Name} can not be below of this project item position {this.Name}.");
       }
       this.Position = position;
@@ -604,7 +604,7 @@ namespace Empiria.ProjectManagement {
 
 
     internal void SetProject(Project project) {
-      Assertion.AssertObject(project, "project");
+      Assertion.Require(project, "project");
 
       this.Project = project;
     }

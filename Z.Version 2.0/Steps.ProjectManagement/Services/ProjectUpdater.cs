@@ -19,7 +19,7 @@ namespace Empiria.ProjectManagement.Services {
     #region Services
 
     static public FixedList<ProjectItem> Complete(ProjectItem projectItem, DateTime completedDate) {
-      Assertion.AssertObject(projectItem, "projectItem");
+      Assertion.Require(projectItem, "projectItem");
 
       WhatIfResult result = ModelingServices.WhatIfCompleted(projectItem, completedDate, false);
 
@@ -48,9 +48,9 @@ namespace Empiria.ProjectManagement.Services {
                                                                    DateTime eventDate,
                                                                    ProjectItem insertionPoint,
                                                                    TreeItemInsertionRule insertionRule) {
-      Assertion.AssertObject(activityModel, "activityModel");
-      Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(insertionPoint, "insertionPoint");
+      Assertion.Require(activityModel, "activityModel");
+      Assertion.Require(project, "project");
+      Assertion.Require(insertionPoint, "insertionPoint");
 
       WhatIfResult result = ModelingServices.WhatIfCreatedFromEvent(activityModel, project, eventDate);
 
@@ -79,7 +79,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static public void Reactivate(ProjectItem projectItem) {
-      Assertion.AssertObject(projectItem, "projectItem");
+      Assertion.Require(projectItem, "projectItem");
 
       WhatIfResult result = ModelingServices.WhatIfReactivated(projectItem);
 
@@ -97,9 +97,9 @@ namespace Empiria.ProjectManagement.Services {
     #region Private methods
 
     static public Activity CreateFromTemplate(ProjectItemStateChange stateChange, int position = -1) {
-      Assertion.AssertObject(stateChange, "stateChange");
-      Assertion.AssertObject(stateChange.Project, "stateChange.Project");
-      Assertion.AssertObject(stateChange.Template, "stateChange.Template");
+      Assertion.Require(stateChange, "stateChange");
+      Assertion.Require(stateChange.Project, "stateChange.Project");
+      Assertion.Require(stateChange.Template, "stateChange.Template");
 
       var json = new JsonObject();
 
@@ -175,7 +175,7 @@ namespace Empiria.ProjectManagement.Services {
             break;
 
           default:
-            throw Assertion.AssertNoReachThisCode($"Unrecognized WhatIfResult operation {stateChange.Operation}");
+            throw Assertion.EnsureNoReachThisCode($"Unrecognized WhatIfResult operation {stateChange.Operation}");
 
         }  // switch
 

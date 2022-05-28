@@ -27,7 +27,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     public ActivityCreator(Project targetProject) {
-      Assertion.AssertObject(targetProject, "targetProject");
+      Assertion.Require(targetProject, "targetProject");
 
       this.targetProject = targetProject;
     }
@@ -40,7 +40,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     public WhatIfResult CreateFromEvent(Activity activityModel, DateTime eventDate) {
-      Assertion.AssertObject(activityModel, "activityModel");
+      Assertion.Require(activityModel, "activityModel");
 
       // Create root
       this.whatIfResult = new WhatIfResult(activityModel, ProjectItemOperation.CreateFromTemplate);

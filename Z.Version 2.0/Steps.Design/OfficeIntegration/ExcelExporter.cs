@@ -22,8 +22,8 @@ namespace Empiria.Steps.OfficeIntegration {
     #region Constructors and parsers
 
     internal ExcelExporter(Project project, ProjectItem branch) {
-      Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(branch, "branch");
+      Assertion.Require(project, "project");
+      Assertion.Require(branch, "branch");
 
       this.Project = project;
       this.Branch = branch;

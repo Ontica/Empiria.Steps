@@ -37,7 +37,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     public WhatIfResult OnComplete(ProjectItem projectItem, DateTime completedDate, bool addNewPeriodics) {
-      Assertion.AssertObject(projectItem, "projectItem");
+      Assertion.Require(projectItem, "projectItem");
 
       this.whatIfResult = new WhatIfResult(projectItem, ProjectItemOperation.Complete);
 

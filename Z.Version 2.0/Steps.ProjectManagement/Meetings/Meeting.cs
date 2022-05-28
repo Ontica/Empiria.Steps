@@ -203,7 +203,7 @@ namespace Empiria.ProjectManagement.Meetings {
     #region Public methods
 
     public void Close() {
-      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+      Assertion.Require(this.Status == OpenCloseStatus.Opened,
                        $"Meeting can't be closed because is not opened. Current status: {this.Status}");
 
       this.ChangeStatus(OpenCloseStatus.Closed);
@@ -211,7 +211,7 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     public void Delete() {
-      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+      Assertion.Require(this.Status == OpenCloseStatus.Opened,
                        $"Meeting can't be deleted because is not opened. Current status: {this.Status}");
 
       this.ChangeStatus(OpenCloseStatus.Deleted);
@@ -219,7 +219,7 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     public void Open() {
-      Assertion.Assert(this.Status == OpenCloseStatus.Closed,
+      Assertion.Require(this.Status == OpenCloseStatus.Closed,
                        $"Meeting can't be opened because is not closed. Current status: {this.Status}");
 
       this.ChangeStatus(OpenCloseStatus.Opened);
@@ -227,7 +227,7 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     public void Update(JsonObject data) {
-      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+      Assertion.Require(this.Status == OpenCloseStatus.Opened,
                 $"I can't update the meeting because is not opened. Current status: {this.Status}");
 
       this.AssertIsValid(data);
@@ -242,7 +242,7 @@ namespace Empiria.ProjectManagement.Meetings {
     #region Protected and private methods
 
     protected void AssertIsValid(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
     }
 
@@ -301,12 +301,12 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     public void AddParticipant(Contact participant) {
-      Assertion.AssertObject(participant, "participant");
+      Assertion.Require(participant, "participant");
 
-      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+      Assertion.Require(this.Status == OpenCloseStatus.Opened,
                        "This meeting is closed. Add a participant is not allowed.");
 
-      Assertion.Assert(!this.Participants.Contains(participant),
+      Assertion.Require(!this.Participants.Contains(participant),
                        $"{participant.Alias} was already added to the meeting.");
 
       this.Aggregator.AddParticipant(participant);
@@ -321,12 +321,12 @@ namespace Empiria.ProjectManagement.Meetings {
 
 
     public void RemoveParticipant(Contact participant) {
-      Assertion.AssertObject(participant, "participant");
+      Assertion.Require(participant, "participant");
 
-      Assertion.Assert(this.Status == OpenCloseStatus.Opened,
+      Assertion.Require(this.Status == OpenCloseStatus.Opened,
                        "This meeting is closed. Remove a participant is not allowed.");
 
-      Assertion.Assert(this.Participants.Contains(participant),
+      Assertion.Require(this.Participants.Contains(participant),
       $"{participant.Alias} is not in the meeting list of participants. I can't perform the remove operation.");
 
       Aggregator.RemoveParticipant(participant);

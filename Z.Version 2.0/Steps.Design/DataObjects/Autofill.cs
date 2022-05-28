@@ -182,7 +182,7 @@ namespace Empiria.Steps.Design.DataObjects {
       }
 
       if (currentPostings.Count > 1) {
-        throw Assertion.AssertNoReachThisCode("Multiple file postings per activity are not yet implemented.");
+        throw Assertion.EnsureNoReachThisCode("Multiple file postings per activity are not yet implemented.");
       }
 
 

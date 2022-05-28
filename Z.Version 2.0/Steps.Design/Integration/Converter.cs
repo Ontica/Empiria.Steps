@@ -143,7 +143,7 @@ namespace Empiria.Steps.Design.Integration {
         case "":
           return StepType.Task;
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 

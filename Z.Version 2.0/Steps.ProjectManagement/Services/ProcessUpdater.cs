@@ -20,7 +20,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     public ProcessUpdater(ProjectItem rootProjectItem) {
-      Assertion.AssertObject(rootProjectItem, "rootProjectItem");
+      Assertion.Require(rootProjectItem, "rootProjectItem");
 
       this.RootProjectItem = rootProjectItem;
     }
@@ -67,7 +67,7 @@ namespace Empiria.ProjectManagement.Services {
            continue;
         }
 
-        ActivityModel template = ((Activity) item.ProjectItem.GetTemplate()).Template;
+        ActivityModel template = item.ProjectItem.GetTemplate().Template;
 
         if (template.IsPeriodic) {
           item.ProcessMatchResult = ProjectItemProcessMatchResult.NoProgrammingRule;
@@ -362,7 +362,7 @@ namespace Empiria.ProjectManagement.Services {
 
       } else {
 
-        Assertion.AssertObject(toInsertActivity.ParentStateChange, "ParentStateChange is null");
+        Assertion.Require(toInsertActivity.ParentStateChange, nameof(toInsertActivity.ParentStateChange));
 
         var newParent = current.StateChanges.Find(x => x.UID == toInsertActivity.ParentStateChange.UID);
 
@@ -489,7 +489,7 @@ namespace Empiria.ProjectManagement.Services {
         currentItem.ProcessMatchResult = ProjectItemProcessMatchResult.MatchedEqual;
 
       } else {
-        Assertion.AssertNoReachThisCode("Programming error. Should be impossible to reach this code.");
+        Assertion.EnsureNoReachThisCode("Should be impossible to reach this code.");
       }
     }
 

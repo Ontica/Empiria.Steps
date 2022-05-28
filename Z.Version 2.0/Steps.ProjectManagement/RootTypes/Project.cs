@@ -288,7 +288,7 @@ namespace Empiria.ProjectManagement {
     #region Project items
 
     public Activity AddActivity(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       lock (__treeLock) {
         return this.Items.AddActivity(data);
@@ -297,7 +297,7 @@ namespace Empiria.ProjectManagement {
 
 
     public Activity CopyActivity(Activity activity) {
-      Assertion.AssertObject(activity, "activity");
+      Assertion.Require(activity, "activity");
 
       lock (__treeLock) {
         return this.Items.CopyActivity(activity);
@@ -306,7 +306,7 @@ namespace Empiria.ProjectManagement {
 
 
     public void DeleteActivity(Activity activity) {
-      Assertion.AssertObject(activity, "activity");
+      Assertion.Require(activity, "activity");
 
       lock (__treeLock) {
         this.Items.DeleteActivity(activity);
@@ -315,7 +315,7 @@ namespace Empiria.ProjectManagement {
 
 
     public Activity InsertActivity(JsonObject data, int position) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       lock (__treeLock) {
         return this.Items.InsertActivity(data, position);
@@ -331,14 +331,14 @@ namespace Empiria.ProjectManagement {
 
 
     public Activity GetActivity(string activityUID) {
-      Assertion.AssertObject(activityUID, "activityUID");
+      Assertion.Require(activityUID, "activityUID");
 
       return this.Items.GetActivity(activityUID);
     }
 
 
     public FixedList<ProjectItem> GetBranch(ProjectItem root) {
-      Assertion.AssertObject(root, "root");
+      Assertion.Require(root, "root");
 
       return this.Items.GetBranch(root);
     }
@@ -355,7 +355,7 @@ namespace Empiria.ProjectManagement {
 
 
     public Activity MoveActivity(Activity activity) {
-      Assertion.AssertObject(activity, "activity");
+      Assertion.Require(activity, "activity");
 
       lock (__treeLock) {
         return this.Items.MoveActivity(activity);
@@ -365,7 +365,7 @@ namespace Empiria.ProjectManagement {
 
     public ProjectItem MoveTo(ProjectItem item, TreeItemInsertionRule insertionRule,
                               ProjectItem insertionPoint = null, int relativePosition = -1) {
-      Assertion.AssertObject(item, "item");
+      Assertion.Require(item, "item");
 
       lock (__treeLock) {
         return this.Items.MoveToInsertionPoint(item, insertionRule, insertionPoint, relativePosition);
@@ -374,8 +374,8 @@ namespace Empiria.ProjectManagement {
 
 
     public ProjectItem ChangeParentKeepingPosition(ProjectItem activity, ProjectItem newParent) {
-      Assertion.AssertObject(activity, "activity");
-      Assertion.AssertObject(newParent, "newParent");
+      Assertion.Require(activity, "activity");
+      Assertion.Require(newParent, "newParent");
 
       lock (__treeLock) {
         return this.Items.ChangeParentKeepingPosition(activity, newParent);
@@ -384,7 +384,7 @@ namespace Empiria.ProjectManagement {
 
 
     public ProjectItem ChangePosition(ProjectItem activity, int newPosition) {
-      Assertion.AssertObject(activity, "activity");
+      Assertion.Require(activity, "activity");
 
       lock (__treeLock) {
         return this.Items.ChangePosition(activity, newPosition);
@@ -393,7 +393,7 @@ namespace Empiria.ProjectManagement {
 
 
     internal void RemoveBranch(Activity root) {
-      Assertion.AssertObject(root, "root");
+      Assertion.Require(root, "root");
 
       lock (__treeLock) {
         this.Items.RemoveBranch(root);

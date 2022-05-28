@@ -18,8 +18,8 @@ namespace Empiria.ProjectManagement.Services {
 
 
     public static ProjectProcess GetProcess(Project project, string processUniqueID) {
-      Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(processUniqueID, "processUniqueID");
+      Assertion.Require(project, "project");
+      Assertion.Require(processUniqueID, "processUniqueID");
 
       ProjectProcess process = ProcessesCheckList(project).Find(x => x.UniqueID == processUniqueID);
 
@@ -28,7 +28,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static public FixedList<ProjectProcess> ProcessesCheckList(Project project) {
-      Assertion.AssertObject(project, "project");
+      Assertion.Require(project, "project");
 
       FixedList<ProjectProcess> list = ProjectProcess.GetList(project);
 
@@ -64,8 +64,8 @@ namespace Empiria.ProjectManagement.Services {
     static public WhatIfResult WhatIfCreatedFromEvent(Activity activityModel,
                                                       Project project,
                                                       DateTime eventDate) {
-      Assertion.AssertObject(activityModel, "activityModel");
-      Assertion.AssertObject(project, "project");
+      Assertion.Require(activityModel, "activityModel");
+      Assertion.Require(project, "project");
 
       var handler = new ActivityCreator(project);
 
@@ -74,7 +74,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static public WhatIfResult WhatIfCompleted(ProjectItem projectItem, DateTime completedDate, bool addNewPeriodics) {
-      Assertion.AssertObject(projectItem, "projectItem");
+      Assertion.Require(projectItem, "projectItem");
 
       var updater = new ActivityUpdater();
 
@@ -83,7 +83,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static public WhatIfResult WhatIfReactivated(ProjectItem projectItem) {
-      Assertion.AssertObject(projectItem, "projectItem");
+      Assertion.Require(projectItem, "projectItem");
 
       var whatIfResult = new WhatIfResult(projectItem, ProjectItemOperation.Reactivate);
 
@@ -96,7 +96,7 @@ namespace Empiria.ProjectManagement.Services {
 
 
     static public WhatIfResult WhatIfUpdatedWithLastProcessChanges(ProjectItem projectItem) {
-      Assertion.AssertObject(projectItem, "projectItem");
+      Assertion.Require(projectItem, "projectItem");
 
       var updater = new ProcessUpdater(projectItem);
 

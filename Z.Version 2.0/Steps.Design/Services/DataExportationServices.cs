@@ -19,7 +19,7 @@ namespace Empiria.Steps.Services {
 
 
     static public string ExportProcessToExcel(string processUID, string branchUID) {
-      Assertion.AssertObject(processUID, "processUID");
+      Assertion.Require(processUID, "processUID");
 
       var process = Project.Parse(processUID);
 
@@ -32,7 +32,7 @@ namespace Empiria.Steps.Services {
 
 
     static public string ExportProjectToExcel(string projectUID, string branchUID) {
-      Assertion.AssertObject(projectUID, "projectUID");
+      Assertion.Require(projectUID, "projectUID");
 
       var project = Project.Parse(projectUID);
 

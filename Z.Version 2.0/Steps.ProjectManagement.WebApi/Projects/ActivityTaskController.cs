@@ -80,7 +80,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var task = Task.Parse(taskUID);
 
-        Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
+        Assertion.Require(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
 
         DateTime completedDate = bodyAsJson.Get<DateTime>("actualEndDate", DateTime.Today);
 
@@ -102,7 +102,7 @@ namespace Empiria.ProjectManagement.WebApi {
       try {
         var task = Task.Parse(taskUID);
 
-        Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
+        Assertion.Require(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
 
         ProjectUpdater.Reactivate(task);
 
@@ -126,7 +126,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var task = Task.Parse(taskUID);
 
-        Assertion.Assert(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
+        Assertion.Require(task.Activity.UID == activityUID, "Task belongs to a distinct activity.");
 
 
         task.Update(bodyAsJson);

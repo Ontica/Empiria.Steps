@@ -114,7 +114,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var posting = list.Find(x => x.PostedItemUID == fileUID);
 
-        Assertion.Assert(posting.NodeObjectUID == projectItem.UID,
+        Assertion.Require(posting.NodeObjectUID == projectItem.UID,
             $"ProjectItem {projectItem.Name} does not have the file {posting.PostedItemUID}.");
 
         posting.Delete();
@@ -137,7 +137,7 @@ namespace Empiria.ProjectManagement.WebApi {
 
         var posting = Posting.Parse(fileUID);
 
-        Assertion.Assert(posting.NodeObjectUID == projectItem.UID,
+        Assertion.Require(posting.NodeObjectUID == projectItem.UID,
             $"ProjectItem {projectItem.Name} does not have the file {posting.PostedItemUID}.");
 
         MediaFilePostingServices.UpdateMediaFilePosting(request, posting);

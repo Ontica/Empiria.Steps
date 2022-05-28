@@ -23,8 +23,8 @@ namespace Empiria.Workflow.Definition {
     }
 
     public BpmnDiagram(string name, string xml, string tags) {
-      Assertion.AssertObject(name, "name");
-      Assertion.AssertObject(xml, "xml");
+      Assertion.Require(name, "name");
+      Assertion.Require(xml, "xml");
 
       this.Name = name;
       this.Xml = xml;
@@ -32,7 +32,7 @@ namespace Empiria.Workflow.Definition {
     }
 
     public BpmnDiagram(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       this.AssertIsValid(data);
       this.Load(data);
@@ -100,7 +100,7 @@ namespace Empiria.Workflow.Definition {
 
 
     protected virtual void AssertIsValid(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
     }
 
@@ -116,7 +116,7 @@ namespace Empiria.Workflow.Definition {
 
 
     public void Update(JsonObject data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       this.AssertIsValid(data);
       this.Load(data);

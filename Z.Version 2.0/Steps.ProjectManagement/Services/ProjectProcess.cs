@@ -16,7 +16,7 @@ namespace Empiria.ProjectManagement {
     #region Constructors and parsers
 
     static internal FixedList<ProjectProcess> GetList(Project forProject) {
-      Assertion.AssertObject(forProject, "forProject");
+      Assertion.Require(forProject, "forProject");
 
       return ProjectData.GetProjectProcesses(forProject);
     }

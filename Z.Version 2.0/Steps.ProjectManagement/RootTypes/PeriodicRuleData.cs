@@ -154,7 +154,7 @@ namespace Empiria.ProjectManagement {
           };
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Invalid periodic rule type '{ruleType}'." +
+          throw Assertion.EnsureNoReachThisCode($"Invalid periodic rule type '{ruleType}'." +
                                                 $"Json data: {data.ToString()}.");
       }
     }

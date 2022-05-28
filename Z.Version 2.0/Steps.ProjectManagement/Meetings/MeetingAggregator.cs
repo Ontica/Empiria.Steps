@@ -27,7 +27,7 @@ namespace Empiria.ProjectManagement.Meetings {
     #region Constructors and parsers
 
     internal MeetingAggregator(Meeting meeting) {
-      Assertion.AssertObject(meeting, "meeting");
+      Assertion.Require(meeting, "meeting");
 
       this.meeting = meeting;
       _participants = new Lazy<List<Contact>>(() => MeetingData.GetMeetingParticipants(this.meeting));

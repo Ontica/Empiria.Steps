@@ -44,7 +44,7 @@ namespace Empiria.ProjectManagement.WebApi {
         return ((Task) projectItem).ToResponse();
 
       } else {
-        throw Assertion.AssertNoReachThisCode($"Unhandled ToResponse() type for " +
+        throw Assertion.EnsureNoReachThisCode($"Unhandled ToResponse() type for " +
                                               $"{projectItem.GetType().FullName}.");
 
       }

@@ -36,7 +36,7 @@ namespace Empiria.Steps.Design {
     }
 
     static internal FixedList<Step> GetList(SearchStepsCommand searchCommand) {
-      Assertion.AssertObject(searchCommand, "searchCommand");
+      Assertion.Require(searchCommand, "searchCommand");
 
       return StepsData.GetStepsList(searchCommand);
     }

@@ -22,8 +22,8 @@ namespace Empiria.ProjectManagement.Messaging {
 
     public async System.Threading.Tasks.Task SendAllActivitiesEmail(Project project,
                                                                     Person sendTo) {
-      Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(sendTo, "sendTo");
+      Assertion.Require(project, "project");
+      Assertion.Require(sendTo, "sendTo");
 
       FixedList<Activity> activities = MessagingUtilities.GetAllUpcomingActivities(project);
 
@@ -39,8 +39,8 @@ namespace Empiria.ProjectManagement.Messaging {
 
     public async System.Threading.Tasks.Task SendByThemeSummaryEmail(Project project,
                                                                      Person sendTo) {
-      Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(sendTo, "sendTo");
+      Assertion.Require(project, "project");
+      Assertion.Require(sendTo, "sendTo");
 
       FixedList<Activity> activities = MessagingUtilities.GetAllUpcomingActivities(project);
 
@@ -56,8 +56,8 @@ namespace Empiria.ProjectManagement.Messaging {
 
     public async System.Threading.Tasks.Task SendPersonalActivitiesEmail(Project project,
                                                                          Person sendTo) {
-      Assertion.AssertObject(project, "project");
-      Assertion.AssertObject(sendTo, "sendTo");
+      Assertion.Require(project, "project");
+      Assertion.Require(sendTo, "sendTo");
 
       FixedList<Activity> activities = MessagingUtilities.GetUserUpcomingActivities(project, sendTo);
 

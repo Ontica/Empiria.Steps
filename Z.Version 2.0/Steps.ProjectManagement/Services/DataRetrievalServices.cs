@@ -17,7 +17,7 @@ namespace Empiria.ProjectManagement.Services {
 
     static public FixedList<ProjectItem> GetWorkOnActivities(ActivityFilter filter,
                                                              ActivityOrderBy orderBy) {
-      Assertion.AssertObject(filter, "filter");
+      Assertion.Require(filter, "filter");
 
       var finder = new ProjectFinder(filter);
 

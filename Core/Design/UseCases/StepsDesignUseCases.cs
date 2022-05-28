@@ -32,7 +32,7 @@ namespace Empiria.Steps.Design.UseCases {
     #region Use cases
 
     public StepDto GetStep(string stepUID) {
-      Assertion.AssertObject(stepUID, "stepUID");
+      Assertion.Require(stepUID, "stepUID");
 
       var step = Step.Parse(stepUID);
 
@@ -41,7 +41,7 @@ namespace Empiria.Steps.Design.UseCases {
 
 
     public FixedList<StepDescriptorDto> SearchSteps(SearchStepsCommand searchCommand) {
-      Assertion.AssertObject(searchCommand, "searchCommand");
+      Assertion.Require(searchCommand, "searchCommand");
 
       var list = Step.GetList(searchCommand);
 
