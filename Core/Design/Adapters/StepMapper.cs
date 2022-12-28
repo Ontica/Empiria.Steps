@@ -30,7 +30,7 @@ namespace Empiria.Steps.Design.Adapters {
         Description = step.Description,
         Topics = step.Topics,
         Tags = step.Tags,
-        Entity = step.Entity.Alias
+        Entity = step.Entity.ShortName
       };
 
       return dto;
@@ -53,7 +53,7 @@ namespace Empiria.Steps.Design.Adapters {
         Name = step.Name,
         Tags = step.Tags,
         Topics = step.Topics,
-        Entity = step.Entity.Alias
+        Entity = step.Entity.ShortName
       };
 
       return dto;
