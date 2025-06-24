@@ -2,27 +2,17 @@
   "appName": "Empiria Steps Tests",
   "description": "Environment settings",
   "version": "3.0",
-  "date": "2022-03-10",
+  "date": "2025-06-25",
   "settings": [
-    {
-      "type": "",
-      "key": "ApplicationKey",
-      "value": "{{APPLICATION-KEY}}"
-    },
     {
       "type": "",
       "key": "GlobalConfigurationFile",
       "value": "{{GLOBAL-CONFIGURATION-FILE}}"
     },
     {
-      "type": "Steps.Tests",
-      "key": "Testing.SessionToken",
-      "value": "{{TESTING-SESSION-TOKEN}}"
-    },
-    {
-      "type": "Steps.Tests",
-      "key": "Testing.ProcessUID",
-      "value": "{{TESTING-PROCESS-UID}}"
+      "type": "",
+      "key": "IsTestingModule",
+      "value": true
     },
     {
       "type": "Steps.Tests",

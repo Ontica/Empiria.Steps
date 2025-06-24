@@ -1,7 +1,7 @@
 ﻿Empiria Project Management System
 =================================
 
-Copyright (c) 2017-2020. La Vía Óntica SC, Ontica LLC and contributors.
+Copyright (c) 2017-2025. La Vía Óntica SC, Ontica LLC and contributors.
 -----------------------------------------------------------------------
 
 These software components are free software: you can redistribute them

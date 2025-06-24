@@ -8,4 +8,4 @@
 
 # Copyright
 
-  Copyright © 2017-2020. La Vía Óntica SC, Ontica LLC and colaborators.
+  Copyright © 2017-2025. La Vía Óntica SC, Ontica LLC and colaborators.
